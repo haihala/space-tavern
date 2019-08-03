@@ -94,6 +94,7 @@ class Engine():
         if not self.collides(point=spot, target="*"):
             item.position = spot
             self.items.append(item)
+            return True
 
     def run(self):
         self.running = True
