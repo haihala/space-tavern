@@ -1,6 +1,7 @@
 from tile import Tile
 from item import Item
 
+import math
 import pygame
 
 class Room():
@@ -11,8 +12,19 @@ class Room():
         self.items = [
             Item([6, 5], "item_beer")
         ]
+
+        background_tiles = []
+
         for x in range(-10, 10):
             for y in range(-6, 7):
+                if math.sin(x) > 0 and abs(math.sin(y)) < (0.2 + abs(math.cos(x)/1.23)):
+                    self.background_tiles.append(Tile([x,y], "wall_middle"))
+                else
+                    self.background_tiles.append(Tile([x,y], "wall"))
+
+        for x in range(-10, 10):
+            for y in range(-6, 7):
+
                 if ((x == -10 or x == 9) or (y == -6 or y == 6 or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
                     self.tiles.append(Tile([x,y], "floor"))
                 elif (y <= 5 and y >= 3) and (x == -10 or x == 9):
