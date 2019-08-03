@@ -15,10 +15,15 @@ def merge(array, x, y, width, height, size=16):
     for i in range(width):
         for j in range(height):
             ret.blit(array[x+i][y+j], (i*size, j*size))
-    return ret
+    return pygame.transform.smoothscale(ret, (TILESIZE*width, TILESIZE*height))
+
+def get(x, y):
+    return pygame.transform.smoothscale(array[x][y], (TILESIZE, TILESIZE))
 
 def stitch (array):
-    wall = pygame.transform.smoothscale(array[6][2], (TILESIZE, TILESIZE))
+    wall = get(6, 2)    # Kuva @x=6, y=2
+    walk = [get(i, 1) for i in range(4)]   # Lista kuvia from x=0-3, y=1
+    big = merge(2, 3, 5, 5)         # yksi iso kuva joka on 5 leveä, 5 korkea ja vasen ylänurkka on kohdassa x=2 y=3
 
     return {
             "wall": wall,
