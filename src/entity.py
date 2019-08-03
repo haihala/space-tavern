@@ -60,6 +60,7 @@ class Entity():
 
     def tick(self):
         self.fatigue = max(0, self.fatigue-1)
+        self.sprite_offset = self.sprite_offset+1
         return self.fatigue != 0
 
     def gravity(self, engine):
@@ -68,7 +69,7 @@ class Entity():
         self.grounded_last_tick = self.grounded
 
     def get_surf(self, surface, camera, i=0):
-        sprite = self.sprite(i)
+        sprite = self.sprite()
         offset = [(self.position[i] - camera[i])*TILESIZE - 0.5*sprite.get_size()[i] for i in range(2)]
         position = [int(offset[i]+surface.get_size()[i]/2) for i in range(2)]
 
