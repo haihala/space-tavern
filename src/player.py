@@ -5,6 +5,7 @@ class Player(Entity):
         super().__init__(sprite="player_idle", speed=2)
         self.binds = binds
         self.jump_height = 3
+        self.inventory = None
 
     def jump(self, engine):
         if self.grounded:

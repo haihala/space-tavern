@@ -27,7 +27,8 @@ class Engine():
     def room(self):
         return self.rooms[self.current_room]
 
-    def collides(self, point, exclude=[]):
+    def collides(self, point, , exclude=[]):
+        search_space = []
         return any(point in i.colliders for i in self.actors + self.room.tiles if i not in exclude)
 
     def run(self):
@@ -35,6 +36,8 @@ class Engine():
         while self.running:
             self._collidables = None
             for entity in self.actors:
+                for item in self.room.items:
+                    if 
                 if entity == self.player:
                     self.player_tick(self.tick_target_duration)
                 else:
