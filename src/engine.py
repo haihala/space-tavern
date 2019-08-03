@@ -43,9 +43,9 @@ class Engine():
                 if ((x == -10 or x == 9) or (y == -6 or y == 6 or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
                     self.tiles.append(Tile([x,y], "floor"))
                 elif (y <= 5 and y >= 3) and (x == -10 or x == 9):
-                    self.tiles.append(ITEMS["item_door"]([x,y]))
+                    self.items.append(ITEMS["item_door"]([x,y]))
                 elif y == 0 and abs(x) < 3:
-                    self.tiles.append(ITEMS["item_jump_pad"]([x,y]))
+                    self.items.append(ITEMS["item_jump_pad"]([x,y]))
 
                 if y == 6 or y == -6 or (y == 0 and abs(x) > 2) or (y == 2 and (x == -10 or x == 9)):
                     self.background.append(Tile([x,y+1], "floor_bottom"))
@@ -73,6 +73,7 @@ class Engine():
                 "*": self.actors + self.items + self.tiles,
                 "collider": self.actors + self.tiles,
                 "enemy": self.enemies,
+                "player": [self.player,],
                 "actor": self.actors,
                 "tile": self.tiles,
                 "item": self.items
@@ -107,7 +108,7 @@ class Engine():
             for entity in self.actors:
                 for item in self.collides(entity, target="item"):
                     if item.on_collision:
-                        item.on_collision(self, target)
+                        item.on_collision(item, self, self.player)
                 if entity == self.player:
                     self.player_tick(self.tick_target_duration)
                     start_time = time()
@@ -115,6 +116,7 @@ class Engine():
                         self.render(0)
                 else:
                     entity.tick(self)
+
             for entity in self.actors:
                 entity.grounded = self.project_collides(entity, [0,1])
 
@@ -146,7 +148,6 @@ class Engine():
 
                         if btn in self.player.binds:
                             buffered = self.player.binds[btn]
-
         self.player.tick(self, buffered)
 
     def render(self, tick_time_left):
@@ -187,3 +188,4 @@ class Engine():
         else:
             color = [0, 255, 0]
         pygame.draw.rect(self.display, color, (0, 0, self.display.get_width()*(1-tick_portion_left), 50))
+

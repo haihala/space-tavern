@@ -1,10 +1,9 @@
 from enemy import Enemy
 
 def create_collection():
-
     def alien_base(position, **kwargs):
         def ai_base(self, engine):
-            self.move(engine, 1, engine.player.position)
+            self.move(engine, target=engine.player.position)
             # Shoot
         return Enemy(ai_base, "alien_base", position, **kwargs)
 

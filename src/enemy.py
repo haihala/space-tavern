@@ -9,5 +9,4 @@ class Enemy(Entity):
         if super().tick():
             return None
         self.ai(self, engine)
-
-        self.gravity(engine)
+        self.upkeep(engine)

@@ -8,14 +8,14 @@ def sign(x):
 
 class Entity():
     # Abstract
-    def __init__(self, sprite, position=[0,0], weight=1, speed=1, width=1, height=1, fatigue=0, drag=0.3):
+    def __init__(self, sprite, position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
         self.sprite_offset = 0
         self.weight = weight
         self.position = position
         self.old_position = position[:]
-        self.speed = speed-1
+        self.speed = speed
         self.fatigue = fatigue
         self.width = width
         self.height = height
@@ -67,7 +67,12 @@ class Entity():
         self.sprite_offset = self.sprite_offset+1
         return self.fatigue != 0
 
-    def gravity(self, engine):
+    def upkeep(self, engine):
+        self.handle_velocity(engine)
+        self.gravity(engine)
+        self.fatigue += self.speed
+
+    def handle_velocity(self, engine):
         if self.velocity != [0, 0]:
             x, y = self.velocity
             self.move(engine, amount=abs(int(y)), direction=[0, y])
@@ -78,6 +83,7 @@ class Entity():
                     ]
             if self.velocity[1] == 0:
                 self.velocity = [0, 0]
+    def gravity(self, engine):
         if not self.grounded and not self.grounded_last_tick:
             self.move(engine, amount=self.weight, direction=[0,1])
         self.grounded_last_tick = self.grounded

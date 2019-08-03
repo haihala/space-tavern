@@ -2,7 +2,7 @@ from entity import Entity
 
 class Player(Entity):
     def __init__(self, binds):
-        super().__init__(sprite="player_idle", speed=2)
+        super().__init__(sprite="player_idle")
         self.binds = binds
         self.jump_height = 3
         self.inventory = None
@@ -78,5 +78,7 @@ class Player(Entity):
             self._sprite = SPRITES["player_idle"]
         else:
             self.sprite_offset = self.sprite_offset - 1
+
         if not moved:
             self.gravity(engine)
+        self.handle_velocity(engine)
