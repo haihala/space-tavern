@@ -11,6 +11,7 @@ class Entity():
     def __init__(self, sprite, position=[0,0], weight=1, speed=1, width=1, height=1, fatigue=0):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
+        self.sprite_offset = 0
         self.weight = weight
         self.position = position
         self.speed = speed-1
@@ -45,12 +46,12 @@ class Entity():
             else:
                 self.position = [self.position[i] + delta[i] for i in range(2)]
 
-    def sprite(self, i=0):
+    def sprite(self):
         if type(self._sprite) is list:
             if self.facing_right:
-                return pygame.transform.flip(self._sprite[i%len(self._sprite)], True, False)
+                return pygame.transform.flip(self._sprite[self.sprite_offset%len(self._sprite)], True, False)
             else:
-                return self._sprite[i%len(self._sprite)]
+                return self._sprite[self.sprite_offset%len(self._sprite)]
         return self._sprite
 
     @property

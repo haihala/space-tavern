@@ -19,13 +19,15 @@ class Player(Entity):
         if action:
             self.fatigue += self.speed
             if action == "left":
+                self.sprite = "player_walk"
                 self.move(engine, direction=[-1, 0])
                 moved = True
             elif action == "right":
+                self.sprite = "player_walk"
                 self.move(engine, direction=[1, 0])
                 moved = True
             elif action == "jump":
                 self.jump(engine)
-                
+
         if not moved:
             self.gravity(engine)
