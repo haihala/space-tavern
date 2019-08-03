@@ -1,5 +1,5 @@
 {
-	"resolution": [1200, 800],
+	"resolution": [640, 480],
 	"fullscreen": false,
 	"binds": {
 		" ": "jump",
