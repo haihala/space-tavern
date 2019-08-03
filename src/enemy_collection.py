@@ -2,15 +2,27 @@ from enemy import Enemy
 
 def create_collection():
 
-    def alien_base(positon, **kwargs):
+    def alien_base(position, **kwargs):
         def ai_base(self, engine):
             pass
+        return Enemy(ai_base, "alien_base", position, **kwargs)
 
-        return Enemy(ai_base, "alien_base", positon, **kwargs)
+    def alien_fly(position, **kwargs):
+        def ai_fly(self, engine):
+            pass
+        return Enemy(ai_base, "alient_fly", position, **kwargs)
+
+    def alien_brain(position, **kwargs):
+        def ai_brain(self, engine):
+            pass
+        return Enemy(ai_base, "alient_brain", position, **kwargs)
+
 
     return  {
 
-            "alien_base": alien_base
+            "alien_base": alien_base,
+            "alien_fly": alien_fly,
+            "alien_brain": alien_brain
 
             }
 
