@@ -17,10 +17,10 @@ def merge(x, y, width, height, size=16):
     for i in range(width):
         for j in range(height):
             ret.blit(ARRAY[x+i][y+j], (i*size, j*size))
-    return pygame.transform.smoothscale(ret, (TILESIZE*width, TILESIZE*height))
+    return pygame.transform.scale(ret, (TILESIZE*width, TILESIZE*height))
 
 def get(x, y):
-    return pygame.transform.smoothscale(ARRAY[x][y], (TILESIZE, TILESIZE))
+    return pygame.transform.scale(ARRAY[x][y], (TILESIZE, TILESIZE))
 
 def get_sprites():
     wall_top = get(6, 0)
