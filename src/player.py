@@ -26,7 +26,6 @@ class Player(Entity):
                 moved = True
             elif action == "jump":
                 self.jump(engine)
-                self.fatigue -= 1
                 
         if not moved:
             self.gravity(engine)
