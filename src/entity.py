@@ -20,6 +20,8 @@ class Entity():
         self.height = height
         self.facing_right = False
 
+        self.velocity = [0, 0]
+        self.drag = 0.3
         self.grounded = False
         self.grounded_last_tick = False # Internal mechanic to slow down gravity and give hang time in the air.
 
@@ -42,6 +44,7 @@ class Entity():
                 delta = [0, sign(delta[1])]
 
             if engine.project_collides(self, delta):
+                self.velocity = [0, 0]
                 return amount-i
             else:
                 self.position = [self.position[i] + delta[i] for i in range(2)]
@@ -64,6 +67,16 @@ class Entity():
         return self.fatigue != 0
 
     def gravity(self, engine):
+        if self.velocity != [0, 0]:
+            x, y = self.velocity
+            self.move(engine, amount=abs(int(x)), direction=[x, 0])
+            self.move(engine, amount=abs(int(y)), direction=[0, y])
+            self.velocity = [
+                    x,
+                    max(0, abs(y-sign(y)*self.drag))*sign(y)
+                    ]
+            if self.velocity[1] == 0:
+                self.velocity = [0, 0]
         if not self.grounded and not self.grounded_last_tick:
             self.move(engine, amount=self.weight, direction=[0,1])
         self.grounded_last_tick = self.grounded

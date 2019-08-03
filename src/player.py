@@ -12,9 +12,8 @@ class Player(Entity):
             self.move(engine, amount=self.jump_height, direction=[0, -1])
 
     def throw(self, engine):
-        spot = [self.position[i] + [0, -1][i] for i in range(2)]
-        engine.place(spot, self.inventory)
-        self.inventory.velocity = [int(self.facing_right)*2-1, -3]
+        engine.place(self.forwards, self.inventory)
+        self.inventory.velocity = [int(self.facing_right)*2-1, -2]
         self.inventory = None
 
     def pickup(self, engine):
