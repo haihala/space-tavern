@@ -1,5 +1,10 @@
 from constants import TILESIZE
 
+def sign(x):
+    if x != 0:
+        return x/abs(x)
+    return 0
+
 class Entity():
     # Abstract
     def __init__(self, sprite, position=[0,0], weight=1, speed=1, width=1, height=1, fatigue=0):
@@ -14,7 +19,7 @@ class Entity():
 
         self.grounded = False
 
-    def move(self, amount=1, target=None, direction=None):
+    def move(self, engine, amount=1, target=None, direction=None):
         if target and direction:
             raise ValueError("Both, direction and target passed to move")
         for i in range(amount):
@@ -26,9 +31,11 @@ class Entity():
                 delta = [sign(delta[0]), 0]
             else:
                 delta = [0, sign(delta[1])]
-
+            old_pos = self.position[:]
             self.position = [self.position[0]+delta[0], self.position[1]+delta[1]]
-
+            if any(engine.collides(i) for i in self.colliders):
+                self.position = old_pos
+                return amount-i
 
     def sprite(self, i=0):
         if type(self._sprite) is list:
@@ -43,10 +50,7 @@ class Entity():
         self.fatigue = max(0, self.fatigue-1)
     
         if not self.grounded:
-            for i in range(self.weight):
-                newy = self.position[1] + 1
-                if not any([self.position[0]+j, newy] in engine.collidables for j in range(self.width)):
-                    self.position = [self.position[0], newy]
+            self.move(engine, amount=self.weight, direction=[0,1])
 
         return self.fatigue != 0
 
