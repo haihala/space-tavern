@@ -1,5 +1,6 @@
 from player import Player
 from room import Room
+from enemy_collection import ENEMIES
 
 import pygame
 
@@ -12,7 +13,7 @@ class Engine():
         self.display = pygame.display.set_mode(resolution, flags)
 
         self.player = Player(conf["binds"])
-        self.actors = [self.player]
+        self.actors = [self.player, ENEMIES["alien_base"]([-5, -5])]
         self.room = Room()
 
         self.tick_target_duration = 1
