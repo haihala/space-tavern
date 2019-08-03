@@ -1,5 +1,5 @@
 {
-	"resolution": [1200, 800],
+	"resolution": [640, 480],
 	"fullscreen": false,
 	"binds": {
 		" ": "jump",
@@ -9,20 +9,5 @@
 		"down": "down",
 		"x": "pickup",
 		"z": "use"
-	},
-	"rooms": [
-		{
-			"name": "ship",
-			"fill_color": [0,0,0],
-			"tiles": [
-				[[-2, 2], "wall"],
-				[[-1, 2], "wall"],
-				[[0, 2], "wall"],
-				[[1, 2], "wall"],
-				[[2, 2], "wall"],
-				[[2, 1], "wall"]
-			],
-			"background": []
-		}
-	]
+	}
 }

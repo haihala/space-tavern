@@ -3,7 +3,7 @@ from tile import Tile
 import pygame
 
 class Room():
-    def __init__(self, name="", tiles=[], background=[], fill_color=(0,0,0)):
+    def __init__(self, name="", fill_color=(0,0,0)):
         self.name = name
         self.tiles = []
         self.background = []

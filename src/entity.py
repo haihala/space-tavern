@@ -11,6 +11,7 @@ class Entity():
     def __init__(self, sprite, position=[0,0], weight=1, speed=1, width=1, height=1, fatigue=0):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
+        self.sprite_offset = 0
         self.weight = weight
         self.position = position
         self.speed = speed-1
@@ -45,12 +46,12 @@ class Entity():
             else:
                 self.position = [self.position[i] + delta[i] for i in range(2)]
 
-    def sprite(self, i=0):
+    def sprite(self):
         if type(self._sprite) is list:
             if self.facing_right:
-                return pygame.transform.flip(self._sprite[i%len(self._sprite)], True, False)
+                return pygame.transform.flip(self._sprite[self.sprite_offset%len(self._sprite)], True, False)
             else:
-                return self._sprite[i%len(self._sprite)]
+                return self._sprite[self.sprite_offset%len(self._sprite)]
         return self._sprite
 
     @property
@@ -59,6 +60,7 @@ class Entity():
 
     def tick(self):
         self.fatigue = max(0, self.fatigue-1)
+        self.sprite_offset = self.sprite_offset+1
         return self.fatigue != 0
 
     def gravity(self, engine):
@@ -67,7 +69,7 @@ class Entity():
         self.grounded_last_tick = self.grounded
 
     def get_surf(self, surface, camera, i=0):
-        sprite = self.sprite(i)
+        sprite = self.sprite()
         offset = [(self.position[i] - camera[i])*TILESIZE - 0.5*sprite.get_size()[i] for i in range(2)]
         position = [int(offset[i]+surface.get_size()[i]/2) for i in range(2)]
 

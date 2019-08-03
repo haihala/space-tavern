@@ -28,20 +28,29 @@ class Player(Entity):
             return True
 
     def tick(self, engine, action):
+        IsIdle = self.fatigue == 0
+
         if super().tick():
             return None
 
         moved = False
+        from pygame_objects import SPRITES
         if action:
             self.fatigue += self.speed
             if action == "left":
+                if self._sprite != SPRITES["player_walk"]:
+                    self.sprite_offset = 0
+                self._sprite = SPRITES["player_walk"]
                 self.move(engine, direction=[-1, 0])
                 moved = True
             elif action == "right":
+                if self._sprite != SPRITES["player_walk"]:
+                    self.sprite_offset = 0
+                self._sprite = SPRITES["player_walk"]
                 self.move(engine, direction=[1, 0])
                 moved = True
             elif action == "down":
-                pass
+                self._sprite = SPRITES["player_idle"]
             elif action == "jump":
                 self.jump(engine)
             elif action == "use":
@@ -54,7 +63,9 @@ class Player(Entity):
                     if not self.pickup(engine):
                         # Nothing to pick up, no fatigue
                         self.fatigue = 0
-
-                
+        elif IsIdle:
+            self._sprite = SPRITES["player_idle"]
+        else:
+            self.sprite_offset = self.sprite_offset - 1
         if not moved:
             self.gravity(engine)

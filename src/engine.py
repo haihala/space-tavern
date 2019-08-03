@@ -13,20 +13,12 @@ class Engine():
 
         self.player = Player(conf["binds"])
         self.actors = [self.player]
-        self.rooms = {
-                room["name"]: Room(**room)
-                for room in conf["rooms"]
-                }
-        self.current_room = "ship"
+        self.room = Room()
 
         self.tick_target_duration = 1
         self.cam = [0,0]
         self.running = False
         self._collidables = None
-
-    @property
-    def room(self):
-        return self.rooms[self.current_room]
 
     def collides(self, entity=None, point=None, types=["actor", "tile"], exclude=[]):
         spaces = {
@@ -51,7 +43,7 @@ class Engine():
         if self.collides(point=spot, types=["actor", "tile", "item"]):
             item.position = spot
             self.items.append(item)
-        
+
     def run(self):
         self.running = True
         while self.running:

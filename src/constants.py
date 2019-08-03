@@ -1,2 +1,2 @@
-TILESIZE = 20
+TILESIZE = 30
 CONFPATH = 'conf.json'
