@@ -2,6 +2,8 @@ from player import Player
 from room import Room
 from enemy_collection import ENEMIES
 
+from constants import HELDSIZE, TILESIZE
+
 import pygame
 
 from copy import copy
@@ -108,7 +110,14 @@ class Engine():
     def draw_world(self):
         targets = []
         for entity in self.actors:
-            targets.append(entity.get_surf(self.display, self.cam))
+            sprite, position = entity.get_surf(self.display, self.cam)
+            targets.append((sprite, position))
+            if type(entity) is Player and entity.inventory:
+                inventory_sprite, inventory_position = entity.inventory.get_surf(self.display, self.cam)
+
+                offset = [HELDSIZE if entity.facing_right else -HELDSIZE, 0]
+
+                targets.append((pygame.transform.scale(pygame.transform.flip(inventory_sprite, True, False) if entity.facing_right else inventory_sprite, (HELDSIZE, HELDSIZE)), [position[i] + offset[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
         self.display.blits(targets)
 
     def draw_hud(self, tick_portion_left):
