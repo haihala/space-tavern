@@ -1,4 +1,4 @@
-from constants import TILESIZE
+from constants import TILESIZE, LERP
 import pygame
 
 def sign(x):
@@ -14,6 +14,7 @@ class Entity():
         self.sprite_offset = 0
         self.weight = weight
         self.position = position
+        self.old_position = position[:]
         self.speed = speed-1
         self.fatigue = fatigue
         self.width = width
@@ -83,7 +84,8 @@ class Entity():
 
     def get_surf(self, surface, camera):
         sprite = self.sprite()
-        offset = [(self.position[i] - camera[i])*TILESIZE - 0.5*sprite.get_size()[i] for i in range(2)]
+        self.old_position = [LERP(self.old_position[i], self.position[i], 0.1) for i in range(2)]
+        offset = [(self.old_position[i] - camera[i])*TILESIZE - 0.5*sprite.get_size()[i] for i in range(2)]
         position = [int(offset[i]+surface.get_size()[i]/2) for i in range(2)]
 
         return (sprite, position)

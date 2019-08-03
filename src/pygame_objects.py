@@ -1,6 +1,7 @@
 from constants import TILESIZE
 
 import pygame
+pygame.mixer.init()
 
 from random import randint
 
@@ -68,3 +69,14 @@ def get_sprites():
     }
 
 SPRITES = get_sprites()
+
+def get_sounds():
+    return  {
+        "item_throw": pygame.mixer.Sound("resources/item_throw.wav"),
+        "item_pickup": pygame.mixer.Sound("resources/item_pickup.wav"),
+        "item_drop": pygame.mixer.Sound("resources/item_drop.wav"),
+
+        "player_move": pygame.mixer.Sound("resources/player_move.wav"),
+    }
+
+SOUNDS = get_sounds()

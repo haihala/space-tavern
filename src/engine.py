@@ -93,6 +93,7 @@ class Engine():
     def place(self, spot, item):
         if not self.collides(point=spot, target="*"):
             item.position = spot
+            item.old_position = spot
             self.items.append(item)
             return True
 
@@ -124,8 +125,9 @@ class Engine():
     def player_tick(self, slot):
         buffered = None
         start_time = time()
-        while time()-start_time < slot and not buffered:
-            self.render((time()-start_time)/slot)
+        true_slot = (slot/2 if self.player.fatigue else slot)
+        while time()-start_time < true_slot and not buffered:
+            self.render((time()-start_time)/true_slot)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.quit()

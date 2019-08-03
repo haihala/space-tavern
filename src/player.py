@@ -15,6 +15,8 @@ class Player(Entity):
         engine.place(self.forwards, self.inventory)
         self.inventory.velocity = [int(self.facing_right)*2-1, -2]
         self.inventory = None
+        from pygame_objects import SOUNDS
+        SOUNDS["item_throw"].play()
 
     def pickup(self, engine):
         targets = []
@@ -25,6 +27,8 @@ class Player(Entity):
             target = targets.pop()
             self.inventory = target
             engine.items = [i for i in engine.items if i is not target]     # Remove item from the world
+            from pygame_objects import SOUNDS
+            SOUNDS["item_pickup"].play()
             return True
 
     @property
@@ -38,7 +42,7 @@ class Player(Entity):
             return None
 
         moved = False
-        from pygame_objects import SPRITES
+        from pygame_objects import SPRITES, SOUNDS
         if action:
             self.fatigue += self.speed
             if action == "left":
@@ -46,12 +50,14 @@ class Player(Entity):
                     self.sprite_offset = 0
                 self._sprite = SPRITES["player_walk"]
                 self.move(engine, direction=[-1, 0])
+                SOUNDS["player_move"].play()
                 moved = True
             elif action == "right":
                 if self._sprite != SPRITES["player_walk"]:
                     self.sprite_offset = 0
                 self._sprite = SPRITES["player_walk"]
                 self.move(engine, direction=[1, 0])
+                SOUNDS["player_move"].play()
                 moved = True
             elif action == "down":
                 self._sprite = SPRITES["player_idle"]

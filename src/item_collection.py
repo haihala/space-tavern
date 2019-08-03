@@ -2,6 +2,8 @@ from item import Item
 
 def drop(self, engine, user):
     if engine.place(user.forwards, self):
+        from pygame_objects import SOUNDS
+        SOUNDS["item_drop"].play()
         user.inventory = None
 
 def jump_pad_collision(self, engine, user):
