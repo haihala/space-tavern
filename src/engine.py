@@ -46,6 +46,11 @@ class Engine():
         cp.position = [cp.position[i]+shift[i] for i in range(2)]
         exclude.append(entity)
         return self.collides(cp, types=types, exclude=exclude)
+
+    def place(spot, item):
+        if self.collides(point=spot, types=["actor", "tile", "item"]):
+            item.position = spot
+            self.items.append(item)
         
     def run(self):
         self.running = True
