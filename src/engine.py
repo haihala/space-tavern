@@ -27,14 +27,8 @@ class Engine():
     def room(self):
         return self.rooms[self.current_room]
 
-    @property
-    def collidables(self):
-        if not self._collidables:
-            self._collidables = [j for k in [i.colliders for i in self.actors] + [i.colliders for i in self.room.tiles] for j in k]
-        return self._collidables
-
-    def collides(self, target):
-        return self.collidables.count(target) > 1
+    def collides(self, point, exclude=[]):
+        return any(point in i.colliders for i in self.actors + self.room.tiles if i not in exclude)
 
     def run(self):
         self.running = True
@@ -46,7 +40,7 @@ class Engine():
                 else:
                     entity.tick(self)
             for entity in self.actors:
-                entity.grounded = any(self.collides([i[0], i[1]+1]) for i in entity.colliders)
+                entity.grounded = any(self.collides([i[0], i[1]+1], exclude=[entity]) for i in entity.colliders)
 
     def quit(self):
         # Maybe save
