@@ -1,15 +1,20 @@
 
-
 class Entity():
-    def __init__(self):
-        self.fatigue = 0
+    # Abstract
+    def __init__(self, position=(0,0), weight=1, speed=1, fatigue=0):
+        self.weight = weight
+        self.position = position
+        self.speed = speed
+        self.fatigue = fatigue
 
-    def ai(self, engine):
-        return None
+    def tick(self, engine):
+        self.fatigue = max(0, self.fatigue-1)+self.speed
+        collision_targets = [i.position for i in engine.actors] + [i.position for i in engine.room.tiles]
 
-    def tick(self, engine, action=None):
-        self.fatigue = max(0, self.fatigue-1)
-        if not self.fatigue:
-            if action == None:
-                return self.ai(engine)
+        for i in range(self.weight):
+            newpos = list(self.position[:])
+            newpos[1] += 1
+            if newpos not in collision_targets:
+                self.position = newpos
 
+        return self.fatigue != self.speed

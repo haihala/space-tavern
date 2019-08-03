@@ -8,9 +8,10 @@ from time import sleep, time
 class Engine():
     def __init__(self, conf):
         pygame.init()
-        self.display = pygame.display.set_mode((400, 300))
+        flags = (pygame.FULLSCREEN * int(conf["fullscreen"]))
+        self.display = pygame.display.set_mode(conf["resolution"], flags)
 
-        self.player = Player()
+        self.player = Player(conf["binds"])
         self.actors = [self.player] 
         self.rooms = {
                 room["name"]: Room(**room)
@@ -21,10 +22,14 @@ class Engine():
         self.tick_target_duration = 0.25
         self.running = False
 
+    @property
+    def room(self):
+        return self.rooms[self.current_room]
 
     def run(self):
         self.running = True
         while self.running:
+            print(self.player.position)
             for entity in self.actors:
                 if entity == self.player:
                     self.player_tick()
@@ -44,22 +49,19 @@ class Engine():
                 if event.type == pygame.QUIT:
                     self.quit()
                 elif event.type == pygame.KEYDOWN:
-                    if event.key in self.player.binds:
-                        self.player.buffered = self.player.binds[event.key]
+                    if event.unicode in self.player.binds:
+                        self.player.buffered = self.player.binds[event.unicode]
         self.player.tick(self, self.player.buffered)
-
-    def physics(self):
-        # Make things fall mostly
-        pass
             
     def render(self):
         # Draw the world
         self.draw_background()
         self.draw_world()
         self.draw_hud()
+        pygame.display.flip()
 
     def draw_background(self):
-        self.rooms[self.current_room].draw(self.display, (0, 0))
+        self.room.draw(self.display, (0, 0))
     
     def draw_world(self):
         # Collideable objects, player, non-collidables in that order.

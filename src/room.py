@@ -5,8 +5,8 @@ import pygame
 class Room():
     def __init__(self, name="", tiles=[], background=[], fill_color=(0,0,0)):
         self.name = name
-        self.tiles = [Tile(*i, True) for i in tiles]
-        self.background = [Tile(*i, False) for i in background]
+        self.tiles = [Tile(*i) for i in tiles]
+        self.background = [Tile(*i) for i in background]
         self.color = fill_color
 
     def draw(self, surface, camera=(0,0)):

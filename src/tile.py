@@ -1,15 +1,10 @@
-from constants import TILESIZE
+from constants import TILESIZE, TILE_SPRITES
 from entity import Entity
-from sprites import tile_sprites
 
 class Tile(Entity):
-    def __init__(self, position, spritename, hard):
+    def __init__(self, position, spritename):
         self.position = position
-        self.sprite = tile_sprites[spritename]
-        self.hard = hard        # Collidable?
-
-    def tick(self):
-        pass
+        self.sprite = TILE_SPRITES[spritename]
 
     def get_surf(self, surface, camera):
         offset = [(self.position[i] - camera[i] - 0.5)*TILESIZE for i in range(2)]
