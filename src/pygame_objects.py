@@ -100,8 +100,8 @@ def get_sprites():
             "turret_alien": turret_alien,
             "big_alien": big_alien,
 
-            "item_door": door,
-            "item_shop": shop,
+            "item_door": item_door,
+            "item_shop": item_shop,
             "item_gun": item_gun,
             "item_beer": item_beer,
             "item_jump_pad": item_jump_pad,

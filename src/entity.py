@@ -12,7 +12,7 @@ class Entity():
         self._sprite = SPRITES[sprite]
         self.weight = weight
         self.position = position
-        self.speed = speed
+        self.speed = speed-1
         self.fatigue = fatigue
         self.width = width
         self.height = height
@@ -34,8 +34,10 @@ class Entity():
             else:
                 delta = [0, sign(delta[1])]
 
-            if engine.project_collides(self, shift=delta):
+            if engine.project_collides(self, delta):
                 return amount-i
+            else:
+                self.position = [self.position[i] + delta[i] for i in range(2)]
 
     def sprite(self, i=0):
         if type(self._sprite) is list:

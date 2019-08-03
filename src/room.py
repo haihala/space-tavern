@@ -13,7 +13,7 @@ class Room():
                 if ((x == -10 or x == 9) or (y == -6 or y == 6 or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
                     self.tiles.append(Tile([x,y], "floor"))
                 elif (y <= 5 and y >= 3) and (x == -10 or x == 9):
-                    self.tiles.append(Tile([x,y], "door"))
+                    self.tiles.append(Tile([x,y], "item_door"))
 
                 if y == 6 or y == -6 or (y == 0 and abs(x) > 2) or (y == 2 and (x == -10 or x == 9)):
                     self.background.append(Tile([x,y+1], "floor_bottom"))

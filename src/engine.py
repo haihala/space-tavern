@@ -45,10 +45,8 @@ class Engine():
         cp = copy(entity)
         cp.position = [cp.position[i]+shift[i] for i in range(2)]
         exclude.append(entity)
-        return self.collides(entity, types=types, exclude=exclude)
+        return self.collides(cp, types=types, exclude=exclude)
         
-
-
     def run(self):
         self.running = True
         while self.running:
