@@ -45,9 +45,6 @@ def get_sprites():
     floor_bottom_right = get(8, 7)
     floor = get(7, 6)
 
-    door = get(4, 3)
-    shop = [get(i+4, 0) for i in range(2)]
-
     projectile_gun = [get(i+7, 3) for i in range(2)]
     projectile_alien = [get(i+7, 4) for i in range(2)]
 
@@ -62,6 +59,8 @@ def get_sprites():
     turret_alien = [get(i+2, 3) for i in range(2)]
     big_alien = [merge(i*2, 4, 2, 2) for i in range(2)]
 
+    item_door = get(4, 3)
+    item_shop = [get(i+4, 0) for i in range(2)]
     item_beer = get(8, 0)
     item_gun = [get(i+4, 2) for i in range(2)]
     item_jump_pad = [get(i+5, 3) for i in range(2)]
@@ -90,9 +89,6 @@ def get_sprites():
             "floor_bottom_left": floor_bottom_left,
             "floor_bottom_right": floor_bottom_right,
 
-            "door": door,
-            "shop": shop,
-
             "player_idle": player_idle,
             "player_walk": player_walk,
             "player_jump": player_jump,
@@ -104,6 +100,8 @@ def get_sprites():
             "turret_alien": turret_alien,
             "big_alien": big_alien,
 
+            "item_door": door,
+            "item_shop": shop,
             "item_gun": item_gun,
             "item_beer": item_beer,
             "item_jump_pad": item_jump_pad,

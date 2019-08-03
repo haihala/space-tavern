@@ -16,6 +16,7 @@ class Entity():
         self.fatigue = fatigue
         self.width = width
         self.height = height
+        self.facing_left = True
 
         self.grounded = False
         self.grounded_last_tick = False # Internal mechanic to slow down gravity and give hang time in the air.

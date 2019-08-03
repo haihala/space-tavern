@@ -7,6 +7,7 @@ class Room():
         self.name = name
         self.tiles = []
         self.background = []
+        self.items = []
         for x in range(-10, 10):
             for y in range(-6, 7):
                 if ((x == -10 or x == 9) or (y == -6 or y == 6 or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
@@ -40,6 +41,9 @@ class Room():
 
         for fg in self.tiles:
             sprites.append(fg.get_surf(surface, camera))
+
+        for item in self.items:
+            sprites.append(item.get_surf(surface, camera))
 
         surface.fill(self.color)
         surface.blits(sprites)
