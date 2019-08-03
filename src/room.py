@@ -5,8 +5,32 @@ import pygame
 class Room():
     def __init__(self, name="", tiles=[], background=[], fill_color=(0,0,0)):
         self.name = name
-        self.tiles = [Tile(*i) for i in tiles]
-        self.background = [Tile(*i) for i in background]
+        self.tiles = []
+        self.background = []
+        for x in range(-10, 10):
+            for y in range(-6, 7):
+                if ((x == -10 or x == 9) or (y == -6 or y == 6 or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
+                    self.tiles.append(Tile([x,y], "floor"))
+                elif (y <= 5 and y >= 3) and (x == -10 or x == 9):
+                    self.tiles.append(Tile([x,y], "door"))
+
+                if y == 6 or y == -6 or (y == 0 and abs(x) > 2) or (y == 2 and (x == -10 or x == 9)):
+                    self.background.append(Tile([x,y+1], "floor_bottom"))
+                if y == -6 or y == 6 or (y == 0 and abs(x) > 2):
+                    self.background.append(Tile([x,y-1], "floor_top"))
+                if (x == -10 or x == 9 or (y == 0 and x == -3)) and not (y <= 5 and y >= 3):
+                    self.background.append(Tile([x+1,y], "floor_right"))
+                if (x == -10 or x == 9 or (y == 0 and x == 3)) and not (y <= 5 and y >= 3):
+                    self.background.append(Tile([x-1,y], "floor_left"))
+                if ((x == -10 and y == -6) or (y == 0 and x == 3)) or (y == 6 and x == -10):
+                    self.background.append(Tile([x-1,y-1], "floor_top_left"))
+                if ((x == -10 and y == 6) or (y == 0 and x == 3)) or (y == 2 and (x == -10 or x == 9)):
+                    self.background.append(Tile([x-1,y+1], "floor_bottom_left"))
+                if ((x == 9 and y == -6) or (y == 0 and x == -3)) or (y == 6 and x == 9):
+                    self.background.append(Tile([x+1,y-1], "floor_top_right"))
+                if ((x == 9 and y == 6) or (y == 0 and x == -3)) or (y == 2 and (x == -10 or x == 9)):
+                    self.background.append(Tile([x+1,y+1], "floor_bottom_right"))
+
         self.color = fill_color
 
     def draw(self, surface, camera=(0,0)):
@@ -19,4 +43,3 @@ class Room():
 
         surface.fill(self.color)
         surface.blits(sprites)
-
