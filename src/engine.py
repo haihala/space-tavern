@@ -39,16 +39,18 @@ class Engine():
         exclude.append(entity)
         return self.collides(cp, types=types, exclude=exclude)
 
-    def place(spot, item):
-        if self.collides(point=spot, types=["actor", "tile", "item"]):
+    def place(self, spot, item):
+        if not self.collides(point=spot, types=["actor", "tile", "item"]):
             item.position = spot
-            self.items.append(item)
+            self.room.items.append(item)
 
     def run(self):
         self.running = True
+        engine = self
         while self.running:
             for item in self.room.items:
-                item.tick(self)
+                item.tick(engine)
+
             for entity in self.actors:
                 for item in self.collides(entity, types=["item"]):
                     if item.on_collision:

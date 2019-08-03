@@ -25,7 +25,7 @@ class Player(Entity):
         if targets:
             target = targets.pop()
             self.inventory = target
-            engine.items = [i for i in engine.items if i is not target]     # Remove item from the world
+            engine.room.items = [i for i in engine.room.items if i is not target]     # Remove item from the world
             return True
 
     def tick(self, engine, action):
