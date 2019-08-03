@@ -24,6 +24,7 @@ class Engine():
         ]
         self.tiles = []
         self.background = []
+        self.color = (0, 0, 0)
 
         self.tick_target_duration = 1
         self.cam = [0,0]
@@ -159,8 +160,8 @@ class Engine():
         for fg in self.tiles:
             targets.append(fg.get_surf(self.display, self.cam))
 
-        surface.fill(self.color)
-        surface.blits(sprites)
+        self.display.fill(self.color)
+        self.display.blits(targets)
 
     def draw_world(self):
         targets = []
@@ -174,7 +175,7 @@ class Engine():
 
                 targets.append((pygame.transform.scale(pygame.transform.flip(inventory_sprite, True, False) if entity.facing_right else inventory_sprite, (HELDSIZE, HELDSIZE)), [position[i] + offset[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
         for item in self.items:
-            targets.append(item.get_surf(surface, camera))
+            targets.append(item.get_surf(self.display, self.cam))
         self.display.blits(targets)
 
     def draw_hud(self, tick_portion_left):
