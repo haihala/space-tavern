@@ -18,7 +18,8 @@ class Engine():
                 }
         self.current_room = "ship"
         
-        self.tick_target_duration = 0.25
+        self.tick_target_duration = 1
+        self.cam = [0,0]
         self.running = False
 
     @property
@@ -29,44 +30,46 @@ class Engine():
         self.running = True
         while self.running:
             for entity in self.actors:
-                print(entity.position)
                 if entity == self.player:
-                    self.player_tick()
+                    self.player_tick(self.tick_target_duration)
                 else:
                     entity.tick(self)
-            self.render()
 
     def quit(self):
         # Maybe save
         exit(0)
 
-    def player_tick(self):
+    def player_tick(self, excess):
+        buffered = None
         start_time = time()
-        self.player.buffered = None
-        while time() - start_time < self.tick_target_duration * 0.8:
+        while time()-start_time < excess and not buffered:
+            self.render((time()-start_time)/excess)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.quit()
                 elif event.type == pygame.KEYDOWN:
                     if event.unicode in self.player.binds:
-                        self.player.buffered = self.player.binds[event.unicode]
-        self.player.tick(self, self.player.buffered)
+                        buffered = self.player.binds[event.unicode]
+        self.player.tick(self, buffered)
             
-    def render(self):
+    def render(self, tick_time_left):
         # Draw the world
         self.draw_background()
         self.draw_world()
-        self.draw_hud()
+        self.draw_hud(tick_time_left)
         pygame.display.flip()
 
     def draw_background(self):
-        self.room.draw(self.display, (0, 0))
+        self.room.draw(self.display, self.cam)
     
     def draw_world(self):
-        # Collideable objects, player, non-collidables in that order.
-        pass
+        targets = []
+        for entity in self.actors:
+            targets.append(entity.get_surf(self.display, self.cam))
+        self.display.blits(targets)
 
-    def draw_hud(self):
-        pass
+    def draw_hud(self, tick_portion_left):
+        if not self.player.fatigue:
+            pygame.draw.rect(self.display, (150, 30, 255), (0, 0, self.display.get_width()*(1-tick_portion_left), 50))
 
 

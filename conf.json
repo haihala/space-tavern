@@ -10,7 +10,13 @@
 		{
 			"name": "ship",
 			"fill_color": [0,0,0],
-			"tiles": [[[0, 2], "wall"]],
+			"tiles": [
+				[[-2, 2], "wall"],
+				[[-1, 2], "wall"],
+				[[0, 2], "wall"],
+				[[1, 2], "wall"],
+				[[2, 2], "wall"]
+			],
 			"background": []
 		}
 	]
