@@ -1,20 +1,25 @@
 
 class Entity():
     # Abstract
-    def __init__(self, position=(0,0), weight=1, speed=1, fatigue=0):
+    def __init__(self, position=[0,0], weight=1, speed=1, width=1, height=1, fatigue=0):
         self.weight = weight
         self.position = position
         self.speed = speed
         self.fatigue = fatigue
+        self.width = width
+        self.height = height
+
+    @property
+    def colliders(self):
+        return [[self.position[0]+i, self.position[1]+j] for i in range(self.width) for j in range(self.height)]
 
     def tick(self, engine):
         self.fatigue = max(0, self.fatigue-1)+self.speed
-        collision_targets = [i.position for i in engine.actors] + [i.position for i in engine.room.tiles]
+        collision_targets = {j for j in [i.colliders for i in engine.actors] + [i.colliders for i in engine.room.tiles]}
 
         for i in range(self.weight):
-            newpos = list(self.position[:])
-            newpos[1] += 1
-            if newpos not in collision_targets:
-                self.position = newpos
+            newy = self.position[1] + 1
+            if not any([self.position[0]+j, newy] in collision_targets for j in range(self.width)):
+                self.position = [self.position[0], newy]
 
         return self.fatigue != self.speed
