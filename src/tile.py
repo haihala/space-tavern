@@ -4,9 +4,9 @@ from entity import Entity
 class Tile(Entity):
     def __init__(self, position, spritename):
         super().__init__(position=position)
-        from pygame_objects import TILE_SPRITES
+        from pygame_objects import SPRITES
         self.position = position
-        self.sprite = TILE_SPRITES[spritename]
+        self.sprite = SPRITES[spritename]
 
     def get_surf(self, surface, camera):
         offset = [(self.position[i] - camera[i] - 0.5)*TILESIZE for i in range(2)]

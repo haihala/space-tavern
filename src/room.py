@@ -18,7 +18,5 @@ class Room():
             sprites.append(fg.get_surf(surface, camera))
 
         surface.fill(self.color)
-        print(sprites)
         surface.blits(sprites)
-
 
