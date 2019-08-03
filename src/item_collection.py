@@ -22,8 +22,8 @@ def create_collection():
 
     return  {
             "item_beer": item_beer,
-            "item_jump_pad": item_beer,
-            "item_door": item_beer,
+            "item_jump_pad": item_jump_pad,
+            "item_door": item_door,
             }
 
 ITEMS = create_collection()
