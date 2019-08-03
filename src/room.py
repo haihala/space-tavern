@@ -20,7 +20,7 @@ class Room():
             for y in range(-6, 7):
                 if math.sin(x) > 0 and abs(math.sin(y)) < (0.2 + abs(math.cos(x)/1.23)):
                     self.background_tiles.append(Tile([x,y], "wall_middle"))
-                else
+                else:
                     self.background_tiles.append(Tile([x,y], "wall"))
 
         for x in range(-10, 10):
