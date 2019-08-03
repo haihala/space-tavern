@@ -7,9 +7,9 @@ from copy import copy
 from time import sleep, time
 
 class Engine():
-    def __init__(self, conf):
+    def __init__(self, conf, resolution):
         flags = (pygame.FULLSCREEN * int(conf["fullscreen"]))
-        self.display = pygame.display.set_mode(conf["resolution"], flags)
+        self.display = pygame.display.set_mode(resolution, flags)
 
         self.player = Player(conf["binds"])
         self.actors = [self.player]

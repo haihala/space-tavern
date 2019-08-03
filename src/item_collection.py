@@ -1,10 +1,10 @@
 from item import Item
 
-def drop(engine, user, item):
-    if engine.place(user, item):
+def drop(self, engine, user):
+    if engine.place(user, self):
         user.inventory = None
 
-def jump_pad_collision(engine, user, item):
+def jump_pad_collision(self, engine, user):
     user.move(engine, amount=5, direction=[0, -1])
 
 def create_collection():
