@@ -8,10 +8,9 @@ def jump_pad_collision(self, engine, user):
     user.move(engine, amount=5, direction=[0, -1])
 
 def create_collection():
-
     def item_beer(position, **kwargs):
         sprite = "item_beer"
-        return Item(position, sprite, on_use=drop, **kwargs)
+        return Item(position, sprite, on_use=drop, collider=True, **kwargs)
 
     def item_jump_pad(position, **kwargs):
         sprite = "item_jump_pad"
@@ -19,7 +18,7 @@ def create_collection():
 
     def item_door(position, **kwargs):
         sprite = "item_door"
-        return Item(position, sprite, **kwargs)
+        return Item(position, sprite, can_pickup=False, **kwargs)
 
     return  {
             "item_beer": item_beer,

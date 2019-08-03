@@ -50,6 +50,10 @@ class Room():
 
         self.color = fill_color
 
+    @property
+    def colliders(self):
+        return [i for i in self.items if i.collider] + self.tiles
+
     def draw(self, surface, camera=(0,0)):
         sprites = []
         for bg in self.background:
