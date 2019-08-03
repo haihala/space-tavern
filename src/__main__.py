@@ -1,15 +1,16 @@
+from constants import CONFPATH
 from engine import Engine
 
-def filesystem_setup():
-    # Check that all files that should exist, do. Create ones that don't
-    pass
+from json import load, dump
+from os import mkdir
+from os.path import isdir, isfile, dirname
+
 
 def load_config():
-    # Returns configs in object form
-    pass
+    with open(CONFPATH) as f:
+        return load(f)
 
 def main():
-    filesystem_setup()
     engine = Engine(load_config())
     engine.run()
 
