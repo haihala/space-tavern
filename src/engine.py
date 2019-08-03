@@ -12,13 +12,13 @@ class Engine():
         self.display = pygame.display.set_mode(conf["resolution"], flags)
 
         self.player = Player(conf["binds"])
-        self.actors = [self.player] 
+        self.actors = [self.player]
         self.rooms = {
                 room["name"]: Room(**room)
                 for room in conf["rooms"]
                 }
         self.current_room = "ship"
-        
+
         self.tick_target_duration = 1
         self.cam = [0,0]
         self.running = False
@@ -82,7 +82,7 @@ class Engine():
                             buffered = self.player.binds[event.unicode]
 
         self.player.tick(self, buffered)
-            
+
     def render(self, tick_time_left):
         # Draw the world
         self.draw_background()
@@ -92,7 +92,7 @@ class Engine():
 
     def draw_background(self):
         self.room.draw(self.display, self.cam)
-    
+
     def draw_world(self):
         targets = []
         for entity in self.actors:
@@ -105,4 +105,3 @@ class Engine():
         else:
             color = [0, 255, 0]
         pygame.draw.rect(self.display, color, (0, 0, self.display.get_width()*(1-tick_portion_left), 50))
-
