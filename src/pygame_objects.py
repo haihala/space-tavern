@@ -45,15 +45,27 @@ def get_sprites():
     floor_bottom_right = get(8, 7)
     floor = get(7, 6)
 
-    player_idle = [get(i, 0) for i in range(1)]
+    door = get(4, 3)
+    shop = [get(i+4, 0) for i in range(2)]
+
+    projectile_gun = [get(i+7, 3) for i in range(2)]
+    projectile_alien = [get(i+7, 4) for i in range(2)]
+
+    player_idle = [get(i, 0) for i in range(2)]
     player_walk = [get(i, 1) for i in range(4)]   # Lista kuvia from x=0-3, y=1
-    player_jump = [get(i+2, 0) for i in range(1)]
+    player_jump = [get(i+2, 0) for i in range(2)]
     player_fall = get(3, 0)
 
-    base_alien = [get(i, 2) for i in range(1)]
-    fly_alien = [get(i+2, 2) for i in range(1)]
-    brain_alien = [get(i, 3) for i in range(1)]
-    turret_alien = [get(i+2, 3) for i in range(1)]
+    base_alien = [get(i, 2) for i in range(2)]
+    fly_alien = [get(i+2, 2) for i in range(2)]
+    brain_alien = [get(i, 3) for i in range(2)]
+    turret_alien = [get(i+2, 3) for i in range(2)]
+    big_alien = [merge(i*2, 4, 2, 2) for i in range(2)]
+
+    item_beer = get(8, 0)
+    item_gun = [get(i+4, 2) for i in range(2)]
+    item_jump_pad = [get(i+5, 3) for i in range(2)]
+
 
     return {
             "wall": wall,
@@ -78,6 +90,9 @@ def get_sprites():
             "floor_bottom_left": floor_bottom_left,
             "floor_bottom_right": floor_bottom_right,
 
+            "door": door,
+            "shop": shop,
+
             "player_idle": player_idle,
             "player_walk": player_walk,
             "player_jump": player_jump,
@@ -87,7 +102,11 @@ def get_sprites():
             "fly_alien": fly_alien,
             "brain_alien": brain_alien,
             "turret_alien": turret_alien,
+            "big_alien": big_alien,
 
+            "item_gun": item_gun,
+            "item_beer": item_beer,
+            "item_jump_pad": item_jump_pad,
             }
 
 SPRITES = get_sprites()
