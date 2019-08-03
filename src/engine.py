@@ -108,7 +108,7 @@ class Engine():
             for entity in self.actors:
                 for item in self.collides(entity, target="item"):
                     if item.on_collision:
-                        item.on_collision(item, self, self.player)
+                        item.on_collision(item, self, entity)
                 if entity == self.player:
                     self.player_tick(self.tick_target_duration)
                     start_time = time()
@@ -188,4 +188,3 @@ class Engine():
         else:
             color = [0, 255, 0]
         pygame.draw.rect(self.display, color, (0, 0, self.display.get_width()*(1-tick_portion_left), 50))
-

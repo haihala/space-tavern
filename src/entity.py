@@ -15,7 +15,7 @@ class Entity():
         self.weight = weight
         self.position = position
         self.old_position = position[:]
-        self.speed = speed
+        self.speed = speed-1
         self.fatigue = fatigue
         self.width = width
         self.height = height
