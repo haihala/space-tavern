@@ -19,12 +19,12 @@ class Player(Entity):
     def pickup(self, engine):
         targets = []
         for i in [[i+self.position[0], j+self.position[1]] for i in range(-1, 2) for j in range(-1, 2)]:
-            targets += engine.collides(point=i, types=["item"])
+            targets += engine.collides(point=i, target="item")
 
         if targets:
             target = targets.pop()
             self.inventory = target
-            engine.room.items = [i for i in engine.room.items if i is not target]     # Remove item from the world
+            engine.items = [i for i in engine.items if i is not target]     # Remove item from the world
             return True
 
     @property
