@@ -1,13 +1,14 @@
 from entity import Entity
 
 class Enemy(Entity):
-    def ai(self, engine):
-        return None
-    
+    def __init__(self, ai, **kwargs):
+        super().__init__(**kwarks)
+        self.ai = ai
+
     def tick(self, engine):
         if super().tick(engine):
             return None
-
-        if action == None:
-            return self.ai(engine)
+        self.ai(engine)
+        
+        self.gravity(engine)
 

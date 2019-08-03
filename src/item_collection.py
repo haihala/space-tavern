@@ -1,24 +1,25 @@
 from item import Item
 
+def drop(engine, user, item):
+    if engine.place(user, item):
+        user.inventory = None
+
+def jump_pad_collision(engine, user, item):
+    user.move(engine, amount=5, direction=[0, -1])
+
 def create_collection():
 
     def item_beer(position, **kwargs):
         sprite = "item_beer"
-        on_collision = None
-        on_use = None
-        return Item(position, sprite, on_collision, on_use, **kwargs)
+        return Item(position, sprite, drop, **kwargs)
 
     def item_jump_pad(position, **kwargs):
         sprite = "item_jump_pad"
-        on_collision = None
-        on_use = None
-        return Item(position, sprite, on_collision, on_use, **kwargs)
+        return Item(position, sprite, jump_pad_collision, drop, **kwargs)
 
     def item_door(position, **kwargs):
         sprite = "item_door"
-        on_collision = None
-        on_use = None
-        return Item(position, sprite, on_collision, on_use, **kwargs)
+        return Item(position, sprite, **kwargs)
 
     return  {
 

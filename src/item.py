@@ -5,3 +5,9 @@ class Item(Entity):
         super().__init__(position=position, sprite=sprite, **kwargs)
         self.on_collision = on_collision
         self.on_use = on_use
+
+    def tick(self, engine, action):
+        if super().tick():
+            return None
+
+        self.gravity(engine)
