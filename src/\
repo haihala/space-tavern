@@ -1,6 +1,5 @@
 from player import Player
 from room import Room
-from enemy import Enemy
 from enemy_collection import ENEMIES
 
 import pygame
@@ -27,8 +26,8 @@ class Engine():
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
         spaces = {
-                "*": self.actors + self.room.items + self.room.tiles,
-                "collider": self.actors + self.room.colliders,
+                "*": self.actors + room.items + room.tiles,
+                "collider": self.actors + room.colliders,
                 "enemy": self.enemies,
                 "actor": self.actors,
                 "tile": self.room.tiles,
@@ -45,7 +44,7 @@ class Engine():
         cp = copy(entity)
         cp.position = [cp.position[i]+shift[i] for i in range(2)]
         exclude.append(entity)
-        return self.collides(cp, target=target, exclude=exclude)
+        return self.collides(cp, types=types, exclude=exclude)
 
     def place(self, spot, item):
         if not self.collides(point=spot, target="*"):
@@ -60,7 +59,7 @@ class Engine():
                 item.tick(engine)
 
             for entity in self.actors:
-                for item in self.collides(entity, target="item"):
+                for item in self.collides(entity, types=["item"]):
                     if item.on_collision:
                         item.on_collision(self, target)
                 if entity == self.player:
