@@ -48,9 +48,9 @@
 
 * Flying Alien
   * Move 6 ticks
-  * Move 1 tile - Omnidirectional
+  * Move 1 tile
   * 1 Max Health
-  * Gravity 0
+  * Gravity -1
   * Projectile:
     * Gravity 2 tile
     * 1 damage
@@ -75,14 +75,15 @@
     * Gravity 1 tile
     * 1 damage
 
-* Kamikaze Alien
+* Bomber Alien
   * Move 3 ticks
   * Move 2 tiles
   * 1 Max Health
   * Jump 2 tiles
   * Gravity 1 tile
   * AI:
-    * Explode when next to player
+    * Explode after 12 ticks
+    * Flee from player
 
 * Runner Alien
   * Move 1 tick
