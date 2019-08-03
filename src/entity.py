@@ -8,7 +8,7 @@ def sign(x):
 
 class Entity():
     # Abstract
-    def __init__(self, sprite, position=[0,0], weight=1, speed=1, width=1, height=1, fatigue=0):
+    def __init__(self, sprite, position=[0,0], weight=1, speed=1, width=1, height=1, fatigue=0, drag=0.3):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
         self.sprite_offset = 0
@@ -21,7 +21,7 @@ class Entity():
         self.facing_right = False
 
         self.velocity = [0, 0]
-        self.drag = 0.3
+        self.drag = drag
         self.grounded = False
         self.grounded_last_tick = False # Internal mechanic to slow down gravity and give hang time in the air.
 
