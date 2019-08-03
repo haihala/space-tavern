@@ -1,4 +1,5 @@
 from constants import TILESIZE
+import pygame
 
 def sign(x):
     if x != 0:
@@ -16,7 +17,7 @@ class Entity():
         self.fatigue = fatigue
         self.width = width
         self.height = height
-        self.facing_left = True
+        self.facing_right = False
 
         self.grounded = False
         self.grounded_last_tick = False # Internal mechanic to slow down gravity and give hang time in the air.
@@ -27,6 +28,11 @@ class Entity():
         for i in range(amount):
             if target and not direction:
                 direction = [target[i]-self.position[i] for i in range(2)]
+
+            if direction[0] > 0:
+                self.facing_right = True
+            elif direction[0] < 0:
+                self.facing_right = False
 
             delta = [i/(direction[0]**2+direction[1]**2) for i in direction]
             if abs(delta[0]) > abs(delta[1]):
@@ -41,7 +47,10 @@ class Entity():
 
     def sprite(self, i=0):
         if type(self._sprite) is list:
-            return self._sprite[i%len(self._sprite)]
+            if self.facing_right:
+                return pygame.transform.flip(self._sprite[i%len(self._sprite)], True, False)
+            else:
+                return self._sprite[i%len(self._sprite)]
         return self._sprite
 
     @property
