@@ -34,10 +34,26 @@ def get_sprites():
     wall_bottom_right = get(8, 2)
     wall = get(7, 0)
 
+    floor_top = get(7, 5)
+    floor_middle = get(4, 4)
+    floor_bottom = get(7, 7)
+    floor_right = get(8, 6)
+    floor_left = get(6, 6)
+    floor_top_left = get(6, 5)
+    floor_top_right = get(8, 5)
+    floor_bottom_left = get(6, 7)
+    floor_bottom_right = get(8, 7)
+    floor = get(7, 6)
+
     player_idle = [get(i, 0) for i in range(1)]
     player_walk = [get(i, 1) for i in range(4)]   # Lista kuvia from x=0-3, y=1
     player_jump = [get(i+2, 0) for i in range(1)]
     player_fall = get(3, 0)
+
+    base_alien = [get(i, 2) for i in range(1)]
+    fly_alien = [get(i+2, 2) for i in range(1)]
+    brain_alien = [get(i, 3) for i in range(1)]
+    turret_alien = [get(i+2, 3) for i in range(1)]
 
     return {
             "wall": wall,
@@ -51,10 +67,26 @@ def get_sprites():
             "wall_bottom_left": wall_bottom_left,
             "wall_bottom_right": wall_bottom_right,
 
+            "floor": floor,
+            "floor_top": floor_top,
+            "floor_middle": floor_middle,
+            "floor_bottom": floor_bottom,
+            "floor_right": floor_right,
+            "floor_left": floor_left,
+            "floor_top_left": floor_top_left,
+            "floor_top_right": floor_top_right,
+            "floor_bottom_left": floor_bottom_left,
+            "floor_bottom_right": floor_bottom_right,
+
             "player_idle": player_idle,
             "player_walk": player_walk,
             "player_jump": player_jump,
             "player_fall": player_fall,
+
+            "base_alien": base_alien,
+            "fly_alien": fly_alien,
+            "brain_alien": brain_alien,
+            "turret_alien": turret_alien,
 
             }
 
