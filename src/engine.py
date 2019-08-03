@@ -19,7 +19,6 @@ class Engine():
         self.tick_target_duration = 1
         self.cam = [0,0]
         self.running = False
-        self._collidables = None
 
     def collides(self, entity=None, point=None, types=["actor", "tile"], exclude=[]):
         spaces = {
@@ -48,11 +47,12 @@ class Engine():
     def run(self):
         self.running = True
         while self.running:
-            self._collidables = None
+            for item in self.room.items:
+                item.tick(self)
             for entity in self.actors:
                 for item in self.collides(entity, types=["item"]):
                     if item.on_collision:
-                        item.on_collision(engine, target)
+                        item.on_collision(self, target)
                 if entity == self.player:
                     self.player_tick(self.tick_target_duration)
                 else:

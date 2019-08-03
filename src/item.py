@@ -6,7 +6,7 @@ class Item(Entity):
         self.on_collision = on_collision
         self.on_use = on_use
 
-    def tick(self, engine, action):
+    def tick(self, engine):
         if super().tick():
             return None
 
