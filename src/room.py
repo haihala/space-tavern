@@ -1,5 +1,6 @@
 from tile import Tile
 from item import Item
+from item_collection import ITEMS
 
 import pygame
 
@@ -9,7 +10,7 @@ class Room():
         self.tiles = []
         self.background = []
         self.items = [
-            Item([6, 5], "item_beer")
+                ITEMS["item_beer"]([6, 5])
         ]
         for x in range(-10, 10):
             for y in range(-6, 7):

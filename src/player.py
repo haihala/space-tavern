@@ -14,7 +14,7 @@ class Player(Entity):
     def throw(self, engine):
         spot = [self.position[i] + [0, -1][i] for i in range(2)]
         engine.place(spot, self.inventory)
-        self.inventory.velocity = [int(self.facing_right)*2-1, 3]
+        self.inventory.velocity = [int(self.facing_right)*2-1, -3]
         self.inventory = None
 
     def pickup(self, engine):
@@ -27,6 +27,10 @@ class Player(Entity):
             self.inventory = target
             engine.room.items = [i for i in engine.room.items if i is not target]     # Remove item from the world
             return True
+
+    @property
+    def forwards(self):
+        return [self.position[i] + [2*int(self.facing_right)-1, 0][i] for i in range(2)]
 
     def tick(self, engine, action):
         IsIdle = self.fatigue == 0
@@ -56,7 +60,8 @@ class Player(Entity):
                 self.jump(engine)
             elif action == "use":
                 if self.inventory:
-                    self.inventory.on_use(engine, self)
+                    self.inventory.on_use(self.inventory, engine, self)
+                self.fatigue = 0
             elif action == "pickup":
                 if self.inventory:
                     self.throw(engine)
