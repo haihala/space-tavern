@@ -1,9 +1,11 @@
-from player import Player
-from room import Room
 from enemy import Enemy
+from player import Player
+from tile import Tile
 from enemy_collection import ENEMIES
+from item_collection import ITEMS
 
 import pygame
+import math
 
 from copy import copy
 from time import sleep, time
@@ -15,11 +17,49 @@ class Engine():
 
         self.player = Player(conf["binds"])
         self.actors = [self.player, ENEMIES["alien_base"]([-5, -5])]
-        self.room = Room()
+        self.items = [
+                ITEMS["item_beer"]([6, 5])
+        ]
+        self.tiles = []
+        self.background = []
 
         self.tick_target_duration = 1
         self.cam = [0,0]
         self.running = False
+
+        for x in range(-10, 10):
+            for y in range(-6, 7):
+                if math.sin(x) > 0 and abs(math.sin(y)) < (0.2 + abs(math.cos(x)/1.23)):
+                    self.background.append(Tile([x,y], "wall_middle"))
+                else:
+                    self.background.append(Tile([x,y], "wall"))
+
+        for x in range(-10, 10):
+            for y in range(-6, 7):
+
+                if ((x == -10 or x == 9) or (y == -6 or y == 6 or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
+                    self.tiles.append(Tile([x,y], "floor"))
+                elif (y <= 5 and y >= 3) and (x == -10 or x == 9):
+                    self.tiles.append(ITEMS["item_door"]([x,y]))
+                elif y == 0 and abs(x) < 3:
+                    self.tiles.append(ITEMS["item_jump_pad"]([x,y]))
+
+                if y == 6 or y == -6 or (y == 0 and abs(x) > 2) or (y == 2 and (x == -10 or x == 9)):
+                    self.background.append(Tile([x,y+1], "floor_bottom"))
+                if y == -6 or y == 6 or (y == 0 and abs(x) > 2):
+                    self.background.append(Tile([x,y-1], "floor_top"))
+                if (x == -10 or x == 9 or (y == 0 and x == -3)) and not (y <= 5 and y >= 3):
+                    self.background.append(Tile([x+1,y], "floor_right"))
+                if (x == -10 or x == 9 or (y == 0 and x == 3)) and not (y <= 5 and y >= 3):
+                    self.background.append(Tile([x-1,y], "floor_left"))
+                if ((x == -10 and y == -6) or (y == 0 and x == 3)) or (y == 6 and x == -10):
+                    self.background.append(Tile([x-1,y-1], "floor_top_left"))
+                if ((x == -10 and y == 6) or (y == 0 and x == 3)) or (y == 2 and (x == -10 or x == 9)):
+                    self.background.append(Tile([x-1,y+1], "floor_bottom_left"))
+                if ((x == 9 and y == -6) or (y == 0 and x == -3)) or (y == 6 and x == 9):
+                    self.background.append(Tile([x+1,y-1], "floor_top_right"))
+                if ((x == 9 and y == 6) or (y == 0 and x == -3)) or (y == 2 and (x == -10 or x == 9)):
+                    self.background.append(Tile([x+1,y+1], "floor_bottom_right"))
 
     @property
     def enemies(self):
@@ -27,12 +67,12 @@ class Engine():
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
         spaces = {
-                "*": self.actors + self.room.items + self.room.tiles,
-                "collider": self.actors + self.room.colliders,
+                "*": self.actors + self.items + self.tiles,
+                "collider": self.actors + self.tiles,
                 "enemy": self.enemies,
                 "actor": self.actors,
-                "tile": self.room.tiles,
-                "item": self.room.items
+                "tile": self.tiles,
+                "item": self.items
                 }
         search_space = spaces[target]
 
@@ -50,13 +90,13 @@ class Engine():
     def place(self, spot, item):
         if not self.collides(point=spot, target="*"):
             item.position = spot
-            self.room.items.append(item)
+            self.items.append(item)
 
     def run(self):
         self.running = True
         engine = self
         while self.running:
-            for item in self.room.items:
+            for item in self.items:
                 item.tick(engine)
 
             for entity in self.actors:
@@ -111,12 +151,22 @@ class Engine():
         pygame.display.flip()
 
     def draw_background(self):
-        self.room.draw(self.display, self.cam)
+        targets= []
+        for bg in self.background:
+            targets.append(bg.get_surf(self.display, self.cam))
+        for fg in self.tiles:
+            targets.append(fg.get_surf(self.display, self.cam))
+
+        surface.fill(self.color)
+        surface.blits(sprites)
 
     def draw_world(self):
         targets = []
         for entity in self.actors:
             targets.append(entity.get_surf(self.display, self.cam))
+        for item in self.items:
+            targets.append(item.get_surf(surface, camera))
+
         self.display.blits(targets)
 
     def draw_hud(self, tick_portion_left):
