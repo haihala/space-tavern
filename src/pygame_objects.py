@@ -67,4 +67,4 @@ def get_sprites():
         "item_jump_pad": [get(i+5, 3) for i in range(2)],
     }
 
-SPRITES": get_sprites()
+SPRITES = get_sprites()
