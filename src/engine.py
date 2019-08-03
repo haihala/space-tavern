@@ -57,6 +57,9 @@ class Engine():
                         item.on_collision(self, target)
                 if entity == self.player:
                     self.player_tick(self.tick_target_duration)
+                    start_time = time()
+                    while time()-start_time < 0.25:
+                        self.render(0)
                 else:
                     entity.tick(self)
             for entity in self.actors:
