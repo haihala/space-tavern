@@ -3,6 +3,7 @@ from room import Room
 
 import pygame
 
+from copy import copy
 from time import sleep, time
 
 class Engine():
@@ -27,23 +28,41 @@ class Engine():
     def room(self):
         return self.rooms[self.current_room]
 
-    def collides(self, point, , exclude=[]):
-        search_space = []
-        return any(point in i.colliders for i in self.actors + self.room.tiles if i not in exclude)
+    def collides(self, entity=None, point=None, types=["actor", "tile"], exclude=[]):
+        spaces = {
+                "actor": self.actors,
+                "tile": self.room.tiles,
+                "item": self.room.items
+                }
+        search_space = [i for j in [spaces[t] for t in types] for i in j]
+
+        if entity:
+            return [i for i in search_space if i not in exclude and any(p in i.colliders for p in entity.colliders)]
+        if point:
+            return [i for i in search_space if i not in exclude and point in i.colliders]
+
+    def project_collides(self, entity, shift, types=["actor", "tile"], exclude=[]):
+        cp = copy(entity)
+        cp.position = [cp.position[i]+shift[i] for i in range(2)]
+        exclude.append(entity)
+        return self.collides(entity, types=types, exclude=exclude)
+        
+
 
     def run(self):
         self.running = True
         while self.running:
             self._collidables = None
             for entity in self.actors:
-                for item in self.room.items:
-                    if 
+                for item in self.collides(entity, types=["item"]):
+                    if item.on_collision:
+                        item.on_collision(engine, target)
                 if entity == self.player:
                     self.player_tick(self.tick_target_duration)
                 else:
                     entity.tick(self)
             for entity in self.actors:
-                entity.grounded = any(self.collides([i[0], i[1]+1], exclude=[entity]) for i in entity.colliders)
+                entity.grounded = self.project_collides(entity, [0,1])
 
     def quit(self):
         # Maybe save

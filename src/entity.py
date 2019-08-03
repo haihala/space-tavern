@@ -32,10 +32,8 @@ class Entity():
                 delta = [sign(delta[0]), 0]
             else:
                 delta = [0, sign(delta[1])]
-            old_pos = self.position[:]
-            self.position = [self.position[0]+delta[0], self.position[1]+delta[1]]
-            if any(engine.collides(i, exclude=[self]) for i in self.colliders):
-                self.position = old_pos
+
+            if engine.project_collides(self, shift=delta):
                 return amount-i
 
     def sprite(self, i=0):
