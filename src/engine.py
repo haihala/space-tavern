@@ -73,6 +73,7 @@ class Engine():
                 "*": self.actors + self.items + self.tiles,
                 "collider": self.actors + self.tiles,
                 "enemy": self.enemies,
+                "player": [self.player,],
                 "actor": self.actors,
                 "tile": self.tiles,
                 "item": self.items
@@ -114,6 +115,7 @@ class Engine():
                         self.render(0)
                 else:
                     entity.tick(self)
+
             for entity in self.actors:
                 entity.grounded = self.project_collides(entity, [0,1])
 
@@ -144,7 +146,6 @@ class Engine():
 
                         if btn in self.player.binds:
                             buffered = self.player.binds[btn]
-
         self.player.tick(self, buffered)
 
     def render(self, tick_time_left):
@@ -185,3 +186,4 @@ class Engine():
         else:
             color = [0, 255, 0]
         pygame.draw.rect(self.display, color, (0, 0, self.display.get_width()*(1-tick_portion_left), 50))
+
