@@ -7,7 +7,6 @@ from time import sleep, time
 
 class Engine():
     def __init__(self, conf):
-        pygame.init()
         flags = (pygame.FULLSCREEN * int(conf["fullscreen"]))
         self.display = pygame.display.set_mode(conf["resolution"], flags)
 
@@ -29,8 +28,8 @@ class Engine():
     def run(self):
         self.running = True
         while self.running:
-            print(self.player.position)
             for entity in self.actors:
+                print(entity.position)
                 if entity == self.player:
                     self.player_tick()
                 else:

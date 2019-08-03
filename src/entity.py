@@ -15,7 +15,8 @@ class Entity():
 
     def tick(self, engine):
         self.fatigue = max(0, self.fatigue-1)+self.speed
-        collision_targets = {j for j in [i.colliders for i in engine.actors] + [i.colliders for i in engine.room.tiles]}
+        collision_targets = [j for k in [i.colliders for i in engine.actors] + [i.colliders for i in engine.room.tiles] for j in k]
+        print(collision_targets)
 
         for i in range(self.weight):
             newy = self.position[1] + 1
