@@ -81,8 +81,19 @@ class Engine():
                     self.quit()
                 if not self.player.fatigue:
                     if event.type == pygame.KEYDOWN:
-                        if event.unicode in self.player.binds:
-                            buffered = self.player.binds[event.unicode]
+                        if event.key == pygame.K_UP:
+                            btn = 'up'
+                        elif event.key == pygame.K_DOWN:
+                            btn = 'down'
+                        elif event.key == pygame.K_LEFT:
+                            btn = 'left'
+                        elif event.key == pygame.K_RIGHT:
+                            btn = 'right'
+                        else:
+                            btn = event.unicode
+
+                        if btn in self.player.binds:
+                            buffered = self.player.binds[btn]
 
         self.player.tick(self, buffered)
 

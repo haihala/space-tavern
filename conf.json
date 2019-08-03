@@ -1,10 +1,14 @@
 {
-	"resolution": [640, 480],
+	"resolution": [1200, 800],
 	"fullscreen": false,
 	"binds": {
 		" ": "jump",
-		"a": "left",
-		"d": "right"
+		"up": "jump",
+		"left": "left",
+		"right": "right",
+		"down": "down",
+		"x": "pickup",
+		"z": "use"
 	},
 	"rooms": [
 		{
