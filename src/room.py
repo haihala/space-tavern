@@ -14,14 +14,12 @@ class Room():
                 ITEMS["item_beer"]([6, 5])
         ]
 
-        background_tiles = []
-
         for x in range(-10, 10):
             for y in range(-6, 7):
                 if math.sin(x) > 0 and abs(math.sin(y)) < (0.2 + abs(math.cos(x)/1.23)):
-                    self.background_tiles.append(Tile([x,y], "wall_middle"))
+                    self.background.append(Tile([x,y], "wall_middle"))
                 else:
-                    self.background_tiles.append(Tile([x,y], "wall"))
+                    self.background.append(Tile([x,y], "wall"))
 
         for x in range(-10, 10):
             for y in range(-6, 7):
