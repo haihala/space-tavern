@@ -69,8 +69,8 @@ class Entity():
     def gravity(self, engine):
         if self.velocity != [0, 0]:
             x, y = self.velocity
-            self.move(engine, amount=abs(int(x)), direction=[x, 0])
             self.move(engine, amount=abs(int(y)), direction=[0, y])
+            self.move(engine, amount=abs(int(x)), direction=[x, 0])
             self.velocity = [
                     x,
                     max(0, abs(y-sign(y)*self.drag))*sign(y)
@@ -81,8 +81,8 @@ class Entity():
             self.move(engine, amount=self.weight, direction=[0,1])
         self.grounded_last_tick = self.grounded
 
-    def get_surf(self, surface, camera, i=0):
-        sprite = self.sprite()
+    def get_surf(self, surface, camera, sprite_num=0):
+        sprite = self.sprite(sprite_num)
         offset = [(self.position[i] - camera[i])*TILESIZE - 0.5*sprite.get_size()[i] for i in range(2)]
         position = [int(offset[i]+surface.get_size()[i]/2) for i in range(2)]
 
