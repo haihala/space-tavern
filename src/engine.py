@@ -21,19 +21,29 @@ class Engine():
         self.tick_target_duration = 1
         self.cam = [0,0]
         self.running = False
+        self._collidables = None
 
     @property
     def room(self):
         return self.rooms[self.current_room]
 
+    @property
+    def collidables(self):
+        if not self._collidables:
+            self._collidables = [j for k in [i.colliders for i in self.actors] + [i.colliders for i in self.room.tiles] for j in k]
+        return self._collidables
+
     def run(self):
         self.running = True
         while self.running:
+            self._collidables = None
             for entity in self.actors:
                 if entity == self.player:
                     self.player_tick(self.tick_target_duration)
                 else:
                     entity.tick(self)
+            for entity in self.actors:
+                entity.grounded = any([i[0], i[1]+1] in self.collidables for i in entity.colliders)
 
     def quit(self):
         # Maybe save

@@ -11,21 +11,6 @@ class Player(Entity):
         self.binds = binds
         self.jump_height = 3
 
-    def move(self, amount=1, target=None, direction=None):
-        if target and direction:
-            raise ValueError("Both, direction and target passed to move")
-        for i in range(amount):
-            if target and not direction:
-                direction = [target[i]-self.position[i] for i in range(2)]
-
-            delta = [i/(direction[0]**2+direction[1]**2) for i in direction]
-            if abs(delta[0]) > abs(delta[1]):
-                delta = [sign(delta[0]), 0]
-            else:
-                delta = [0, sign(delta[1])]
-
-            self.position = [self.position[0]+delta[0], self.position[1]+delta[1]]
-
     def jump():
         if self.grounded:
             move(direction=[0, -3])

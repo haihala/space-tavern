@@ -14,6 +14,22 @@ class Entity():
 
         self.grounded = False
 
+    def move(self, amount=1, target=None, direction=None):
+        if target and direction:
+            raise ValueError("Both, direction and target passed to move")
+        for i in range(amount):
+            if target and not direction:
+                direction = [target[i]-self.position[i] for i in range(2)]
+
+            delta = [i/(direction[0]**2+direction[1]**2) for i in direction]
+            if abs(delta[0]) > abs(delta[1]):
+                delta = [sign(delta[0]), 0]
+            else:
+                delta = [0, sign(delta[1])]
+
+            self.position = [self.position[0]+delta[0], self.position[1]+delta[1]]
+
+
     def sprite(self, i=0):
         if type(self._sprite) is list:
             return self._sprite[i%len(self._sprite)]
@@ -25,12 +41,12 @@ class Entity():
 
     def tick(self, engine):
         self.fatigue = max(0, self.fatigue-1)
-        collision_targets = [j for k in [i.colliders for i in engine.actors] + [i.colliders for i in engine.room.tiles] for j in k]
-
-        for i in range(self.weight):
-            newy = self.position[1] + 1
-            if not any([self.position[0]+j, newy] in collision_targets for j in range(self.width)):
-                self.position = [self.position[0], newy]
+    
+        if not self.grounded:
+            for i in range(self.weight):
+                newy = self.position[1] + 1
+                if not any([self.position[0]+j, newy] in engine.collidables for j in range(self.width)):
+                    self.position = [self.position[0], newy]
 
         return self.fatigue != 0
 
