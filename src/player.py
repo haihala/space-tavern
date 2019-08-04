@@ -2,7 +2,7 @@ from entity import Entity
 
 class Player(Entity):
     def __init__(self, binds):
-        super().__init__(sprite="player_idle")
+        super().__init__(sprite="player_idle", health=3)
         self.binds = binds
         self.jump_height = 3
         self.inventory = None
