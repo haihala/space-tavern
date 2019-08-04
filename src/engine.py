@@ -234,8 +234,9 @@ class Engine():
                         break
             self.tick_count += 1
 
-    def quit(self):
-        self.pause(False, True)
+    def quit(self, hard=False):
+        if not hard:
+            self.pause(False, True)
         exit(0)
 
     def player_tick(self, slot):
@@ -246,7 +247,7 @@ class Engine():
             self.render(((time()-start_time)/true_slot) if self.in_space else 1)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.quit()
+                    self.quit(True)
                 if not self.player.fatigue:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
@@ -279,12 +280,13 @@ class Engine():
                 self.draw_title_screen()
             elif end:
                 self.draw_end_screen()
+                sleep(2)
             else:
                 self.draw_help()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.quit()
+                    self.quit(True)
                 elif event.type == pygame.KEYDOWN:
                     paused = False
                     break
