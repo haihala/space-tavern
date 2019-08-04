@@ -317,8 +317,19 @@ class Engine():
 
 
     def draw_hud(self, tick_portion_left):
+        # Fatigue bar
         if self.player.fatigue:
             color = [255, 0, 0]
         else:
             color = [0, 255, 0]
         pygame.draw.rect(self.display, color, (0, 0, self.display.get_width()*(1-tick_portion_left), 50))
+
+        # Health
+        base = [self.display.get_size()[i]-TILESIZE for i in range(2)]
+        heart = pygame.Surface((TILESIZE, TILESIZE))
+        heart.fill((255, 0, 0))
+        for i in range(self.player.health):
+            self.display.blit(heart, (int(base[0]-i*TILESIZE*1.1), base[1]))
+
+            
+
