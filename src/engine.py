@@ -137,6 +137,7 @@ class Engine():
                     if (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
                         self.tiles.append(Tile([x,y],"door"))
             self.background = [background for background in self.background if background._sprite != SPRITES["ground_top"]]
+            self.entities = [entity for entity in self.entities if not (entity._sprite in [SPRITES["item_sell"], SPRITES["item_shop"]])]
 
         else:
             SOUNDS["music_space"].fadeout(2)
@@ -354,4 +355,3 @@ class Engine():
         self.display.blit(money_text, (
             int(self.display.get_width()-money_text.get_width()-10),
             int(self.display.get_height()-money_text.get_height()-10-TILESIZE)))
-
