@@ -32,6 +32,9 @@ class Engine():
         self.target_cam = [0,0]
         self.running = False
 
+        from pygame_objects import SOUNDS
+        SOUNDS["music_peace"].play(-1)
+
         for x in range(-10, 10):
             for y in range(-6, 7):
                 if math.sin(x) > 0 and abs(math.sin(y)) < (0.2 + abs(math.cos(x)/1.23)):

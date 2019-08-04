@@ -77,6 +77,8 @@ def get_sounds():
         "item_drop": pygame.mixer.Sound("resources/item_drop.wav"),
 
         "player_move": pygame.mixer.Sound("resources/player_move.wav"),
+
+        "music_peace": pygame.mixer.Sound("resources/music_peace.wav"),
     }
 
 SOUNDS = get_sounds()
