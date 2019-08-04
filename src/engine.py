@@ -320,7 +320,9 @@ class Engine():
         pygame.display.flip()
 
     def draw_title_screen(self):
+        from pygame_objects import SPRITES
         self.display.fill((0, 0, 0))
+        self.display.blit(pygame.transform.scale(SPRITES["panorama_stars"][0], self.display.get_size()), (0,0))
         cont_txt = self.text_surface("Press any key to continue", (255, 255, 255))
         self.display.blit(cont_txt, (
             self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
