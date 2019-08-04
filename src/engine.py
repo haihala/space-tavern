@@ -147,6 +147,8 @@ class Engine():
 
         else:
             self.planet += 1
+            if self.planet == 5:
+                self.quit(victory=True)
             SOUNDS["ship_land"].play()
             SOUNDS["music_space"].fadeout(2)
             SOUNDS["music_peace"].play(-1, 0, 2)
@@ -234,9 +236,9 @@ class Engine():
                         break
             self.tick_count += 1
 
-    def quit(self, hard=False):
+    def quit(self, hard=False, victory=False):
         if not hard:
-            self.pause(False, True)
+            self.pause(False, not victory, victory)
         exit(0)
 
     def player_tick(self, slot):
@@ -273,13 +275,16 @@ class Engine():
 
         self.player.tick(self, buffered)
 
-    def pause(self, title=False, end=False):
+    def pause(self, title=False, lose=False, win=False):
         paused = True
         while paused:
             if title:
                 self.draw_title_screen()
-            elif end:
+            elif lose:
                 self.draw_end_screen()
+                sleep(2)
+            elif win:
+                self.draw_end_screen(True)
                 sleep(2)
             else:
                 self.draw_help()
@@ -342,12 +347,16 @@ class Engine():
             self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
         pygame.display.flip()
 
-    def draw_end_screen (self):
+    def draw_end_screen (self, win=False):
         from pygame_objects import SPRITES
         self.display.fill((0, 0, 0))
-        sarcasm = self.text_surface("Red is health", (255, 0, 0))
-        self.display.blit(sarcasm,
-                [self.display.get_size()[i]/2-sarcasm.get_size()[i]/2 for i in range(2)])
+        if win:
+            msg = self.text_surface("Thanks for playing, you win", (0, 255, 0))
+        else:
+            msg = self.text_surface("Red is health", (255, 0, 0))
+
+        self.display.blit(msg,
+                [self.display.get_size()[i]/2-msg.get_size()[i]/2 for i in range(2)])
 
         cont_txt = self.text_surface("Press any key to exit", (255, 255, 255))
         self.display.blit(cont_txt, (
