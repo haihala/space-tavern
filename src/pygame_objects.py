@@ -76,7 +76,7 @@ def get_sprites():
         "alien_big": [merge(i*2, 4, 2, 2) for i in range(2)],
         "alien_spawner": get(4, 4),
 
-        "item_door": get(4, 3),
+        "door": get(4, 3),
         "item_shop": [get(i+4, 0) for i in range(2)],
         "item_beer": get(8, 0),
         "item_gun": [get(i+4, 2) for i in range(2)],

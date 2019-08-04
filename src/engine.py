@@ -33,7 +33,7 @@ class Engine():
 
         self.player = Player(conf["binds"])
         self.entities = [
-                self.player, 
+                self.player,
                 ITEMS["item_beer"]([6, 5]),
                 ITEMS["item_gun"]([7, 4])
                 ]
@@ -85,7 +85,7 @@ class Engine():
                 if ((x == -self.ship_width or x == self.ship_width) or (y == -self.ship_height or y == self.ship_height or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
                     self.entities.append(Tile([x,y], "floor"))
                 elif (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
-                    self.entities.append(ITEMS["item_door"]([x,y]))
+                    self.tiles.append(Tile([x,y],"door"))
                 elif y == 0 and abs(x) < 3:
                     self.entities.append(ITEMS["item_jump_pad"]([x,y]))
 
@@ -122,7 +122,7 @@ class Engine():
         else:
             #remove doors
             #add extra floors
-            self.items = [item for item in self.items if item._sprite != SPRITES["item_door"]]
+            self.tiles = [tile for tile in self.tiles if tile._sprite != SPRITES["door"]]
             for x in range(-self.ship_width*3, self.ship_width*3+1):
                 self.tiles.append(Tile([x, 7], "ground_top"))
                 if abs(x) == self.ship_width*3:
