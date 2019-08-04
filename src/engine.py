@@ -26,7 +26,7 @@ class Engine():
 
         self.difficulty = 20
         self.max_enemy_count = 5
-        self.boss_probability = 0.1
+        self.boss_probability = 1
         self.space_duration = 10
         self.console_available = 0
 
@@ -159,7 +159,7 @@ class Engine():
                 "enemy": self.enemies,
                 "player": [self.player],
                 "tile": self.tiles,
-                "entities": self.entities,
+                "entity": self.entities,
                 "trigger_item": [i for i in self.entities if type(i) is Item and i.on_collision],
                 "pickup": [i for i in self.entities if type(i) is Item and i.can_pickup]
                 }
@@ -179,6 +179,12 @@ class Engine():
         if not self.collides(entity=item, target=target, exclude=exclude):
             self.entities.append(item)
             return True
+
+    def roadroll(self, points):
+        for point in points:
+            tgt = self.collides(point=point, target="entity")
+            for t in tgt:
+                t.hurt(self, 1)
 
     def camera_shake(self, amount):
         self.cam = [self.cam[i] + uniform(-amount, amount) for i in range(2)]

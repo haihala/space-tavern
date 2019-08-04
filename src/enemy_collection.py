@@ -37,10 +37,10 @@ def create_collection():
         def ai_fly(self, engine):
             if self.position[0] == engine.player.position[0]:
                 bat_shoot(self, engine)
-            elif self.move(engine, amount=1, direction=[int(self.facing_right)*2-1, 0]):
+            elif self.move(engine, amount=1, direction=self.forwards):
                 if self.move(engine, amount=1, direction=[0, -1]):
                     self.facing_right = not self.facing_right
-                    if self.move(engine, amount=1, direction=[int(self.facing_right)*2-1, 0]):
+                    if self.move(engine, amount=1, direction=self.forwards):
                         self.dead = True
 
         return Enemy(ai_fly, "alien_fly", position, -1, 3, health=1, sprite_updated=True, **kwargs)
@@ -71,9 +71,24 @@ def create_collection():
 
     def alien_roadroller(position, **kwargs):
         def ai_roadroller(self, engine):
-            pass
+            target_direction = engine.player.position[0] - self.position[0] 
 
-        return Enemy(ai_roadroller, "alien_big", position, 2, 3, health=5, sprite_updated=True, width=2, height=2, **kwargs)
+            print()
+            print(self.forwards)
+            print(self.position)
+            engine.roadroll([[self.forwards[i] + [0, j][i] for i in range(2)] for j in range(-1, 4)])
+            self.move(engine, amount=1, direction=[self.forwards[i] - self.position[i] for i in range(2)])
+            
+            if target_direction:
+                direction = target_direction < 0
+                
+                if direction == self.facing_right:
+                    # Turn 
+                    self.facing_right = not direction
+
+
+
+        return Enemy(ai_roadroller, "alien_big", position, 2, 3, health=3, sprite_updated=True, width=2, height=2, **kwargs)
 
     def alien_spawner_big(position, **kwargs):
         def ai_spawner(self, engine):
