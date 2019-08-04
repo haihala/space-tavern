@@ -186,12 +186,6 @@ class Engine():
             self.entities.append(item)
             return True
 
-    def roadroll(self, points):
-        for point in points:
-            tgt = self.collides(point=point, target="entity")
-            for t in tgt:
-                t.hurt(self, 1)
-
     def camera_shake(self, amount):
         self.cam = [self.cam[i] + uniform(-amount, amount) for i in range(2)]
 
