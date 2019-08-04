@@ -18,6 +18,10 @@ class Engine():
         flags = (pygame.FULLSCREEN * int(conf["fullscreen"]))
         self.display = pygame.display.set_mode(resolution, flags)
 
+        self.money = 0
+        self.in_space = True
+        self.planet = 0
+
         self.player = Player(conf["binds"])
         self.actors = [self.player, ENEMIES["alien_base"]([-5, -5])]
         self.items = [
@@ -97,6 +101,13 @@ class Engine():
     @property
     def enemies(self):
         return [i for i in self.actors if type(i) is Enemy]
+
+    def update_surroundings(self, state):
+        self.in_space = state
+        if self.in_space:
+            pass
+        else:
+            pass
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
         spaces = {
