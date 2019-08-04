@@ -23,7 +23,7 @@ class Engine():
         self.planet = 0
 
         self.player = Player(conf["binds"])
-        self.actors = [self.player, ENEMIES["alien_base"]([-5, -5])]
+        self.actors = [self.player, ENEMIES["alien_spawner"]([-5, -5])]
         self.items = [
                 ITEMS["item_beer"]([6, 5]),
                 ITEMS["item_gun"]([7, 4])
@@ -144,13 +144,15 @@ class Engine():
 
     def run(self):
         self.running = True
-        engine = self
         while self.running:
+            for dead in self.actors + self.items:
+                if dead.dead and dead.on_death:
+                    dead.on_death(dead, self, self.player)
             self.actors = [entity for entity in self.actors if not entity.dead]
             self.items = [item for item in  self.items if not item.dead]
 
             for item in self.items:
-                item.tick(engine)
+                item.tick(self)
 
             for entity in self.actors:
                 for item in self.collides(entity, target="item"):

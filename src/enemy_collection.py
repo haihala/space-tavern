@@ -1,4 +1,5 @@
 from enemy import Enemy
+from random import choice
 
 def create_collection():
     def alien_base(position, **kwargs):
@@ -19,18 +20,23 @@ def create_collection():
     def alien_fly(position, **kwargs):
         def ai_fly(self, engine):
             pass
-        return Enemy(ai_base, "alien_fly", position, -1, 6, health=1, **kwargs)
+        return Enemy(ai_fly, "alien_fly", position, -1, 6, health=1, **kwargs)
 
     def alien_brain(position, **kwargs):
         def ai_brain(self, engine):
             pass
-        return Enemy(ai_base, "alienz_brain", position, 1, 10, health=1, **kwargs)
+        return Enemy(ai_brain, "alien_brain", position, 1, 10, health=1, **kwargs)
 
     def alien_spawner(position, **kwargs):
         def ai_spawner(self, engine):
             self.hurt(engine, 1)
 
-        return Enemy(ai_spawner, "alien_spawner", position, 2, 2, health=5, **kwargs)
+        def spawn(self, engine, player):
+            mob = choice([alien_base, alien_fly, alien_brain])(self.up)
+            engine.place(self.up, mob)
+
+
+        return Enemy(ai_spawner, "alien_spawner", position, 2, 2, health=5, on_death=spawn, **kwargs)
 
     return  {
 
