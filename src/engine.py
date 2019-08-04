@@ -27,6 +27,8 @@ class Engine():
         self.difficulty = 20
         self.max_enemy_count = 5
         self.boss_probability = 0.1
+        self.space_duration = 10
+        self.console_available = 0
 
         self.tick_count = 0
         self.planet = 0
@@ -36,10 +38,10 @@ class Engine():
         self.ship_gap = 4
 
         self.player = Player(conf["binds"])
+        self.console = ITEMS["item_console"]([-9, -1])
         self.entities = [
                 self.player,
-                ITEMS["item_console"]([-9, -1]),
-                ITEMS["item_shop"]([-9, 5], "gun")
+                self.console
                 ]
         self.tiles = []
         self.background = []
@@ -117,8 +119,9 @@ class Engine():
     def enemies(self):
         return [i for i in self.entities if type(i) is Enemy]
 
-    def liftoff(self, console):
-        console.data["console"] = self.in_space
+    def liftoff(self):
+        self.console.data["console"] = self.in_space
+        self.console_available = self.tick_count + self.space_duration
         self.update_surroundings(not self.in_space)
 
     def update_surroundings(self, state):
@@ -183,6 +186,8 @@ class Engine():
     def run(self):
         self.running = True
         while self.running:
+            if self.tick_count >= self.console_available:
+                self.console.data["console"] = True
             for dead in self.entities:
                 if dead.dead and dead.on_death:
                     dead.on_death(dead, self, self.player)

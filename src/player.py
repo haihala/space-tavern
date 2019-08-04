@@ -48,7 +48,7 @@ class Player(Entity):
                     return False
             elif "console" in target.data:
                 if target.data["console"]:
-                    engine.liftoff(target)
+                    engine.liftoff()
             else:
                 self.inventory = target
                 engine.entities = [i for i in engine.entities if i is not target]     # Remove item from the world
