@@ -2,8 +2,11 @@ from item import Item
 from tile import Tile
 from projectile_collection import PROJECTILES
 
+from random import choice
+
 def drop(self, engine, user):
     self.position = user.forwards
+    self.old_position = user.forwards
     if engine.place(self):
         user.inventory = None
         from pygame_objects import SOUNDS
@@ -25,9 +28,10 @@ def gun_shoot(self, engine, user):
             self.fatigue += self.speed
 
 def sell_collision(self, engine, user):
+    from pygame_objects import SPRITES
     if user._sprite == SPRITES["item_beer"]:
         engine.entities = [entity for entity in engine.entities if entity != user]
-        engine.money = engine.money + (5 if user.data.planet == engnine.planet else 10)
+        engine.money = engine.money + (5 if user.data["planet"] == engine.planet else 10)
 
 SHOP_CATALOG = {
         "gun": {
@@ -43,9 +47,9 @@ SHOP_CATALOG = {
         }
 
 def create_collection():
-    def item_beer(position, planet=0, **kwargs):
+    def item_beer(position, **kwargs):
         sprite = "item_beer"
-        return Item(position, sprite, on_use=drop, data={"planet": planet}, collider=True, collision_damage=1, **kwargs)
+        return Item(position, sprite, on_use=drop, collider=True, collision_damage=1, **kwargs)
 
     def item_jump_pad(position, **kwargs):
         sprite = "item_jump_pad"
@@ -55,10 +59,10 @@ def create_collection():
         sprite = "item_gun"
         return Item(position, sprite, on_use=gun_shoot, speed=6, **kwargs)
 
-    def item_shop(position, item, **kwargs):
+    def item_shop(position, item=None, **kwargs):
         sprite = "item_shop"
-        i = SHOP_CATALOG[item]
-        return Item(position, sprite, data={"item": i["name"], "itemcount": i["count"], "cost": i["cost"]}, collider=False, **kwargs)
+        i = SHOP_CATALOG[choice([product for product in SHOP_CATALOG.keys() if product != "box"])] if not item else SHOP_CATALOG[item]
+        return Item(position, sprite, data={"item": i["name"], "itemcount": i["count"], "cost": i["cost"]}, collider=False, sprite_updated=True, **kwargs)
 
     def item_console(position, **kwargs):
         sprite = "item_console"
@@ -73,6 +77,7 @@ def create_collection():
             "item_jump_pad": item_jump_pad,
             "item_gun": item_gun,
             "item_shop": item_shop,
+            "item_sell": item_sell,
             "item_console": item_console
             }
 

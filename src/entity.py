@@ -133,7 +133,7 @@ class Entity():
 
     def get_surf(self, surface, camera):
         sprite = self.sprite()
-        self.old_position = [LERP(self.old_position[i], self.position[i], 0.1) for i in range(2)]
+        #self.old_position = [LERP(self.old_position[i], self.position[i], 0.1) for i in range(2)]
         offset = [(self.old_position[i] - camera[i] - 0.5)*TILESIZE for i in range(2)]
         position = [int(offset[i]+surface.get_size()[i]/2) for i in range(2)]
 

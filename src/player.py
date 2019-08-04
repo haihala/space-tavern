@@ -19,10 +19,12 @@ class Player(Entity):
 
     def throw(self, engine):
         self.inventory.position = self.forwards
+        self.inventory.old_position = self.forwards
         if engine.place(self.inventory):
             self.inventory.velocity = [int(self.facing_right)*2-1, -2]
         else:
             self.inventory.position = self.up
+            self.inventory.old_position = self.up
             if engine.place(self.inventory):
                 self.inventory.velocity = [0, -3]
         self.inventory = None
@@ -40,7 +42,7 @@ class Player(Entity):
             if "item" in target.data:
                 if engine.money >= target.data["cost"]:
                     if target.data["itemcount"] != 0:
-                        self.inventory = ITEMS[target.data["item"]](self.position)
+                        self.inventory = ITEMS[target.data["item"]](self.position, data={"planet": engine.planet})
                         engine.money -= target.data["cost"]
                         if target.data["itemcount"] != None:
                             target.data["itemcount"] -= 1
@@ -73,7 +75,8 @@ class Player(Entity):
                     self.sprite_offset = 0
                 self._sprite = SPRITES["player_walk"]
                 SOUNDS["player_move"].play()
-                engine.camera_shake(0.2)
+                if engine.in_space:
+                    engine.camera_shake(0.2)
                 self.move(engine, direction=[-1, 0])
                 moved = True
             elif action == "right":
@@ -81,7 +84,8 @@ class Player(Entity):
                     self.sprite_offset = 0
                 self._sprite = SPRITES["player_walk"]
                 SOUNDS["player_move"].play()
-                engine.camera_shake(0.2)
+                if engine.in_space:
+                    engine.camera_shake(0.2)
                 self.move(engine, direction=[1, 0])
                 moved = True
             elif action == "down":
