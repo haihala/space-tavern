@@ -58,7 +58,7 @@ class Engine():
         SOUNDS["music_space"].set_volume(0.5)
         #SOUNDS["music_peace"].play(-1, 0, 2)
 
-        self.basic_font = pygame.font.SysFont("comicsansms", 72)
+        self.basic_font = pygame.font.SysFont("comicsansms", 30)
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
@@ -110,6 +110,9 @@ class Engine():
                 if ((x == self.ship_width and y == self.ship_height) or (y == 0 and x == -3)) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
                     self.background.append(Tile([x+1,y+1], "floor_bottom_right"))
         self.update_surroundings(self.in_space)
+
+        self.pause(True)
+
 
     @property
     def enemies(self):
@@ -245,12 +248,86 @@ class Engine():
                             btn = 'left'
                         elif event.key == pygame.K_RIGHT:
                             btn = 'right'
+                        elif event.key == pygame.K_ESCAPE:
+                            btn = 'esc'
+                        elif event.key == pygame.K_SPACE:
+                            btn = 'space'
                         else:
                             btn = event.unicode
 
                         if btn in self.player.binds:
                             buffered = self.player.binds[btn]
+
+                        if buffered == "pause":
+                            self.pause()
+
         self.player.tick(self, buffered)
+
+    def pause(self, title=False):
+        paused = True
+        while paused:
+            if not title:
+                self.draw_help()
+            else:
+                self.draw_title_screen()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.quit()
+                elif event.type == pygame.KEYDOWN:
+                    paused = False
+                    break
+
+    def draw_help(self):
+        self.display.fill((0, 0, 0))
+        text_height = 30
+        offset = 0
+        self.display.blit(self.text_surface("HUD(bottom right):", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Blue is current planet", (0, 0, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Green is money", (0, 255, 0)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Red is health", (255, 0, 0)), (10, int(10+offset*text_height*1.1)))
+        offset += 2
+
+        self.display.blit(self.text_surface("Keys:", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("x - Use/pickup/buy/throw", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Arrow keys - Move", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("z - Use held item", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("up arrow or space - Jump", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("down arrow - Skip turn", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("esc - Open this pause menu.", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 2
+
+        self.display.blit(self.text_surface("Use console to take off", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Throw beer into dollar sign when on a planet to sell", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Holding onto beer raises value", (255, 255, 255)), (10, int(10+offset*100*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Use items to survive. 5 planets max, each one harder than the last.", (255, 255, 255)), (10, int(10+offset*100*1.1)))
+        offset += 2
+
+        cont_txt = self.text_surface("Press any key to continue", (255, 255, 255))
+        self.display.blit(cont_txt, (
+            self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
+        pygame.display.flip()
+
+    def draw_title_screen(self):
+        from pygame_objects import SPRITES
+        self.display.fill((0, 0, 0))
+        self.display.blit(pygame.transform.scale(SPRITES["panorama_stars"][0], self.display.get_size()), (0,0))
+        cont_txt = self.text_surface("Press any key to continue", (255, 255, 255))
+        self.display.blit(cont_txt, (
+            self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
+        pygame.display.flip()
 
     def render(self, tick_time_left):
         # Draw the world

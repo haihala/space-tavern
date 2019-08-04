@@ -17,24 +17,24 @@ DIFFICULTY = [
             "spawn_interval": 22,
             "max_enemy_count": 10,
             "boss_probability": 0,
-            "space_duration": 40
+            "space_duration": 45
         },
         {
             "spawn_interval": 20,
             "max_enemy_count": 15,
             "boss_probability": 0.05,
-            "space_duration": 50
+            "space_duration": 60
         },
         {
             "spawn_interval": 17,
             "max_enemy_count": 20,
             "boss_probability": 0.1,
-            "space_duration": 60
+            "space_duration": 75
         },
         {
             "spawn_interval": 15,
             "max_enemy_count": 25,
             "boss_probability": 0.2,
-            "space_duration": 80
+            "space_duration": 90
         }
         ]

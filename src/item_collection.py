@@ -31,11 +31,11 @@ def stop_time(self, engine, user):
     user.inventory = None
     for i in engine.entities:
         if i is not user:
-            i.fatigue += 10
+            i.fatigue += 20
 
 def speed_up(self, engine, user):
     user.inventory = None
-    user.speed -= 1
+    user.speed = max(1, user.speed-1)
 
 def heal(self, engine, user):
     user.inventory = None
@@ -86,7 +86,7 @@ SHOP_CATALOG = {
         "warudo": {
             "name": "item_warudo",
             "count": 1,
-            "cost": 50
+            "cost": 40
             },
         "mine": {
             "name": "item_mine",
