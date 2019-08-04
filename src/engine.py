@@ -4,10 +4,11 @@ from tile import Tile
 from enemy_collection import ENEMIES
 from item_collection import ITEMS
 
-from constants import HELDSIZE, TILESIZE
+from constants import HELDSIZE, TILESIZE, LERP
 
 import pygame
 import math
+import random
 
 from copy import copy
 from time import sleep, time
@@ -28,6 +29,7 @@ class Engine():
 
         self.tick_target_duration = 1
         self.cam = [0,0]
+        self.target_cam = [0,0]
         self.running = False
 
         for x in range(-10, 10):
@@ -98,6 +100,9 @@ class Engine():
             self.items.append(item)
             return True
 
+    def camera_shake(self, amount):
+        self.cam = [self.cam[i] + random.uniform(-amount, amount) for i in range(2)]
+
     def run(self):
         self.running = True
         engine = self
@@ -152,6 +157,7 @@ class Engine():
 
     def render(self, tick_time_left):
         # Draw the world
+        self.cam = [LERP(self.cam[i], self.target_cam[i], 0.1) for i in range(2)]
         self.draw_background()
         self.draw_world()
         self.draw_hud(tick_time_left)

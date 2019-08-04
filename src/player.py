@@ -51,6 +51,7 @@ class Player(Entity):
                 self._sprite = SPRITES["player_walk"]
                 self.move(engine, direction=[-1, 0])
                 SOUNDS["player_move"].play()
+                engine.camera_shake(1)
                 moved = True
             elif action == "right":
                 if self._sprite != SPRITES["player_walk"]:
@@ -58,6 +59,7 @@ class Player(Entity):
                 self._sprite = SPRITES["player_walk"]
                 self.move(engine, direction=[1, 0])
                 SOUNDS["player_move"].play()
+                engine.camera_shake(1)
                 moved = True
             elif action == "down":
                 self._sprite = SPRITES["player_idle"]
