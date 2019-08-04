@@ -43,7 +43,8 @@ class Engine():
         self.background = []
         self.panorama = [
             Tile([0,0], "panorama_stars"),
-            Tile([-self.display.get_width()/TILESIZE, 0], "panorama_stars")
+            Tile([-self.display.get_width()/TILESIZE, 0], "panorama_stars"),
+            Tile([0,self.display.get_height()/TILESIZE], "panorama_planet")
         ]
         self.color = (0, 0, 0)
 
@@ -239,16 +240,22 @@ class Engine():
         pygame.display.flip()
 
     def draw_panorama(self):
+        from pygame_objects import SPRITES
         targets = []
         for p in self.panorama:
-            p.position = [p.position[0]+0.01, p.position[1]]
-            if p.position[0] > self.display.get_width()/TILESIZE:
-                p.position = [-self.display.get_width()/TILESIZE, p.position[1]]
-                p.old_position = p.position[:]
-            if random.randint(0,100) > 99:
-                p.sprite_offset = p.sprite_offset + 1
-            sprite, position = p.get_surf(self.display, self.cam)
-            targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), position))
+            if p._sprite == SPRITES["panorama_stars"]:
+                p.position = [p.position[0]+1, p.position[1]]
+                if p.position[0] > self.display.get_width()/2:
+                    p.position = [-self.display.get_width()/2, 0]
+                    p.old_position = p.position[:]
+                if random.randint(0,100) > 99:
+                    p.sprite_offset = p.sprite_offset + 1
+                sprite, position = p.get_surf(self.display, self.cam)
+                targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), p.old_position))
+            elif p._sprite == SPRITES["panorama_planet"]:
+                p.position = [0,self.display.get_height()] if self.in_space else [0, 0]
+                sprite, position = p.get_surf(self.display, self.cam)
+                targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), p.old_position))
 
         self.display.fill(self.color)
         self.display.blits(targets)
