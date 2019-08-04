@@ -55,7 +55,7 @@ def create_collection():
         def ai_roadroller(self, engine):
             pass
 
-        return Enemy(ai_roadroller, "alien_big", position, 1, 3, health=5, sprite_updated=True, width=2, height=2, **kwargs)
+        return Enemy(ai_roadroller, "alien_big", position, 2, 3, health=5, sprite_updated=True, width=2, height=2, **kwargs)
 
     def alien_spawner_big(position, **kwargs):
         def ai_spawner(self, engine):

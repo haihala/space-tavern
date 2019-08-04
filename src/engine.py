@@ -25,7 +25,7 @@ class Engine():
         self.money = 50
         self.in_space = True
         self.difficulty = 20
-        self.max_enemy_count = 2
+        self.max_enemy_count = 1
         self.tick_count = 0
         self.planet = 0
 
@@ -151,15 +151,7 @@ class Engine():
                 }
         search_space = spaces[target]
         if entity:
-            tmp = [i for i in search_space if i not in exclude and abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1])<=2 and any(p in i.colliders for p in entity.colliders)]
-            if len(entity.colliders) >1:
-                print()
-                print(self.player.position)
-                print(entity.position)
-                print(entity.colliders)
-                print(tmp)
-            return tmp
-
+            return [i for i in search_space if i not in exclude and (abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1]))<=3 and any(p in i.colliders for p in entity.colliders)]
         if point:
             return [i for i in search_space if i not in exclude and abs(i.position[0]-point[0]) + abs(i.position[1]-point[1])<=2 and point in i.colliders]
 
@@ -197,7 +189,7 @@ class Engine():
                     entity.tick(self)
 
             for entity in self.entities:
-                entity.grounded = self.project_collides(entity, [0,1])
+                entity.grounded = self.project_collides(entity, [0,1], exclude=[entity])
 
             if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
                 while True:
