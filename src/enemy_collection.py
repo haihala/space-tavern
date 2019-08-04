@@ -19,19 +19,25 @@ def create_collection():
     def alien_fly(position, **kwargs):
         def ai_fly(self, engine):
             pass
-        return Enemy(ai_base, "alient_fly", position, -1, 6, health=1, **kwargs)
+        return Enemy(ai_base, "alien_fly", position, -1, 6, health=1, **kwargs)
 
     def alien_brain(position, **kwargs):
         def ai_brain(self, engine):
             pass
-        return Enemy(ai_base, "alient_brain", position, 5, 10, health=1, **kwargs)
+        return Enemy(ai_base, "alienz_brain", position, 1, 10, health=1, **kwargs)
 
+    def alien_spawner(position, **kwargs):
+        def ai_spawner(self, engine):
+            self.hurt(engine, 1)
+
+        return Enemy(ai_spawner, "alien_spawner", position, 2, 2, health=5, **kwargs)
 
     return  {
 
             "alien_base": alien_base,
             "alien_fly": alien_fly,
-            "alien_brain": alien_brain
+            "alien_brain": alien_brain,
+            "alien_spawner": alien_spawner
 
             }
 
