@@ -91,7 +91,6 @@ class Player(Entity):
             elif action == "use":
                 if self.inventory:
                     self.inventory.on_use(self.inventory, engine, self)
-                self.fatigue = 0
             elif action == "pickup":
                 if self.inventory:
                     self.throw(engine)
