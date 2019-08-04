@@ -46,14 +46,16 @@ class Player(Entity):
                         engine.money -= target.data["cost"]
                         if target.data["itemcount"] != None:
                             target.data["itemcount"] -= 1
+                    else:
+                        return False
                 else:
                     return False
             elif "console" in target.data:
                 if target.data["console"]:
                     engine.liftoff()
             else:
+                engine.entities.remove(target)
                 self.inventory = target
-                engine.entities = [i for i in engine.entities if i != target]     # Remove item from the world
                 from pygame_objects import SOUNDS
                 SOUNDS["item_pickup"].play()
             return True
