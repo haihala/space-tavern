@@ -9,7 +9,7 @@ def sign(x):
 
 class Entity():
     # Abstract
-    def __init__(self, sprite, position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None):
+    def __init__(self, sprite, position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None, jump_height=0):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
         self.sprite_offset = 0
@@ -24,6 +24,7 @@ class Entity():
         self.health = health
         self.on_collision = on_collision
         self.on_use = on_use
+        self.jump_height = jump_height
 
         self.velocity = [0, 0]
         self.dead = False
@@ -62,7 +63,7 @@ class Entity():
                             self.on_collision(self, engine, ent)
                         else:
                             self.hurt(engine, self.weight)
-                    
+
                 self.velocity = [0, 0]
                 return amount-i
             else:
