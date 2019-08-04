@@ -120,7 +120,7 @@ class Engine():
     def enemies(self):
         return [i for i in self.entities if type(i) is Enemy]
 
-    def make_particles(self, position, kind):
+    def add_particles(self, position, kind):
         self.particles.append((position, kind))
 
     def liftoff(self):
@@ -206,6 +206,7 @@ class Engine():
                 self.console.sprite_offset = 1
             for dead in self.entities:
                 if dead.dead and dead.on_death:
+                    self.add_particles(dead.position, "particle_explosion")
                     dead.on_death(dead, self, self.player)
             self.entities = [entity for entity in self.entities if not entity.dead]
             for entity in self.entities:
@@ -233,7 +234,7 @@ class Engine():
             self.tick_count += 1
 
     def quit(self):
-        # Maybe save
+        self.pause(False, True)
         exit(0)
 
     def player_tick(self, slot):
@@ -270,13 +271,15 @@ class Engine():
 
         self.player.tick(self, buffered)
 
-    def pause(self, title=False):
+    def pause(self, title=False, end=False):
         paused = True
         while paused:
-            if not title:
-                self.draw_help()
-            else:
+            if title:
                 self.draw_title_screen()
+            elif end:
+                self.draw_end_screen()
+            else:
+                self.draw_help()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -332,6 +335,18 @@ class Engine():
         self.display.fill((0, 0, 0))
         self.display.blit(pygame.transform.scale(SPRITES["panorama_stars"][0], self.display.get_size()), (0,0))
         cont_txt = self.text_surface("Press any key to continue", (255, 255, 255))
+        self.display.blit(cont_txt, (
+            self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
+        pygame.display.flip()
+
+    def draw_end_screen (self):
+        from pygame_objects import SPRITES
+        self.display.fill((0, 0, 0))
+        sarcasm = self.text_surface("Red is health", (255, 0, 0))
+        self.display.blit(sarcasm,
+                [self.display.get_size()[i]/2-sarcasm.get_size()[i]/2 for i in range(2)])
+
+        cont_txt = self.text_surface("Press any key to exit", (255, 255, 255))
         self.display.blit(cont_txt, (
             self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
         pygame.display.flip()

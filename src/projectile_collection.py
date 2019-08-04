@@ -3,11 +3,6 @@ from entity import Entity
 def bullet_hit(self, engine, target):
     self.dead = True
     target.hurt(engine, 1)
-    print(str(type(target)))
-    if "tile" not in str(type(target)):
-        print()
-        print(type(self))
-        print(type(target))
 
 def create_collection():
     def projectile_gun(position, **kwargs):
