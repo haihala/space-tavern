@@ -42,6 +42,8 @@ class Player(Entity):
             if "item" in target.data:
                 if engine.money >= target.data["cost"]:
                     if target.data["itemcount"] != 0:
+                        from pygame_objects import SOUNDS
+                        SOUNDS["player_buy"].play()
                         self.inventory = ITEMS[target.data["item"]](self.position, data={"planet": engine.planet})
                         engine.money -= target.data["cost"]
                         if target.data["itemcount"] != None:

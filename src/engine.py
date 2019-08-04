@@ -268,6 +268,7 @@ class Engine():
         for p in self.panorama:
             if p._sprite == SPRITES["panorama_stars"]:
                 p.position = [p.position[0]+(1 if self.in_space else 0), p.position[1]]
+                p.old_position = [LERP(p.old_position[i], p.position[i], 0.1) for i in p.position]
                 if p.position[0] > self.display.get_width():
                     p.position = [-self.display.get_width(), 0]
                     p.old_position = p.position[:]
@@ -277,6 +278,7 @@ class Engine():
                 targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), p.old_position))
             elif p._sprite == SPRITES["panorama_planet"]:
                 p.position = [0,self.display.get_height()] if self.in_space else [0, 0]
+                p.old_position = [LERP(p.old_position[i], p.position[i], 0.1) for i in p.position]
                 sprite, position = p.get_surf(self.display, self.cam)
                 targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), p.old_position))
 

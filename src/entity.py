@@ -160,6 +160,8 @@ class Entity():
 
         self.health -= amount
         if self.health <= 0:
+            from pygame_objects import SOUNDS
+            SOUNDS["entity_die"].play()
             self.dead = True
 
     def on_death(self, engine):
