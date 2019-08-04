@@ -4,14 +4,15 @@ def create_collection():
     def alien_base(position, **kwargs):
         def ai_base(self, engine):
             #self.move(engine, target=engine.player.position)
-            direction = [0, 0]
 
             if engine.player.position[1] < self.position[1] and self.grounded:
-                direction = [0, self.jump_height]
+                direction = [0, 1]
+                self.move(engine, direction=direction, amount=self.jump_height)
             else:
                 direction = [1 if engine.player.position[0] > self.position[0] else -1, 0]
+                self.move(engine, direction=direction, amount=1)
 
-            self.move(engine, direction=direction)
+
             # Shoot
         return Enemy(ai_base, "alien_base", position, 1, 4, health=1, **kwargs)
 
