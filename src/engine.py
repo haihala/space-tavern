@@ -39,8 +39,25 @@ class Engine():
 
         for x in range(-10, 10):
             for y in range(-6, 7):
-                if abs(x) <= 6 and abs(y) == 3:
-                    self.background.append(Tile([x,y], "window"))
+                if abs(x) <= 6 and abs(y) >= 2 and abs(y) <= 4:
+                    if abs(x) < 6 and (y == 2 or y == -4):
+                        self.background.append(Tile([x,y], "window_top"))
+                    elif abs(x) < 6 and (y == 4 or y == -2):
+                        self.background.append(Tile([x,y], "window_bottom"))
+                    elif x == -6 and abs(y) == 3:
+                        self.background.append(Tile([x,y], "window_left"))
+                    elif x == 6 and abs(y) == 3:
+                        self.background.append(Tile([x,y], "window_right"))
+                    elif x == -6 and (y == -4 or y == 2):
+                        self.background.append(Tile([x,y], "window_top_left"))
+                    elif x == 6 and (y == -4 or y == 2):
+                        self.background.append(Tile([x,y], "window_top_right"))
+                    elif x == -6 and (y == 4 or y == -2):
+                        self.background.append(Tile([x,y], "window_bottom_left"))
+                    elif x == 6 and (y == 4 or y == -2):
+                        self.background.append(Tile([x,y], "window_bottom_right"))
+                    else:
+                        self.background.append(Tile([x,y], "window"))
                 elif math.sin(x) > 0 and abs(math.sin(y)) < (0.2 + abs(math.cos(x)/1.23)):
                     self.background.append(Tile([x,y], "wall_middle"))
                 else:
