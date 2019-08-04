@@ -38,15 +38,16 @@ class Engine():
         self.player = Player(conf["binds"])
         self.entities = [
                 self.player,
-                ITEMS["item_console"]([-9, -1])
+                ITEMS["item_console"]([-9, -1]),
+                ITEMS["item_shop"]([-9, 5], "gun")
                 ]
         self.tiles = []
         self.background = []
         self.panorama = [
-            Tile([0,0], "panorama_stars"),
-            Tile([-self.display.get_width(), 0], "panorama_stars"),
-            Tile([0,self.display.get_height()/TILESIZE], "panorama_planet")
-        ]
+                Tile([0,0], "panorama_stars"),
+                Tile([-self.display.get_width(), 0], "panorama_stars"),
+                Tile([0,self.display.get_height()/TILESIZE], "panorama_planet")
+                ]
         self.color = (0, 0, 0)
 
         self.tick_target_duration = 1
@@ -58,6 +59,8 @@ class Engine():
         SOUNDS["music_peace"].set_volume(0.5)
         SOUNDS["music_space"].set_volume(0.5)
         #SOUNDS["music_peace"].play(-1, 0, 2)
+
+        self.basic_font = pygame.font.SysFont("comicsansms", 72)
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
@@ -279,6 +282,9 @@ class Engine():
 
         self.display.blits(targets)
 
+    def text_surface(self, content, color):
+        return self.basic_font.render(content, True, color)
+
     def draw_world(self):
         targets = []
         for entity in self.entities:
@@ -302,7 +308,11 @@ class Engine():
                         (HELDSIZE, HELDSIZE)
                         ), [position[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
 
+                cost_txt = pygame.transform.scale(self.text_surface(str(entity.data["cost"]), (133, 187, 101)), (TILESIZE, TILESIZE))
+                targets.append([cost_txt, [position[i] + [0, -TILESIZE][i] for i in range(2)]])
+
         self.display.blits(targets)
+
 
     def draw_hud(self, tick_portion_left):
         if self.player.fatigue:

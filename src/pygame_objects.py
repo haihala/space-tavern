@@ -2,6 +2,8 @@ from constants import TILESIZE
 
 from math import pi
 import pygame
+pygame.init()
+pygame.font.init()
 pygame.mixer.init(buffer=1)
 
 def get_array(path, size=16):
