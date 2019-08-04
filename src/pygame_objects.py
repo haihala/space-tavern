@@ -91,7 +91,9 @@ def get_sprites():
         "item_mine": get(9, 0),
         "item_heal": get(9, 1),
         "item_warudo": get(9, 2),
-        "item_syringe": get(9, 3)
+        "item_syringe": get(9, 3),
+
+        "particle_explosion": get(6, 8)
     }
 
 SPRITES = get_sprites()
