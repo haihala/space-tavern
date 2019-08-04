@@ -36,8 +36,10 @@ class Player(Entity):
 
     def tick(self, engine, action):
         IsIdle = self.fatigue == 0
+        if self.inventory:
+            self.inventory.tick(engine)
 
-        if super().tick():
+        if super().tick(engine):
             return None
 
         moved = False

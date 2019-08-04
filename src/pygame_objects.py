@@ -24,7 +24,7 @@ def get(x, y):
 def get_sprites():
     return {
 
-        "panorama_stars": [pygame.image.load("resources/Stars_Panorama1.png"), pygame.image.load("resources/Stars_Panorama2.png")],
+        "panorama_stars": [pygame.image.load("resources/Stars_Panorama1.png").convert(), pygame.image.load("resources/Stars_Panorama2.png").convert()],
 
         "wall_top": get(6, 0),
         "wall_middle": get(6, 1),
