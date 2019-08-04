@@ -53,7 +53,7 @@ def create_collection():
 
     def item_jump_pad(position, **kwargs):
         sprite = "item_jump_pad"
-        return Item(position, sprite, on_collision=jump_pad_collision, on_use=drop, weight=1, **kwargs)
+        return Item(position, sprite, on_collision=jump_pad_collision, on_use=drop, can_pickup=False, weight=1, **kwargs)
 
     def item_gun(position, **kwargs):
         sprite = "item_gun"
