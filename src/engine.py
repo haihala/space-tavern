@@ -58,7 +58,7 @@ class Engine():
         SOUNDS["music_space"].set_volume(0.5)
         #SOUNDS["music_peace"].play(-1, 0, 2)
 
-        self.basic_font = pygame.font.SysFont("comicsansms", 72)
+        self.basic_font = pygame.font.SysFont("comicsansms", 30)
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
@@ -246,12 +246,66 @@ class Engine():
                             btn = 'left'
                         elif event.key == pygame.K_RIGHT:
                             btn = 'right'
+                        elif event.key == pygame.K_ESCAPE:
+                            btn = 'esc'
+                        elif event.key == pygame.K_SPACE:
+                            btn = ' '
                         else:
                             btn = event.unicode
 
                         if btn in self.player.binds:
                             buffered = self.player.binds[btn]
+
+                        if buffered == "pause":
+                            self.pause()
+
         self.player.tick(self, buffered)
+
+    def pause(self):
+        while True:
+            self.draw_help()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.quit()
+                elif event.type == pygame.KEYDOWN:
+                    break
+
+    def draw_help(self):
+        self.display.fill((0, 0, 0))
+        text_height = 30
+        offset = 0
+        self.display.blit(self.text_surface("HUD(bottom right):", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Blue is current planet", (0, 0, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Green is money", (0, 255, 0)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Red is health", (255, 0, 0)), (10, int(10+offset*text_height*1.1)))
+        offset += 2
+        self.display.blit(self.text_surface("Keys:", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("x - Use/pickup/buy/throw", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Arrow keys - Move", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("z - Use held item", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("up arrow or space - Jump", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("down arrow - Skip turn", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("esc - Toggle this pause menu", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 2
+        self.display.blit(self.text_surface("Use console to take off", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Throw beer into dollar sign when on a planet to sell", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Holding onto beer raises value", (255, 255, 255)), (10, int(10+offset*100*1.1)))
+        offset += 1
+        self.display.blit(self.text_surface("Use items to survive. 5 planets max, each one harder than the last.", (255, 255, 255)), (10, int(10+offset*100*1.1)))
+        offset += 1
+
+        pygame.display.flip()
 
     def render(self, tick_time_left):
         # Draw the world

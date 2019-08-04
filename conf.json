@@ -2,12 +2,13 @@
 	"resolution": [640, 480],
 	"fullscreen": false,
 	"binds": {
-		" ": "jump",
+		"space": "jump",
 		"up": "jump",
 		"left": "left",
 		"right": "right",
 		"down": "down",
 		"x": "pickup",
-		"z": "use"
+		"z": "use",
+		"esc": "pause"
 	}
 }
