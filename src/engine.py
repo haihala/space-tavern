@@ -23,7 +23,7 @@ class Engine():
         self.null_entity = Entity()
 
         self.money = 50
-        self.in_space = True
+        self.in_space = False
         self.difficulty = 20
         self.max_enemy_count = 2
         self.tick_count = 0
@@ -54,8 +54,9 @@ class Engine():
         self.running = False
 
         from pygame_objects import SOUNDS
-        SOUNDS["music_peace"].set_volume(0.25)
-        SOUNDS["music_peace"].play(-1, 0, 2)
+        SOUNDS["music_peace"].set_volume(0.75)
+        SOUNDS["music_space"].set_volume(0.75)
+        #SOUNDS["music_peace"].play(-1, 0, 2)
 
         self.place(ITEMS["item_shop"]([-5, 5], "gun"))
 
@@ -110,6 +111,7 @@ class Engine():
                     self.background.append(Tile([x+1,y-1], "floor_top_right"))
                 if ((x == self.ship_width and y == self.ship_height) or (y == 0 and x == -3)) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
                     self.background.append(Tile([x+1,y+1], "floor_bottom_right"))
+        self.update_surroundings(self.in_space)
 
     @property
     def enemies(self):
@@ -119,6 +121,8 @@ class Engine():
         from pygame_objects import SPRITES, SOUNDS
         self.in_space = state
         if self.in_space:
+            SOUNDS["music_peace"].fadeout(2)
+            SOUNDS["music_space"].play(-1, 0, 2)
             #stop peace music
             #start space music
             for x in range(-self.ship_width, self.ship_width+1):
@@ -128,6 +132,8 @@ class Engine():
             self.background = [background for background in self.background if background._sprite != SPRITES["ground_top"]]
 
         else:
+            SOUNDS["music_space"].fadeout(2)
+            SOUNDS["music_peace"].play(-1, 0, 2)
             #stop space music
             #start peace music
             self.tiles = [tile for tile in self.tiles if tile._sprite != SPRITES["door"]]
