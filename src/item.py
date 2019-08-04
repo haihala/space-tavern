@@ -12,4 +12,5 @@ class Item(Entity):
         if super().tick():
             return None
 
+        self.handle_velocity(engine)
         self.gravity(engine)
