@@ -94,7 +94,7 @@ class Engine():
                     self.tiles.append(Tile([x,y], "floor"))
                 elif (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
                     self.tiles.append(Tile([x,y], "door"))
-                elif y == 0 and abs(x) <= 1:
+                elif y == self.ship_height-1 and abs(x) == 0:
                     self.entities.append(ITEMS["item_jump_pad"]([x,y]))
 
                 if y == self.ship_height or y == -self.ship_height or (y == 0 and abs(x) > 2) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
@@ -146,6 +146,12 @@ class Engine():
             self.tiles = [tile for tile in self.tiles if tile._sprite != SPRITES["door"]]
             for x in range(-self.ship_width*3, self.ship_width*3+1):
                 self.background.append(Tile([x,GROUND_LEVEL], "ground_top"))
+
+            self.entities.append(ITEMS["item_sell"]([self.ship_width+3, GROUND_LEVEL-1]))
+
+            self.entities.append(ITEMS["item_shop"]([-self.ship_width-3, GROUND_LEVEL-1], "box"))
+            for i in range(3):
+                self.entities.append(ITEMS["item_shop"]([-self.ship_width-6 - 3*i, GROUND_LEVEL-1]))
 
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
@@ -204,9 +210,10 @@ class Engine():
                         item.on_collision(item, self, entity)
                 if entity == self.player:
                     self.player_tick(self.tick_target_duration)
-                    start_time = time()
-                    while time()-start_time < 0.25:
-                        self.render(0)
+                    if self.in_space:
+                        start_time = time()
+                        while time()-start_time < 0.25:
+                            self.render(0)
                 else:
                     entity.tick(self)
 
@@ -228,9 +235,9 @@ class Engine():
     def player_tick(self, slot):
         buffered = None
         start_time = time()
-        true_slot = (slot/2 if self.player.fatigue else slot)
+        true_slot = (slot/2 if self.player.fatigue else slot) if self.in_space else 0.1
         while time()-start_time < true_slot and not buffered:
-            self.render((time()-start_time)/true_slot)
+            self.render(((time()-start_time)/true_slot) if self.in_space else 1)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.quit()
@@ -298,6 +305,7 @@ class Engine():
         targets = []
         for entity in self.entities:
             sprite, position = entity.get_surf(self.display, self.cam)
+            entity.old_position = [LERP(entity.old_position[i], entity.position[i], (0.1 if self.in_space else 0.5)) for i in range(2)]
             targets.append((sprite, position))
             if type(entity) is Player and entity.inventory:
                 inventory_sprite, inventory_position = entity.inventory.get_surf(self.display, self.cam)
