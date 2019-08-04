@@ -21,7 +21,8 @@ class Player(Entity):
         self.inventory.position = self.forwards
         self.inventory.old_position = self.forwards
         if engine.place(self.inventory):
-            self.inventory.velocity = [int(self.facing_right)*2-1, -2]
+            self.inventory.velocity = [(int(self.facing_right)*2-1)*2, -2]
+            print(self.inventory.velocity)
         else:
             self.inventory.position = self.up
             self.inventory.old_position = self.up
@@ -53,7 +54,8 @@ class Player(Entity):
                     engine.liftoff()
             else:
                 self.inventory = target
-                engine.entities = [i for i in engine.entities if i is not target]     # Remove item from the world
+                engine.entities = [i for i in engine.entities if i != target]     # Remove item from the world
+                print(target in engine.entities)
                 from pygame_objects import SOUNDS
                 SOUNDS["item_pickup"].play()
             return True

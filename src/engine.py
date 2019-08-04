@@ -247,7 +247,6 @@ class Engine():
                             btn = 'up'
                         elif event.key == pygame.K_DOWN:
                             btn = 'down'
-                            self.update_surroundings(not self.in_space)
                         elif event.key == pygame.K_LEFT:
                             btn = 'left'
                         elif event.key == pygame.K_RIGHT:
@@ -355,6 +354,4 @@ class Engine():
         self.display.blit(money_text, (
             int(self.display.get_width()-money_text.get_width()-10),
             int(self.display.get_height()-money_text.get_height()-10-TILESIZE)))
-
-            
 
