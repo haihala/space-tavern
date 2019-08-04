@@ -16,10 +16,16 @@ def create_collection():
     def projectile_alien_down(position, **kwargs):
         sprite = "projectile_alien_down"
         return Entity(position=position, sprite=sprite, on_collision=bullet_hit, collider=False, drag=0, weight=0, **kwargs)
+
+    def projectile_alien_up(position, **kwargs):
+        sprite = "projectile_alien_up"
+        return Entity(position=position, sprite=sprite, on_collision=bullet_hit, collider=False, drag=0, weight=0, **kwargs)
+
     return  {
             "projectile_gun": projectile_gun,
             "projectile_alien": projectile_alien,
-            "projectile_alien_down": projectile_alien_down
+            "projectile_alien_down": projectile_alien_down,
+            "projectile_alien_up": projectile_alien_up
             }
 
 PROJECTILES = create_collection()

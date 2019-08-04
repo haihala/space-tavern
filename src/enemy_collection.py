@@ -11,6 +11,16 @@ def bat_shoot(self, engine):
             bullet.velocity = [0, 1]
             self.fatigue += self.speed
 
+def turret_shoot(self, engine, direction, sprite):
+    if not self.fatigue:
+        bullet = PROJECTILES[sprite]([direction[i]+self.position[i] for i in range(2)])
+        if direction == [1, 0]:
+            bullet.facing_right = True
+
+        if engine.place(bullet, target="tile"):
+            bullet.velocity = direction
+            self.fatigue += self.speed
+
 def create_collection():
     def alien_base(position, **kwargs):
         def ai_base(self, engine):
@@ -35,17 +45,25 @@ def create_collection():
 
         return Enemy(ai_fly, "alien_fly", position, -1, 3, health=1, sprite_updated=True, **kwargs)
 
-    def alien_brain(position, **kwargs):
-        def ai_brain(self, engine):
-            pass
-        return Enemy(ai_brain, "alien_brain", position, 1, 10, health=1, sprite_updated=True, **kwargs)
+    def alien_turret(position, **kwargs):
+        def ai_turret(self, engine):
+            if self.position[0] == engine.player.position[0]:
+                direction = [0, -1]
+                sprite = "projectile_alien_up"
+            else:
+                direction = [[-1, 1][self.position[0]<engine.player.position[0]], 0]
+                sprite = "projectile_alien"
+                self.facing_right = self.position[0]<engine.player.position[0]
+            turret_shoot(self, engine, direction, sprite)
+
+        return Enemy(ai_turret, "alien_turret", position, 1, 5, health=1, sprite_updated=True, **kwargs)
 
     def alien_spawner(position, **kwargs):
         def ai_spawner(self, engine):
             self.hurt(engine, 1)
 
         def spawn(self, engine, player):
-            mob = choice([alien_base, alien_fly, alien_brain])(self.position)
+            mob = choice([alien_base, alien_fly, alien_turret])(self.position)
             mob.facing_right = bool(getrandbits(1))
             engine.place(mob, exclude=[self])
 
@@ -71,7 +89,7 @@ def create_collection():
     return  {
             "alien_base": alien_base,
             "alien_fly": alien_fly,
-            "alien_brain": alien_brain,
+            "alien_turret": alien_turret,
             "alien_spawner": alien_spawner,
             "alien_spawner_big": alien_spawner_big
             }
