@@ -1,4 +1,6 @@
 from item import Item
+from tile import Tile
+from projectile_collection import PROJECTILES
 
 def drop(self, engine, user):
     if engine.place(user.forwards, self):
@@ -7,7 +9,16 @@ def drop(self, engine, user):
         SOUNDS["item_drop"].play()
 
 def jump_pad_collision(self, engine, user):
-    user.move(engine, amount=5, direction=[0, -1])
+    if type(user) is not Tile:
+        user.move(engine, amount=5, direction=[0, -1])
+
+def gun_shoot(self, engine, user):
+    if not self.fatigue:
+        bullet = PROJECTILES["projectile_gun"](user.forwards)
+
+        if engine.place(user.forwards, bullet): 
+            bullet.velocity = [int(user.facing_right)*2-1, 0]
+            self.fatigue += self.speed
 
 def create_collection():
     def item_beer(position, **kwargs):
@@ -24,7 +35,7 @@ def create_collection():
 
     def item_gun(position, **kwargs):
         sprite = "item_gun"
-        return Item(position, sprite, **kwargs)
+        return Item(position, sprite, on_use=gun_shoot, speed=6, **kwargs)
 
     return  {
             "item_beer": item_beer,

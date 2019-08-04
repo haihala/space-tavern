@@ -9,7 +9,7 @@ def sign(x):
 
 class Entity():
     # Abstract
-    def __init__(self, sprite, position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None):
+    def __init__(self, sprite, position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None, collider=True, collision_damage=0):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
         self.sprite_offset = 0
@@ -24,6 +24,8 @@ class Entity():
         self.health = health
         self.on_collision = on_collision
         self.on_use = on_use
+        self.collision_damage = collision_damage
+        self.collider = collider
 
         self.velocity = [0, 0]
         self.dead = False
@@ -52,16 +54,15 @@ class Entity():
             colgroup = engine.project_collides(entity=self, shift=delta)
             if colgroup:
                 for ent in colgroup:
-                    if str(type(ent)) != "<class 'tile.Tile'>":
-                        if ent.on_collision:
-                            ent.on_collision(ent, engine, self)
-                        else:
-                            ent.hurt(engine, self.weight)
+                    if ent.on_collision:
+                        ent.on_collision(ent, engine, self)
+                    else:
+                        ent.hurt(engine, self.collision_damage)
 
-                        if self.on_collision:
-                            self.on_collision(self, engine, ent)
-                        else:
-                            self.hurt(engine, self.weight)
+                    if self.on_collision:
+                        self.on_collision(self, engine, ent)
+                    else:
+                        self.hurt(engine, ent.collision_damage)
                     
                 self.velocity = [0, 0]
                 return amount-i
@@ -88,27 +89,29 @@ class Entity():
     def colliders(self):
         return [[self.position[0]+i, self.position[1]+j] for i in range(self.width) for j in range(self.height)]
 
-    def tick(self):
+    def tick(self, engine):
         self.fatigue = max(0, self.fatigue-1)
         self.sprite_offset = self.sprite_offset+1
-        return self.fatigue != 0
+        active = self.fatigue != 0
+        if type(self) is Entity:
+            self.upkeep(engine, False)
+        return active
 
-    def upkeep(self, engine):
+    def upkeep(self, engine, fatigue=True):
         self.handle_velocity(engine)
         self.gravity(engine)
-        self.fatigue += self.speed
+        if fatigue:
+            self.fatigue += self.speed
 
     def handle_velocity(self, engine):
         if self.velocity != [0, 0]:
             x, y = self.velocity
-            self.move(engine, amount=abs(int(y)), direction=[0, y])
             self.move(engine, amount=abs(int(x)), direction=[x, 0])
+            self.move(engine, amount=abs(int(y)), direction=[0, y])
             self.velocity = [
                     x,
                     max(0, abs(y-sign(y)*self.drag))*sign(y)
                     ]
-            if self.velocity[1] == 0:
-                self.velocity = [0, 0]
     def gravity(self, engine):
         if not self.grounded and not self.grounded_last_tick:
             self.move(engine, amount=self.weight, direction=[0,1])
