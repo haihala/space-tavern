@@ -1,3 +1,4 @@
+from entity import Entity
 from enemy import Enemy
 from item import Item
 from player import Player
@@ -5,7 +6,7 @@ from tile import Tile
 from enemy_collection import ENEMIES
 from item_collection import ITEMS
 
-from constants import HELDSIZE, TILESIZE, LERP
+from constants import HELDSIZE, TILESIZE, LERP, GROUND_LEVEL
 
 import pygame
 import math
@@ -19,6 +20,7 @@ class Engine():
     def __init__(self, conf, resolution):
         flags = (pygame.FULLSCREEN * int(conf["fullscreen"]))
         self.display = pygame.display.set_mode(resolution, flags)
+        self.null_entity = Entity()
 
         self.money = 0
         self.in_space = True
@@ -127,15 +129,12 @@ class Engine():
             #remove doors
             #add extra floors
             self.tiles = [tile for tile in self.tiles if tile._sprite != SPRITES["door"]]
-            for x in range(-self.ship_width*3, self.ship_width*3+1):
-                self.tiles.append(Tile([x, 7], "ground_top"))
-                if abs(x) == self.ship_width*3:
-                    for y in range(-self.ship_height, self.ship_height*2+1):
-                        self.tiles.append(Tile([x,y], "ground"))
-                for y in range(8, 10):
-                    self.tiles.append(Tile([x, y], "ground"))
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
+        if target in ["collider", "*"]:
+            if entity:
+                if entity.position[1] == GROUND_LEVEL:
+                    return [self.null_entity]
         spaces = {
                 "*": self.entities + self.tiles,
                 "collider": self.tiles + [i for i in self.entities if i.collider],
@@ -143,14 +142,15 @@ class Engine():
                 "player": [self.player],
                 "tile": self.tiles,
                 "entities": self.entities,
-                "trigger_item": [i for i in self.entities if type(i) is Item and i.on_collision]
+                "trigger_item": [i for i in self.entities if type(i) is Item and i.on_collision],
+                "pickup": [i for i in self.entities if type(i) is Item and i.can_pickup]
                 }
         search_space = spaces[target]
 
         if entity:
-            return [i for i in search_space if i not in exclude and any(p in i.colliders for p in entity.colliders)]
+            return [i for i in search_space if i not in exclude and abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1])<=2 and any(p in i.colliders for p in entity.colliders)]
         if point:
-            return [i for i in search_space if i not in exclude and point in i.colliders]
+            return [i for i in search_space if i not in exclude and abs(i.position[0]-point[0]) + abs(i.position[1]-point[1])<=2 and point in i.colliders]
 
     def project_collides(self, entity, shift, target="collider", exclude=[]):
         cp = copy(entity)

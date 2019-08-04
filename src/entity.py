@@ -1,4 +1,5 @@
 from constants import TILESIZE, LERP
+from constants import GROUND_LEVEL
 
 import pygame
 
@@ -9,7 +10,7 @@ def sign(x):
 
 class Entity():
     # Abstract
-    def __init__(self, sprite, position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None, on_death=None, jump_height=0, collision_damage=0, collider=True):
+    def __init__(self, sprite="window", position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None, on_death=None, jump_height=0, collision_damage=0, collider=True):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
         self.sprite_offset = 0
@@ -91,6 +92,7 @@ class Entity():
         return [[self.position[0]+i, self.position[1]+j] for i in range(self.width) for j in range(self.height)]
 
     def tick(self, engine):
+        self.position = [self.position[0], min(self.position[1], GROUND_LEVEL)]
         self.fatigue = max(0, self.fatigue-1)
         self.sprite_offset = self.sprite_offset+1
         active = self.fatigue != 0

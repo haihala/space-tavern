@@ -24,7 +24,7 @@ class Player(Entity):
     def pickup(self, engine):
         targets = []
         for i in [[i+self.position[0], j+self.position[1]] for i in range(-1, 2) for j in range(-1, 2)]:
-            targets += [i for i in engine.collides(point=i, target="item") if i.can_pickup]
+            targets += engine.collides(point=i, target="pickup")
 
         if targets:
             target = targets.pop()
