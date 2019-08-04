@@ -114,6 +114,7 @@ class Engine():
         self.update_surroundings(self.in_space)
 
         self.pause(True)
+        self.pause()        # Info for players
 
 
     @property
