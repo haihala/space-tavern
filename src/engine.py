@@ -10,9 +10,8 @@ from constants import HELDSIZE, TILESIZE, LERP, GROUND_LEVEL
 
 import pygame
 import math
-import random
 
-from random import randint
+from random import randint, random, uniform
 from copy import copy
 from time import sleep, time
 
@@ -24,8 +23,11 @@ class Engine():
 
         self.money = 50
         self.in_space = False
+
         self.difficulty = 20
-        self.max_enemy_count = 1
+        self.max_enemy_count = 5
+        self.boss_probability = 0.1
+
         self.tick_count = 0
         self.planet = 0
 
@@ -173,7 +175,7 @@ class Engine():
             return True
 
     def camera_shake(self, amount):
-        self.cam = [self.cam[i] + random.uniform(-amount, amount) for i in range(2)]
+        self.cam = [self.cam[i] + uniform(-amount, amount) for i in range(2)]
 
     def run(self):
         self.running = True
@@ -198,9 +200,10 @@ class Engine():
                 entity.grounded = self.project_collides(entity, [0,1], exclude=[entity])
 
             if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
+                boss = int(random()<self.boss_probability)
                 while True:
                     rand_coords = [randint(-self.ship_width+1, self.ship_width-1), randint(-self.ship_height+1, self.ship_height-1)]
-                    if self.place(ENEMIES["alien_spawner_big"](rand_coords)):
+                    if self.place(ENEMIES[["alien_spawner", "alien_spawner_big"][boss]](rand_coords)):
                         break
             self.tick_count += 1
 
@@ -253,7 +256,7 @@ class Engine():
                 if p.position[0] > self.display.get_width():
                     p.position = [-self.display.get_width(), 0]
                     p.old_position = p.position[:]
-                if random.randint(0,100) > 99:
+                if randint(0,100) > 99:
                     p.sprite_offset = p.sprite_offset + 1
                 sprite, position = p.get_surf(self.display, self.cam)
                 targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), p.old_position))
