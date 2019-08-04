@@ -1,4 +1,5 @@
 TILESIZE = 30
+GROUND_LEVEL = 6
 HELDSIZE = int(TILESIZE/2)
 CONFPATH = 'conf.json'
 def LERP(a, b, t):
