@@ -1,4 +1,5 @@
 from entity import Entity
+from item_collection import ITEMS
 
 class Player(Entity):
     def __init__(self, binds):
@@ -28,10 +29,21 @@ class Player(Entity):
 
         if targets:
             target = targets.pop()
-            self.inventory = target
-            engine.items = [i for i in engine.items if i is not target]     # Remove item from the world
-            from pygame_objects import SOUNDS
-            SOUNDS["item_pickup"].play()
+            if "item" in target.data:
+                print(target)
+                if engine.money >= target.data["cost"]:
+                    if target.data["itemcount"] != 0:
+                        self.inventory = ITEMS[target.data["item"]](self.position)
+                        engine.money -= target.data["cost"]
+                        if target.data["itemcount"] != None:
+                            target.data["itemcount"] -= 1
+                else:
+                    return False
+            else:
+                self.inventory = target
+                engine.entities = [i for i in engine.entities if i is not target]     # Remove item from the world
+                from pygame_objects import SOUNDS
+                SOUNDS["item_pickup"].play()
             return True
 
     def tick(self, engine, action):
