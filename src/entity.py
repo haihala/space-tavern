@@ -1,4 +1,5 @@
 from constants import TILESIZE, LERP
+
 import pygame
 
 def sign(x):
@@ -8,7 +9,7 @@ def sign(x):
 
 class Entity():
     # Abstract
-    def __init__(self, sprite, position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3):
+    def __init__(self, sprite, position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
         self.sprite_offset = 0
@@ -19,12 +20,16 @@ class Entity():
         self.fatigue = fatigue
         self.width = width
         self.height = height
-        self.facing_right = False
+        self.drag = drag
+        self.health = health
+        self.on_collision = on_collision
+        self.on_use = on_use
 
         self.velocity = [0, 0]
-        self.drag = drag
+        self.dead = False
         self.grounded = False
         self.grounded_last_tick = False # Internal mechanic to slow down gravity and give hang time in the air.
+        self.facing_right = False
 
     def move(self, engine, amount=1, target=None, direction=None):
         if target and direction:
@@ -44,7 +49,20 @@ class Entity():
             else:
                 delta = [0, sign(delta[1])]
 
-            if engine.project_collides(entity=self, shift=delta):
+            colgroup = engine.project_collides(entity=self, shift=delta)
+            if colgroup:
+                for ent in colgroup:
+                    if str(type(ent)) != "<class 'tile.Tile'>":
+                        if ent.on_collision:
+                            ent.on_collision(ent, engine, self)
+                        else:
+                            ent.hurt(engine, self.weight)
+
+                        if self.on_collision:
+                            self.on_collision(self, engine, ent)
+                        else:
+                            self.hurt(engine, self.weight)
+                    
                 self.velocity = [0, 0]
                 return amount-i
             else:
@@ -103,3 +121,14 @@ class Entity():
         position = [int(offset[i]+surface.get_size()[i]/2) for i in range(2)]
 
         return (sprite, position)
+
+    def hurt(self, engine, amount):
+        if self.health is None:
+            return
+
+        self.health -= amount
+        if self.health <= 0:
+            self.dead = True
+
+    def on_death(self, engine):
+        pass

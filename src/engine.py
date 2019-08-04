@@ -112,6 +112,9 @@ class Engine():
         self.running = True
         engine = self
         while self.running:
+            self.actors = [entity for entity in self.actors if not entity.dead]
+            self.items = [item for item in  self.items if not item.dead]
+
             for item in self.items:
                 item.tick(engine)
 
