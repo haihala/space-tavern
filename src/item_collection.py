@@ -75,7 +75,7 @@ SHOP_CATALOG = {
             },
         "heal": {
             "name": "item_heal",
-            "count": 2,
+            "count": 3,
             "cost": 5
             },
         "warudo": {
@@ -85,13 +85,13 @@ SHOP_CATALOG = {
             },
         "mine": {
             "name": "item_mine",
-            "count": 1,
+            "count": 2,
             "cost": 10
             },
-        "item_adrenaline": {
+        "adrenaline": {
             "name": "item_adrenaline",
             "count": 1,
-            "cost": 50
+            "cost": 60
             },
         "box": {
             "name": "item_beer",
@@ -123,7 +123,7 @@ def create_collection():
 
     def item_heal(position, **kwargs):
         sprite = "item_heal"
-        return Item(position, sprite, on_use=stop_time, **kwargs)
+        return Item(position, sprite, on_use=heal, **kwargs)
 
     def item_mine(position, **kwargs):
         sprite = "item_mine"
