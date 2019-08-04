@@ -89,21 +89,21 @@ class Engine():
                 elif y == 0 and abs(x) < 3:
                     self.items.append(ITEMS["item_jump_pad"]([x,y]))
 
-                if y == 6 or y == -6 or (y == 0 and abs(x) > 2) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
+                if y == self.ship_height or y == -self.ship_height or (y == 0 and abs(x) > 2) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
                     self.background.append(Tile([x,y+1], "floor_bottom"))
-                if y == -6 or y == 6 or (y == 0 and abs(x) > 2):
+                if y == -self.ship_height or y == self.ship_height or (y == 0 and abs(x) > 2):
                     self.background.append(Tile([x,y-1], "floor_top"))
                 if (x == -self.ship_width or x == self.ship_width or (y == 0 and x == -3)) and not (y <= 5 and y >= 3):
                     self.background.append(Tile([x+1,y], "floor_right"))
                 if (x == -self.ship_width or x == self.ship_width or (y == 0 and x == 3)) and not (y <= 5 and y >= 3):
                     self.background.append(Tile([x-1,y], "floor_left"))
-                if ((x == -self.ship_width and y == -6) or (y == 0 and x == 3)) or (y == 6 and x == -self.ship_width):
+                if ((x == -self.ship_width and y == -self.ship_height) or (y == 0 and x == 3)) or (y == self.ship_height and x == -self.ship_width):
                     self.background.append(Tile([x-1,y-1], "floor_top_left"))
-                if ((x == -self.ship_width and y == 6) or (y == 0 and x == 3)) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
+                if ((x == -self.ship_width and y == self.ship_height) or (y == 0 and x == 3)) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
                     self.background.append(Tile([x-1,y+1], "floor_bottom_left"))
-                if ((x == self.ship_width and y == -6) or (y == 0 and x == -3)) or (y == 6 and x == self.ship_width):
+                if ((x == self.ship_width and y == -self.ship_height) or (y == 0 and x == -3)) or (y == self.ship_height and x == self.ship_width):
                     self.background.append(Tile([x+1,y-1], "floor_top_right"))
-                if ((x == self.ship_width and y == 6) or (y == 0 and x == -3)) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
+                if ((x == self.ship_width and y == self.ship_height) or (y == 0 and x == -3)) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
                     self.background.append(Tile([x+1,y+1], "floor_bottom_right"))
 
     @property
@@ -123,8 +123,11 @@ class Engine():
             #remove doors
             #add extra floors
             self.items = [item for item in self.items if item._sprite != SPRITES["item_door"]]
-            for x in range(-20, 20):
+            for x in range(-self.ship_width*3, self.ship_width*3+1):
                 self.tiles.append(Tile([x, 7], "ground_top"))
+                if abs(x) == self.ship_width*3:
+                    for y in range(-self.ship_height, self.ship_height*2+1):
+                        self.tiles.append(Tile([x,y], "ground"))
                 for y in range(8, 10):
                     self.tiles.append(Tile([x, y], "ground"))
 
