@@ -126,10 +126,9 @@ class Engine():
         self.in_space = state
 
         if self.in_space:
+            SOUNDS["ship_space"].play()
             SOUNDS["music_peace"].fadeout(2)
             SOUNDS["music_space"].play(-1, 0, 2)
-            #stop peace music
-            #start space music
             for x in range(-self.ship_width, self.ship_width+1):
                 for y in range(-self.ship_height, self.ship_height+1):
                     if (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
@@ -139,10 +138,9 @@ class Engine():
 
         else:
             self.planet += 1
+            SOUNDS["ship_land"].play()
             SOUNDS["music_space"].fadeout(2)
             SOUNDS["music_peace"].play(-1, 0, 2)
-            #stop space music
-            #start peace music
             self.tiles = [tile for tile in self.tiles if tile._sprite != SPRITES["door"]]
             for x in range(-self.ship_width*3, self.ship_width*3+1):
                 self.background.append(Tile([x,GROUND_LEVEL], "ground_top"))
@@ -268,7 +266,7 @@ class Engine():
         for p in self.panorama:
             if p._sprite == SPRITES["panorama_stars"]:
                 p.position = [p.position[0]+(1 if self.in_space else 0), p.position[1]]
-                p.old_position = [LERP(p.old_position[i], p.position[i], 0.1) for i in p.position]
+                p.old_position = [LERP(p.old_position[i], p.position[i], 0.1) for i in range(2)]
                 if p.position[0] > self.display.get_width():
                     p.position = [-self.display.get_width(), 0]
                     p.old_position = p.position[:]
@@ -278,7 +276,7 @@ class Engine():
                 targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), p.old_position))
             elif p._sprite == SPRITES["panorama_planet"]:
                 p.position = [0,self.display.get_height()] if self.in_space else [0, 0]
-                p.old_position = [LERP(p.old_position[i], p.position[i], 0.1) for i in p.position]
+                p.old_position = [LERP(p.old_position[i], p.position[i], 0.1) for i in range(2)]
                 sprite, position = p.get_surf(self.display, self.cam)
                 targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), p.old_position))
 

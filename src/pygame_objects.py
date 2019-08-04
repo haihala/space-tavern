@@ -109,6 +109,7 @@ def get_sounds():
         "player_move": pygame.mixer.Sound("resources/player_move.wav"),
         "player_buy": pygame.mixer.Sound("resources/player_buy.wav"),
         "player_heal": pygame.mixer.Sound("resources/player_buy.wav"),
+        "player_damage": pygame.mixer.Sound("resources/player_damage.wav"),
 
         "ship_space": pygame.mixer.Sound("resources/ship_space.wav"),
         "ship_land": pygame.mixer.Sound("resources/ship_land.wav"),
