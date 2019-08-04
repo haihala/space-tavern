@@ -6,7 +6,7 @@ from tile import Tile
 from enemy_collection import ENEMIES
 from item_collection import ITEMS
 
-from constants import HELDSIZE, TILESIZE, LERP, GROUND_LEVEL
+from constants import HELDSIZE, TILESIZE, LERP, GROUND_LEVEL, DIFFICULTY
 
 import pygame
 import math
@@ -24,10 +24,6 @@ class Engine():
         self.money = 50
         self.in_space = False
 
-        self.difficulty = 20
-        self.max_enemy_count = 5
-        self.boss_probability = 1
-        self.space_duration = 10
         self.console_available = 0
 
         self.tick_count = 0
@@ -121,12 +117,13 @@ class Engine():
 
     def liftoff(self):
         self.console.data["console"] = self.in_space
-        self.console_available = self.tick_count + self.space_duration
+        self.console_available = self.tick_count + DIFFICULTY[self.planet]["space_duration"]
         self.update_surroundings(not self.in_space)
 
     def update_surroundings(self, state):
         from pygame_objects import SPRITES, SOUNDS
         self.in_space = state
+
         if self.in_space:
             SOUNDS["music_peace"].fadeout(2)
             SOUNDS["music_space"].play(-1, 0, 2)
@@ -140,6 +137,7 @@ class Engine():
             self.entities = [entity for entity in self.entities if not (entity._sprite in [SPRITES["item_sell"], SPRITES["item_shop"]])]
 
         else:
+            self.planet += 1
             SOUNDS["music_space"].fadeout(2)
             SOUNDS["music_peace"].play(-1, 0, 2)
             #stop space music
@@ -221,8 +219,8 @@ class Engine():
             for entity in self.entities:
                 entity.grounded = self.project_collides(entity, [0,1], exclude=[entity])
 
-            if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
-                boss = int(random()<self.boss_probability)
+            if self.tick_count % DIFFICULTY[self.planet]["spawn_interval"]== 0 and len(self.enemies) < DIFFICULTY[self.planet]["max_enemy_count"] and self.in_space:
+                boss = int(random() < DIFFICULTY[self.planet]["boss_probability"])
                 while True:
                     rand_coords = [randint(-self.ship_width+1, self.ship_width-1), randint(-self.ship_height+1, self.ship_height-1)]
                     if self.place(ENEMIES[["alien_spawner", "alien_spawner_big"][boss]](rand_coords)):
@@ -355,3 +353,9 @@ class Engine():
         self.display.blit(money_text, (
             int(self.display.get_width()-money_text.get_width()-10),
             int(self.display.get_height()-money_text.get_height()-10-TILESIZE)))
+
+        # Planet
+        planet_text = self.text_surface("Planet {}".format(self.planet), (30, 100, 255))
+        self.display.blit(planet_text, (
+            int(self.display.get_width()-planet_text.get_width()-10),
+            int(self.display.get_height()-planet_text.get_height()-100)))
