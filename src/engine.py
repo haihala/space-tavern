@@ -168,6 +168,7 @@ class Engine():
                 "pickup": [i for i in self.entities if type(i) is Item and i.can_pickup]
                 }
         search_space = spaces[target]
+
         if entity:
             return [i for i in search_space if i not in exclude and (abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1]))<=3 and any(p in i.colliders for p in entity.colliders)]
         if point:
@@ -198,7 +199,7 @@ class Engine():
                     dead.on_death(dead, self, self.player)
             self.entities = [entity for entity in self.entities if not entity.dead]
             for entity in self.entities:
-                for item in self.collides(entity, target="trigger_item"):
+                for item in self.collides(entity, target="trigger_item", exclude=[entity]):
                     if item.on_collision:
                         item.on_collision(item, self, entity)
                 if entity == self.player:
