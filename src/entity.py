@@ -62,12 +62,12 @@ class Entity():
                 for ent in colgroup:
                     if ent.on_collision:
                         ent.on_collision(ent, engine, self)
-                    elif (self.velocity != [0, 0] or "enemy" in str(type(self))) and "item" not in str(type(self)):
+                    elif (self.velocity != [0, 0] or "enemy" in str(type(self))) and "item" not in str(type(ent)):
                         ent.hurt(engine, self.collision_damage)
 
                     if self.on_collision:
                         self.on_collision(self, engine, ent)
-                    elif ent.velocity != [0, 0] or "enemy" in str(type(ent)):
+                    elif (ent.velocity != [0, 0] or "enemy" in str(type(ent))) and "item" not in str(type(self)):
                         self.hurt(engine, ent.collision_damage)
                 self.velocity = [0, 0]
                 return amount-i
