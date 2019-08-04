@@ -11,6 +11,7 @@ def drop(self, engine, user):
 def jump_pad_collision(self, engine, user):
     if type(user) is not Tile and self != user:
         user.move(engine, amount=engine.ship_height*2-3, direction=[0, -1])
+        self.sprite_offset = 1
 
 def gun_shoot(self, engine, user):
     if not self.fatigue:
@@ -25,7 +26,12 @@ SHOP_CATALOG = {
         "gun": {
             "name": "item_gun",
             "count": 1,
-            "cost": 4
+            "cost": 20
+            },
+        "box": {
+            "name": "item_beer",
+            "count": None,
+            "cost": 5
             }
         }
 

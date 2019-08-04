@@ -22,7 +22,7 @@ class Engine():
         self.display = pygame.display.set_mode(resolution, flags)
         self.null_entity = Entity()
 
-        self.money = 10
+        self.money = 50
         self.in_space = True
         self.difficulty = 20
         self.max_enemy_count = 2
@@ -36,8 +36,8 @@ class Engine():
         self.player = Player(conf["binds"])
         self.entities = [
                 self.player,
-                ITEMS["item_beer"]([6, 5]),
-                ITEMS["item_gun"]([7, 4])
+                #ITEMS["item_beer"]([6, 5]),
+                #ITEMS["item_gun"]([7, 4])
                 ]
         self.tiles = []
         self.background = []
@@ -55,10 +55,9 @@ class Engine():
 
         from pygame_objects import SOUNDS
         SOUNDS["music_peace"].set_volume(0.25)
-        SOUNDS["music_peace"].play(-1)
+        SOUNDS["music_peace"].play(-1, 0, 2)
 
-        pos = [-5, 5]
-        self.place(pos, ITEMS["item_shop"](pos, "gun"))
+        self.place([-5, 5], ITEMS["item_shop"]([-5, 5], "gun"))
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
@@ -122,17 +121,18 @@ class Engine():
         if self.in_space:
             #stop peace music
             #start space music
-            #create doors
-            #remove extra floors
             for x in range(-self.ship_width, self.ship_width+1):
                 for y in range(-self.ship_height, self.ship_height+1):
                     if (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
                         self.tiles.append(Tile([x,y],"door"))
-            pass
+            self.background = [background for background in self.background if background._sprite != SPRITES["ground_top"]]
+
         else:
-            #remove doors
-            #add extra floors
+            #stop space music
+            #start peace music
             self.tiles = [tile for tile in self.tiles if tile._sprite != SPRITES["door"]]
+            for x in range(-self.ship_width*3, self.ship_width*3+1):
+                self.background.append(Tile([x,GROUND_LEVEL], "ground_top"))
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
         if target in ["collider", "*"]:
@@ -282,7 +282,7 @@ class Engine():
                 targets.append((
                     pygame.transform.scale(
                         pygame.transform.flip(
-                            inventory_sprite, True, False) 
+                            inventory_sprite, True, False)
                         if entity.facing_right else inventory_sprite, (HELDSIZE, HELDSIZE)), [position[i] + offset[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
 
             if type(entity) is Item and entity.data and "item" in entity.data and entity.data["itemcount"] != 0:

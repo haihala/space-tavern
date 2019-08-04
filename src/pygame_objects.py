@@ -39,14 +39,14 @@ def get_sprites():
         "wall": get(7, 0),
 
         "window_top": get(1, 6),
-        "window_bottom": get(1, 8),
-        "window_right": get(2, 7),
-        "window_left": get(0, 7),
+        "window_bottom": get(0, 7),
+        "window_right": get(4, 6),
+        "window_left": get(3, 6),
         "window_top_left": get(0, 6),
         "window_top_right": get(2, 6),
-        "window_bottom_left": get(0, 8),
-        "window_bottom_right": get(2, 8),
-        "window": get(1, 7),
+        "window_bottom_left": get(5, 6),
+        "window_bottom_right": get(1, 7),
+        "window": get(6, 4),
 
         "floor_top": get(7, 5),
         "floor_middle": get(4, 4),
@@ -60,7 +60,6 @@ def get_sprites():
         "floor": get(7, 6),
 
         "ground_top": get(5, 4),
-        "ground": get(6, 4),
 
         "projectile_gun": [get(i+7, 3) for i in range(2)],
         "projectile_alien": [get(i+7, 4) for i in range(2)],
@@ -72,6 +71,7 @@ def get_sprites():
         "player_fall": get(3, 0),
 
         "alien_spawner": [get(i+4,5) for i in range(2)],
+        "alien_spawner_big": [merge(2+i*2, 7, 2, 2) for i in range(2)],
         "alien_base": [get(i, 2) for i in range(2)],
         "alien_fly": [get(i+2, 2) for i in range(2)],
         "alien_brain": [get(i, 3) for i in range(2)],
