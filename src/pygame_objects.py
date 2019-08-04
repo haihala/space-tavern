@@ -58,6 +58,9 @@ def get_sprites():
         "floor_bottom_right": get(8, 7),
         "floor": get(7, 6),
 
+        "ground_top": get(5, 4),
+        "ground": get(6, 4),
+
         "projectile_gun": [get(i+7, 3) for i in range(2)],
         "projectile_alien": [get(i+7, 4) for i in range(2)],
 
