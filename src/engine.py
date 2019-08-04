@@ -24,8 +24,6 @@ class Engine():
         self.money = 50
         self.in_space = False
 
-        self.console_available = 0
-
         self.tick_count = 0
         self.planet = 0
 
@@ -35,6 +33,8 @@ class Engine():
 
         self.player = Player(conf["binds"])
         self.console = ITEMS["item_console"]([-7, -1])
+        self.console.sprite_offset = 1
+        self.console_available = 0
         self.entities = [
                 self.player,
                 self.console
@@ -117,6 +117,7 @@ class Engine():
 
     def liftoff(self):
         self.console.data["console"] = self.in_space
+        self.console.sprite_offset = self.in_space
         self.console_available = self.tick_count + DIFFICULTY[self.planet]["space_duration"]
         self.update_surroundings(not self.in_space)
 
@@ -199,6 +200,7 @@ class Engine():
         while self.running:
             if self.tick_count >= self.console_available:
                 self.console.data["console"] = True
+                self.console.sprite_offset = 1
             for dead in self.entities:
                 if dead.dead and dead.on_death:
                     dead.on_death(dead, self, self.player)
