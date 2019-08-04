@@ -27,6 +27,10 @@ class Engine():
         self.tick_count = 0
         self.planet = 0
 
+        self.ship_width = 10
+        self.ship_height = 6
+        self.ship_gap = 4
+
         self.player = Player(conf["binds"])
         self.entities = [
                 self.player, 
@@ -50,8 +54,8 @@ class Engine():
         SOUNDS["music_peace"].set_volume(0.25)
         SOUNDS["music_peace"].play(-1)
 
-        for x in range(-10, 10):
-            for y in range(-6, 7):
+        for x in range(-self.ship_width, self.ship_width+1):
+            for y in range(-self.ship_height, self.ship_height+1):
                 if abs(x) <= 6 and abs(y) >= 2 and abs(y) <= 4:
                     if abs(x) < 6 and (y == 2 or y == -4):
                         self.background.append(Tile([x,y], "window_top"))
@@ -76,31 +80,30 @@ class Engine():
                 else:
                     self.background.append(Tile([x,y], "wall"))
 
-        for x in range(-10, 10):
-            for y in range(-6, 7):
-
-                if ((x == -10 or x == 9) or (y == -6 or y == 6 or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
+        for x in range(-self.ship_width, self.ship_width+1):
+            for y in range(-self.ship_height, self.ship_height+1):
+                if ((x == -self.ship_width or x == self.ship_width) or (y == -self.ship_height or y == self.ship_height or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
                     self.entities.append(Tile([x,y], "floor"))
-                elif (y <= 5 and y >= 3) and (x == -10 or x == 9):
+                elif (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
                     self.entities.append(ITEMS["item_door"]([x,y]))
                 elif y == 0 and abs(x) < 3:
                     self.entities.append(ITEMS["item_jump_pad"]([x,y]))
 
-                if y == 6 or y == -6 or (y == 0 and abs(x) > 2) or (y == 2 and (x == -10 or x == 9)):
+                if y == 6 or y == -6 or (y == 0 and abs(x) > 2) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
                     self.background.append(Tile([x,y+1], "floor_bottom"))
                 if y == -6 or y == 6 or (y == 0 and abs(x) > 2):
                     self.background.append(Tile([x,y-1], "floor_top"))
-                if (x == -10 or x == 9 or (y == 0 and x == -3)) and not (y <= 5 and y >= 3):
+                if (x == -self.ship_width or x == self.ship_width or (y == 0 and x == -3)) and not (y <= 5 and y >= 3):
                     self.background.append(Tile([x+1,y], "floor_right"))
-                if (x == -10 or x == 9 or (y == 0 and x == 3)) and not (y <= 5 and y >= 3):
+                if (x == -self.ship_width or x == self.ship_width or (y == 0 and x == 3)) and not (y <= 5 and y >= 3):
                     self.background.append(Tile([x-1,y], "floor_left"))
-                if ((x == -10 and y == -6) or (y == 0 and x == 3)) or (y == 6 and x == -10):
+                if ((x == -self.ship_width and y == -6) or (y == 0 and x == 3)) or (y == 6 and x == -self.ship_width):
                     self.background.append(Tile([x-1,y-1], "floor_top_left"))
-                if ((x == -10 and y == 6) or (y == 0 and x == 3)) or (y == 2 and (x == -10 or x == 9)):
+                if ((x == -self.ship_width and y == 6) or (y == 0 and x == 3)) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
                     self.background.append(Tile([x-1,y+1], "floor_bottom_left"))
-                if ((x == 9 and y == -6) or (y == 0 and x == -3)) or (y == 6 and x == 9):
+                if ((x == self.ship_width and y == -6) or (y == 0 and x == -3)) or (y == 6 and x == self.ship_width):
                     self.background.append(Tile([x+1,y-1], "floor_top_right"))
-                if ((x == 9 and y == 6) or (y == 0 and x == -3)) or (y == 2 and (x == -10 or x == 9)):
+                if ((x == self.ship_width and y == 6) or (y == 0 and x == -3)) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
                     self.background.append(Tile([x+1,y+1], "floor_bottom_right"))
 
     @property
@@ -108,11 +111,22 @@ class Engine():
         return [i for i in self.entities if type(i) is Enemy]
 
     def update_surroundings(self, state):
+        from pygame_objects import SPRITES, SOUNDS
         self.in_space = state
         if self.in_space:
+            #stop peace music
+            #start space music
+            #create doors
+            #remove extra floors
             pass
         else:
-            pass
+            #remove doors
+            #add extra floors
+            self.items = [item for item in self.items if item._sprite != SPRITES["item_door"]]
+            for x in range(-20, 20):
+                self.tiles.append(Tile([x, 7], "ground_top"))
+                for y in range(8, 10):
+                    self.tiles.append(Tile([x, y], "ground"))
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
         spaces = {
@@ -196,6 +210,7 @@ class Engine():
                             btn = 'up'
                         elif event.key == pygame.K_DOWN:
                             btn = 'down'
+                            self.update_surroundings(False)
                         elif event.key == pygame.K_LEFT:
                             btn = 'left'
                         elif event.key == pygame.K_RIGHT:
