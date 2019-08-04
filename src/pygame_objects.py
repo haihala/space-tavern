@@ -1,7 +1,7 @@
 from constants import TILESIZE
 
 import pygame
-pygame.mixer.init()
+pygame.mixer.init(buffer=1)
 
 def get_array(path, size=16):
     sheet = pygame.image.load(path).convert_alpha()
