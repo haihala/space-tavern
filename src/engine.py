@@ -54,11 +54,11 @@ class Engine():
         self.running = False
 
         from pygame_objects import SOUNDS
-        SOUNDS["music_peace"].set_volume(0.75)
-        SOUNDS["music_space"].set_volume(0.75)
+        SOUNDS["music_peace"].set_volume(0.5)
+        SOUNDS["music_space"].set_volume(0.5)
         #SOUNDS["music_peace"].play(-1, 0, 2)
 
-        self.place(ITEMS["item_shop"]([-5, 5], "gun"))
+        #self.place(ITEMS["item_shop"]([-5, 5], "gun"))
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
@@ -139,6 +139,7 @@ class Engine():
             self.tiles = [tile for tile in self.tiles if tile._sprite != SPRITES["door"]]
             for x in range(-self.ship_width*3, self.ship_width*3+1):
                 self.background.append(Tile([x,GROUND_LEVEL], "ground_top"))
+            
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
         if target in ["collider", "*"]:
