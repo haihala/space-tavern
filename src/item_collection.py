@@ -49,7 +49,7 @@ SHOP_CATALOG = {
 def create_collection():
     def item_beer(position, **kwargs):
         sprite = "item_beer"
-        return Item(position, sprite, on_use=drop, collider=True, collision_damage=1, **kwargs)
+        return Item(position, sprite, on_use=drop, collider=True, health=2, collision_damage=1, **kwargs)
 
     def item_jump_pad(position, **kwargs):
         sprite = "item_jump_pad"
