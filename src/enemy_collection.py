@@ -7,7 +7,7 @@ def bat_shoot(self, engine):
     if not self.fatigue:
         bullet = PROJECTILES["projectile_alien_down"](self.down)
 
-        if engine.place(self.down, bullet, target="tile"):
+        if engine.place(bullet, target="tile"):
             bullet.velocity = [0, 1]
             self.fatigue += self.speed
 
@@ -47,17 +47,33 @@ def create_collection():
         def spawn(self, engine, player):
             mob = choice([alien_base, alien_fly, alien_brain])(self.position)
             mob.facing_right = bool(getrandbits(1))
-            engine.place(self.position, mob, exclude=[self])
+            engine.place(mob, exclude=[self])
 
         return Enemy(ai_spawner, "alien_spawner", position, 0, 2, health=5, on_death=spawn, sprite_updated=True, **kwargs)
 
-    return  {
+    def alien_roadroller(position, **kwargs):
+        def ai_roadroller(self, engine):
+            pass
 
+        return Enemy(ai_roadroller, "alien_big", position, 1, 3, health=5, sprite_updated=True, width=2, height=2, **kwargs)
+
+    def alien_spawner_big(position, **kwargs):
+        def ai_spawner(self, engine):
+            self.hurt(engine, 1)
+
+        def spawn(self, engine, player):
+            mob = alien_roadroller(self.position)
+            mob.facing_right = bool(getrandbits(1))
+            engine.place(mob, exclude=[self])
+
+        return Enemy(ai_spawner, "alien_spawner_big", position, 0, 2, health=1, on_death=spawn, sprite_updated=True, width=2, height=2, **kwargs)
+
+    return  {
             "alien_base": alien_base,
             "alien_fly": alien_fly,
             "alien_brain": alien_brain,
-            "alien_spawner": alien_spawner
-
+            "alien_spawner": alien_spawner,
+            "alien_spawner_big": alien_spawner_big
             }
 
 ENEMIES = create_collection()

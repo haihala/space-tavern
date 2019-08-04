@@ -14,10 +14,13 @@ class Player(Entity):
             self.move(engine, amount=self.jump_height, direction=[0, -1])
 
     def throw(self, engine):
-        if engine.place(self.forwards, self.inventory):
+        self.inventory.position = self.forwards
+        if engine.place(self.inventory):
             self.inventory.velocity = [int(self.facing_right)*2-1, -2]
-        elif engine.place(self.up, self.inventory):
-            self.inventory.velocity = [0, -3]
+        else:
+            self.inventory.position = self.up
+            if engine.place(self.inventory):
+                self.inventory.velocity = [0, -3]
         self.inventory = None
         from pygame_objects import SOUNDS
         SOUNDS["item_throw"].play()

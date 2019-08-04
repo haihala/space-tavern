@@ -57,7 +57,7 @@ class Engine():
         SOUNDS["music_peace"].set_volume(0.25)
         SOUNDS["music_peace"].play(-1, 0, 2)
 
-        self.place([-5, 5], ITEMS["item_shop"]([-5, 5], "gun"))
+        self.place(ITEMS["item_shop"]([-5, 5], "gun"))
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
@@ -151,7 +151,15 @@ class Engine():
                 }
         search_space = spaces[target]
         if entity:
-            return [i for i in search_space if i not in exclude and abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1])<=2 and any(p in i.colliders for p in entity.colliders)]
+            tmp = [i for i in search_space if i not in exclude and abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1])<=2 and any(p in i.colliders for p in entity.colliders)]
+            if len(entity.colliders) >1:
+                print()
+                print(self.player.position)
+                print(entity.position)
+                print(entity.colliders)
+                print(tmp)
+            return tmp
+
         if point:
             return [i for i in search_space if i not in exclude and abs(i.position[0]-point[0]) + abs(i.position[1]-point[1])<=2 and point in i.colliders]
 
@@ -161,10 +169,8 @@ class Engine():
         exclude.append(cp)
         return self.collides(cp, target=target, exclude=exclude)
 
-    def place(self, spot, item, exclude=[], target="*"):
-        if not self.collides(point=spot, target=target, exclude=exclude):
-            item.position = spot
-            item.old_position = spot
+    def place(self, item, exclude=[], target="*"):
+        if not self.collides(entity=item, target=target, exclude=exclude):
             self.entities.append(item)
             return True
 
@@ -196,7 +202,7 @@ class Engine():
             if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
                 while True:
                     rand_coords = [randint(-self.ship_width+1, self.ship_width-1), randint(-self.ship_height+1, self.ship_height-1)]
-                    if self.place(rand_coords, ENEMIES["alien_spawner"](rand_coords)):
+                    if self.place(ENEMIES["alien_spawner_big"](rand_coords)):
                         break
             self.tick_count += 1
 
