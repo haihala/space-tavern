@@ -24,6 +24,11 @@ def gun_shoot(self, engine, user):
             bullet.facing_right = user.facing_right
             self.fatigue += self.speed
 
+def sell_collision(self, engine, user):
+    if user._sprite == SPRITES["item_beer"]:
+        engine.entities = [entity for entity in engine.entities if entity != user]
+        engine.money = engine.money + (5 if user.data.planet == engnine.planet else 10)
+
 SHOP_CATALOG = {
         "gun": {
             "name": "item_gun",
@@ -38,9 +43,9 @@ SHOP_CATALOG = {
         }
 
 def create_collection():
-    def item_beer(position, **kwargs):
+    def item_beer(position, planet=0, **kwargs):
         sprite = "item_beer"
-        return Item(position, sprite, on_use=drop, collider=True, collision_damage=1, **kwargs)
+        return Item(position, sprite, on_use=drop, data={"planet": planet}, collider=True, collision_damage=1, **kwargs)
 
     def item_jump_pad(position, **kwargs):
         sprite = "item_jump_pad"
@@ -56,8 +61,12 @@ def create_collection():
         return Item(position, sprite, data={"item": i["name"], "itemcount": i["count"], "cost": i["cost"]}, collider=False, **kwargs)
 
     def item_console(position, **kwargs):
-        sprite = "floor_middle"
+        sprite = "item_console"
         return Item(position, sprite, data={"console": True}, collider=False, **kwargs)
+
+    def item_sell(position, **kwargs):
+        sprite = "item_sell"
+        return Item(position, sprite, collider=False, on_collision=sell_collision, **kwargs)
 
     return  {
             "item_beer": item_beer,
