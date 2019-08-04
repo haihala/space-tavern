@@ -41,6 +41,7 @@ class Engine():
                 ]
         self.tiles = []
         self.background = []
+        self.particles = {}
         self.panorama = [
                 Tile([0,0], "panorama_stars"),
                 Tile([-self.display.get_width(), 0], "panorama_stars"),
@@ -118,6 +119,9 @@ class Engine():
     def enemies(self):
         return [i for i in self.entities if type(i) is Enemy]
 
+    def make_particles(self, position, kind):
+        self.particles.append((position, kind))
+
     def liftoff(self):
         self.console.data["console"] = self.in_space
         self.console.sprite_offset = self.in_space
@@ -193,6 +197,7 @@ class Engine():
     def run(self):
         self.running = True
         while self.running:
+            self.particles = []
             if self.tick_count >= self.console_available:
                 self.console.data["console"] = True
                 self.console.sprite_offset = 1
@@ -402,6 +407,12 @@ class Engine():
 
                 cost_txt = pygame.transform.scale(self.text_surface(str(entity.data["cost"]), col), (TILESIZE, TILESIZE))
                 targets.append([cost_txt, [position[i] + [0, -TILESIZE][i] for i in range(2)]])
+
+        from pygame_objects import SPRITES
+        for part in self.particles:
+            relpos, kind = part
+            abspos = [(relpos[i]-self.cam[i]-0.5)*TILESIZE + self.display.get_size()[i]/2 for i in range(2)]
+            targets.append((SPRITES[kind], abspos))
 
         self.display.blits(targets)
 
