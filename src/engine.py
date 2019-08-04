@@ -37,7 +37,8 @@ class Engine():
         self.console_available = 0
         self.entities = [
                 self.player,
-                self.console
+                self.console,
+                ITEMS["item_gun"]((-3, -1))
                 ]
         self.tiles = []
         self.background = []
@@ -298,7 +299,7 @@ class Engine():
 
         self.display.blit(self.text_surface("Keys:", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
         offset += 1
-        self.display.blit(self.text_surface("x - Use/pickup/buy/throw", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        self.display.blit(self.text_surface("x - Use/pickup/buy/throw something in the same square or the one in front", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
         offset += 1
         self.display.blit(self.text_surface("Arrow keys - Move", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
         offset += 1
