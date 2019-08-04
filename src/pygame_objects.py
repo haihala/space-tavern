@@ -88,6 +88,10 @@ def get_sprites():
         "item_gun": [get(i+4, 2) for i in range(2)],
         "item_jump_pad": [get(i+5, 3) for i in range(2)],
         "item_console": [get(i, 8) for i in range(2)],
+        "item_mine": get(9, 0),
+        "item_heal": get(9, 1),
+        "item_warudo": get(9, 2),
+        "item_syringe": get(9, 3)
     }
 
 SPRITES = get_sprites()
@@ -98,7 +102,14 @@ def get_sounds():
         "item_pickup": pygame.mixer.Sound("resources/item_pickup.wav"),
         "item_drop": pygame.mixer.Sound("resources/item_drop.wav"),
 
+        "entity_jump": pygame.mixer.Sound("resources/entity_jump.wav"),
+        "entity_die": pygame.mixer.Sound("resources/entity_die.wav"),
         "player_move": pygame.mixer.Sound("resources/player_move.wav"),
+        "player_buy": pygame.mixer.Sound("resources/player_buy.wav"),
+        "player_heal": pygame.mixer.Sound("resources/player_buy.wav"),
+
+        "ship_space": pygame.mixer.Sound("resources/ship_space.wav"),
+        "ship_land": pygame.mixer.Sound("resources/ship_land.wav"),
 
         "music_peace": pygame.mixer.Sound("resources/music_peace.wav"),
         "music_space": pygame.mixer.Sound("resources/music_space.wav")
