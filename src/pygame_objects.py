@@ -3,8 +3,6 @@ from constants import TILESIZE
 import pygame
 pygame.mixer.init()
 
-from random import randint
-
 def get_array(path, size=16):
     sheet = pygame.image.load(path).convert_alpha()
     width, height = sheet.get_size()
