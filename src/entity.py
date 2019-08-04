@@ -96,7 +96,7 @@ class Entity():
     def tick(self, engine):
         self.position = [self.position[0], min(self.position[1], GROUND_LEVEL)]
         self.fatigue = max(0, self.fatigue-1)
-        self.sprite_offset = self.sprite_offset+1
+        self.sprite_offset = (self.sprite_offset+1 if self.sprite_updated else 0)
         active = self.fatigue != 0
         if type(self) is Entity:
             self.upkeep(engine, False)

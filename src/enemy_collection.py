@@ -15,17 +15,17 @@ def create_collection():
 
 
             # Shoot
-        return Enemy(ai_base, "alien_base", position, 1, 4, health=1, **kwargs)
+        return Enemy(ai_base, "alien_base", position, 1, 4, health=1, sprite_updated=True, **kwargs)
 
     def alien_fly(position, **kwargs):
         def ai_fly(self, engine):
             pass
-        return Enemy(ai_fly, "alien_fly", position, -1, 6, health=1, **kwargs)
+        return Enemy(ai_fly, "alien_fly", position, -1, 6, health=1, sprite_updated=True, **kwargs)
 
     def alien_brain(position, **kwargs):
         def ai_brain(self, engine):
             pass
-        return Enemy(ai_brain, "alien_brain", position, 1, 10, health=1, **kwargs)
+        return Enemy(ai_brain, "alien_brain", position, 1, 10, health=1, sprite_updated=True, **kwargs)
 
     def alien_spawner(position, **kwargs):
         def ai_spawner(self, engine):
@@ -35,7 +35,7 @@ def create_collection():
             mob = choice([alien_base, alien_fly, alien_brain])(self.position)
             engine.place(self.position, mob, exclude=[self])
 
-        return Enemy(ai_spawner, "alien_spawner", position, 0, 2, health=5, on_death=spawn, **kwargs)
+        return Enemy(ai_spawner, "alien_spawner", position, 0, 2, health=5, on_death=spawn, sprite_updated=True, **kwargs)
 
     return  {
 

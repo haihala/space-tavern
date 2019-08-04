@@ -7,6 +7,7 @@ class Player(Entity):
         self.binds = binds
         self.jump_height = 3
         self.inventory = None
+        self.sprite_updated = True
 
     def jump(self, engine):
         if self.grounded:
