@@ -68,7 +68,7 @@ class Entity():
                     elif (self.velocity != [0, 0] or "enemy" in str(type(self))) and "item" not in str(type(ent)):
                         ent.hurt(engine, self.collision_damage)
                     from tile import Tile
-                    if self.on_collision and type(ent) == Tile:
+                    if self.on_collision and type(ent) != Tile:
                         self.on_collision(self, engine, ent)
                     elif (ent.velocity != [0, 0] or "enemy" in str(type(ent))) and "item" not in str(type(self)):
                         self.hurt(engine, ent.collision_damage)
@@ -168,6 +168,3 @@ class Entity():
 
             SOUNDS["entity_die"].play()
             self.dead = True
-
-    def on_death(self, engine):
-        pass
