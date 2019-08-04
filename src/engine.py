@@ -78,7 +78,7 @@ class Engine():
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
         spaces = {
                 "*": self.actors + self.items + self.tiles,
-                "collider": self.actors + self.tiles,
+                "collider": self.actors + self.tiles + [i for i in self.items if i.collider],
                 "enemy": self.enemies,
                 "player": [self.player],
                 "actor": self.actors,

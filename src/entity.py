@@ -31,10 +31,7 @@ class Entity():
             raise ValueError("Both, direction and target passed to move")
         for i in range(amount):
             if target and not direction:
-                print("Entity aoueaeose moving")
                 direction = [target[i]-self.position[i] for i in range(2)]
-            if target:
-                print("any")
 
             if direction[0] > 0:
                 self.facing_right = True
@@ -49,12 +46,8 @@ class Entity():
 
             if engine.project_collides(entity=self, shift=delta):
                 self.velocity = [0, 0]
-                if target:
-                    print("col")
                 return amount-i
             else:
-                if target:
-                    print("nocol")
                 self.position = [self.position[i] + delta[i] for i in range(2)]
 
     def sprite(self):
