@@ -157,9 +157,13 @@ class Entity():
     def hurt(self, engine, amount):
         if self.health is None:
             return
+        from pygame_objects import SOUNDS
+        SOUNDS["player_damage"]
 
         self.health -= amount
         if self.health <= 0:
+
+            SOUNDS["entity_die"].play()
             self.dead = True
 
     def on_death(self, engine):

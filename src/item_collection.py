@@ -59,6 +59,8 @@ def sell_collision(self, engine, user):
     if user._sprite == SPRITES["item_beer"]:
         engine.entities = [entity for entity in engine.entities if entity != user]
         engine.money = engine.money + (5 if user.data["planet"] == engine.planet else 10)
+        from pygame_objects import SOUNDS
+        SOUNDS["player_buy"].play()
 
 SHOP_CATALOG = {
         "gun": {
@@ -104,11 +106,11 @@ def create_collection():
         return Item(position, sprite, on_use=drop, collider=True, health=2, collision_damage=1, **kwargs)
 
     def item_warudo(position, **kwargs):
-        sprite = "floor_middle"
+        sprite = "item_warudo"
         return Item(position, sprite, on_use=stop_time, **kwargs)
 
     def item_adrenaline(position, **kwargs):
-        sprite = "floor_middle"
+        sprite = "item_syringe"
         return Item(position, sprite, on_use=speed_up, **kwargs)
 
     def item_jump_pad(position, **kwargs):
@@ -120,11 +122,11 @@ def create_collection():
         return Item(position, sprite, on_use=gun_shoot, speed=6, **kwargs)
 
     def item_heal(position, **kwargs):
-        sprite = "wall_middle"
+        sprite = "item_heal"
         return Item(position, sprite, on_use=heal, **kwargs)
 
     def item_mine(position, **kwargs):
-        sprite = "wall_middle"
+        sprite = "item_mine"
         return Item(position, sprite, can_pickup=False, on_collision=explode, **kwargs)
 
     def item_shop(position, item=None, **kwargs):
