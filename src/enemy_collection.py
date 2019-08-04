@@ -73,9 +73,6 @@ def create_collection():
         def ai_roadroller(self, engine):
             target_direction = engine.player.position[0] - self.position[0] 
 
-            print()
-            print(self.forwards)
-            print(self.position)
             engine.roadroll([[self.forwards[i] + [0, j][i] for i in range(2)] for j in range(-1, 4)])
             self.move(engine, amount=1, direction=[self.forwards[i] - self.position[i] for i in range(2)])
             
