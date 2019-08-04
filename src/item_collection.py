@@ -20,7 +20,7 @@ def create_collection():
 
     def item_door(position, **kwargs):
         sprite = "item_door"
-        return Item(position, sprite, can_pickup=False, **kwargs)
+        return Item(position, sprite, collider=True, can_pickup=False, **kwargs)
 
     return  {
             "item_beer": item_beer,
