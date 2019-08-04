@@ -16,7 +16,7 @@ def gun_shoot(self, engine, user):
     if not self.fatigue:
         bullet = PROJECTILES["projectile_gun"](user.forwards)
 
-        if engine.place(user.forwards, bullet): 
+        if engine.place(user.forwards, bullet):
             bullet.velocity = [int(user.facing_right)*2-1, 0]
             self.fatigue += self.speed
 
@@ -29,10 +29,6 @@ def create_collection():
         sprite = "item_jump_pad"
         return Item(position, sprite, on_collision=jump_pad_collision, on_use=drop, weight=1, **kwargs)
 
-    def item_door(position, **kwargs):
-        sprite = "item_door"
-        return Item(position, sprite, collider=True, can_pickup=False, **kwargs)
-
     def item_gun(position, **kwargs):
         sprite = "item_gun"
         return Item(position, sprite, on_use=gun_shoot, speed=6, **kwargs)
@@ -40,7 +36,6 @@ def create_collection():
     return  {
             "item_beer": item_beer,
             "item_jump_pad": item_jump_pad,
-            "item_door": item_door,
             "item_gun": item_gun
             }
 

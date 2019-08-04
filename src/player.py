@@ -85,3 +85,8 @@ class Player(Entity):
         if not moved:
             self.gravity(engine)
         self.handle_velocity(engine)
+
+        if abs(self.position[0]) > engine.ship_width:
+            engine.target_cam = [self.position[0], 0]
+        else:
+            engine.target_cam = [0, 0]
