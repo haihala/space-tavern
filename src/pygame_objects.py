@@ -28,6 +28,7 @@ def get_sprites():
     return {
         "panorama_stars": [pygame.image.load("resources/Stars_Panorama1.png").convert(), pygame.image.load("resources/Stars_Panorama2.png").convert()],
         "panorama_planet": [pygame.image.load("resources/Land_Panorama.png").convert_alpha()],
+        "title_image": [pygame.image.load("resources/title_image.png").convert_alpha()],
 
         "wall_top": get(6, 0),
         "wall_middle": get(6, 1),
