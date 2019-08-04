@@ -118,6 +118,10 @@ class Engine():
             #start space music
             #create doors
             #remove extra floors
+            for x in range(-self.ship_width, self.ship_width+1):
+                for y in range(-self.ship_height, self.ship_height+1):
+                    if (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
+                        self.tiles.append(Tile([x,y],"door"))
             pass
         else:
             #remove doors
@@ -213,7 +217,7 @@ class Engine():
                             btn = 'up'
                         elif event.key == pygame.K_DOWN:
                             btn = 'down'
-                            self.update_surroundings(False)
+                            self.update_surroundings(not self.in_space)
                         elif event.key == pygame.K_LEFT:
                             btn = 'left'
                         elif event.key == pygame.K_RIGHT:
