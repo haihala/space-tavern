@@ -39,6 +39,9 @@ class Entity():
         self.facing_right = False
 
     def move(self, engine, amount=1, target=None, direction=None):
+        if not (self in engine.entities):
+            return None
+
         if target and direction:
             raise ValueError("Both, direction and target passed to move")
         for i in range(amount):
@@ -64,8 +67,8 @@ class Entity():
                         ent.on_collision(ent, engine, self)
                     elif (self.velocity != [0, 0] or "enemy" in str(type(self))) and "item" not in str(type(ent)):
                         ent.hurt(engine, self.collision_damage)
-
-                    if self.on_collision:
+                    from tile import Tile
+                    if self.on_collision and type(ent) == Tile:
                         self.on_collision(self, engine, ent)
                     elif (ent.velocity != [0, 0] or "enemy" in str(type(ent))) and "item" not in str(type(self)):
                         self.hurt(engine, ent.collision_damage)

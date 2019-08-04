@@ -96,6 +96,7 @@ class Player(Entity):
                 self._sprite = SPRITES["player_idle"]
             elif action == "jump":
                 self.jump(engine)
+                SOUNDS["entity_jump"].play()
             elif action == "use":
                 if self.inventory:
                     self.inventory.on_use(self.inventory, engine, self)

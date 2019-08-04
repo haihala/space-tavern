@@ -40,8 +40,14 @@ def speed_up(self, engine, user):
 def heal(self, engine, user):
     user.inventory = None
     user.health += 2
+    from pygame_objects import SOUNDS
+    SOUNDS["player_heal"].play()
 
 def explode(self, engine, user):
+
+    from pygame_objects import SOUNDS
+    SOUNDS["entity_die"].play()
+
     points = []
     for i in range(-1, 3):
         for j in range(-1, 3):
@@ -51,7 +57,6 @@ def explode(self, engine, user):
         tgt = engine.collides(point=point, target="entity")
         for t in tgt:
             t.hurt(self, 2)
-
     self.dead = True
 
 def sell_collision(self, engine, user):
@@ -127,7 +132,7 @@ def create_collection():
 
     def item_mine(position, **kwargs):
         sprite = "item_mine"
-        return Item(position, sprite, can_pickup=False, on_collision=explode, **kwargs)
+        return Item(position, sprite, can_pickup=False, on_collision=explode, on_use=drop, weight=1, **kwargs)
 
     def item_shop(position, item=None, **kwargs):
         sprite = "item_shop"
