@@ -1,4 +1,6 @@
-# space-tavern
+# The ultimate boose run (tubs)
+
+GMTK game jam 2019 product by yours truly.
 
 # Setup
 
