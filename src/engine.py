@@ -26,6 +26,10 @@ class Engine():
         ]
         self.tiles = []
         self.background = []
+        self.panorama = [
+            Tile([0,0], "panorama_stars"),
+            Tile([-self.display.get_width()/TILESIZE, 0], "panorama_stars")
+        ]
         self.color = (0, 0, 0)
 
         self.tick_target_duration = 1
@@ -185,19 +189,35 @@ class Engine():
     def render(self, tick_time_left):
         # Draw the world
         self.cam = [LERP(self.cam[i], self.target_cam[i], 0.1) for i in range(2)]
+        self.draw_panorama()
         self.draw_background()
         self.draw_world()
         self.draw_hud(tick_time_left)
         pygame.display.flip()
 
+    def draw_panorama(self):
+        targets = []
+        for p in self.panorama:
+            p.position = [p.position[0]+0.01, p.position[1]]
+            if p.position[0] > self.display.get_width()/TILESIZE:
+                p.position = [-self.display.get_width()/TILESIZE, p.position[1]]
+                p.old_position = p.position[:]
+            if random.randint(0,100) > 99:
+                p.sprite_offset = p.sprite_offset + 1
+            sprite, position = p.get_surf(self.display, self.cam)
+            targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), position))
+
+        self.display.fill(self.color)
+        self.display.blits(targets)
+
     def draw_background(self):
+
         targets= []
         for bg in self.background:
             targets.append(bg.get_surf(self.display, self.cam))
         for fg in self.tiles:
             targets.append(fg.get_surf(self.display, self.cam))
 
-        self.display.fill(self.color)
         self.display.blits(targets)
 
     def draw_world(self):
