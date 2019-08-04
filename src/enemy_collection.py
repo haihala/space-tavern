@@ -4,7 +4,7 @@ def create_collection():
     def alien_base(position, **kwargs):
         def ai_base(self, engine):
             #self.move(engine, target=engine.player.position)
-            direction = []
+            direction = [0, 0]
 
             if engine.player.position[1] < self.position[1] and self.grounded:
                 direction = [0, self.jump_height]
