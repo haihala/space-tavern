@@ -43,7 +43,7 @@ class Engine():
         self.background = []
         self.panorama = [
             Tile([0,0], "panorama_stars"),
-            Tile([-self.display.get_width()/TILESIZE, 0], "panorama_stars"),
+            Tile([-self.display.get_width(), 0], "panorama_stars"),
             Tile([0,self.display.get_height()/TILESIZE], "panorama_planet")
         ]
         self.color = (0, 0, 0)
@@ -248,8 +248,8 @@ class Engine():
         for p in self.panorama:
             if p._sprite == SPRITES["panorama_stars"]:
                 p.position = [p.position[0]+1, p.position[1]]
-                if p.position[0] > self.display.get_width()/2:
-                    p.position = [-self.display.get_width()/2, 0]
+                if p.position[0] > self.display.get_width():
+                    p.position = [-self.display.get_width(), 0]
                     p.old_position = p.position[:]
                 if random.randint(0,100) > 99:
                     p.sprite_offset = p.sprite_offset + 1
