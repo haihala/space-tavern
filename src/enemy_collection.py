@@ -58,6 +58,19 @@ def create_collection():
 
         return Enemy(ai_turret, "alien_turret", position, 1, 5, health=1, sprite_updated=True, **kwargs)
 
+    def alien_brain(position, **kwargs):
+        def ai_brain(self, engine):
+            if self.grounded and bool(getrandbits(1)):
+                direction = [0, -1]
+                engine.entities = [entity for entity in engine.entities if entity.position != [self.position[0], self.position[1]-1]]
+                self.move(engine, amount=self.jump_height, direction=direction)
+            else:
+                direction = [-1 if bool(getrandbits(1)) else 1, 0]
+                engine.entities = [entity for entity in engine.entities if entity.position != [self.position[0]+direction[0], self.position[1]]]
+
+
+        return Enemy(ai_brain, "alien_brain", position, 1, 3, health=1, sprite_updated=True, jump_height=3, **kwargs)
+
     def alien_spawner(position, **kwargs):
         def ai_spawner(self, engine):
             self.hurt(engine, 1)
@@ -71,16 +84,16 @@ def create_collection():
 
     def alien_roadroller(position, **kwargs):
         def ai_roadroller(self, engine):
-            target_direction = engine.player.position[0] - self.position[0] 
+            target_direction = engine.player.position[0] - self.position[0]
 
             engine.roadroll([[self.forwards[i] + [0, j][i] for i in range(2)] for j in range(-1, 4)])
             self.move(engine, amount=1, direction=[self.forwards[i] - self.position[i] for i in range(2)])
-            
+
             if target_direction:
                 direction = target_direction < 0
-                
+
                 if direction == self.facing_right:
-                    # Turn 
+                    # Turn
                     self.facing_right = not direction
 
 
