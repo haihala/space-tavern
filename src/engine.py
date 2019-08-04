@@ -32,7 +32,7 @@ class Engine():
         self.ship_gap = 4
 
         self.player = Player(conf["binds"])
-        self.console = ITEMS["item_console"]([-9, -1])
+        self.console = ITEMS["item_console"]([-7, -1])
         self.console.sprite_offset = 1
         self.console_available = 0
         self.entities = [
@@ -345,13 +345,13 @@ class Engine():
             self.display.blit(heart, (int(base[0]-i*TILESIZE*1.1), base[1]))
 
         # Money
-        money_text = self.text_surface("$ {}".format(self.money), (133, 187, 101))
+        money_text = pygame.transform.scale(self.text_surface("$ {}".format(self.money), (133, 187, 101)), (int(self.display.get_width()/6), int(self.display.get_height()/10)))
         self.display.blit(money_text, (
             int(self.display.get_width()-money_text.get_width()-10),
             int(self.display.get_height()-money_text.get_height()-10-TILESIZE)))
 
         # Planet
-        planet_text = self.text_surface("Planet {}".format(self.planet), (30, 100, 255))
+        planet_text = pygame.transform.scale(self.text_surface("Planet {}".format(self.planet), (30, 100, 255)), (int(self.display.get_width()/5), int(self.display.get_height()/10)))
         self.display.blit(planet_text, (
             int(self.display.get_width()-planet_text.get_width()-10),
             int(self.display.get_height()-planet_text.get_height()-100)))
