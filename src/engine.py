@@ -43,7 +43,8 @@ class Engine():
         self.background = []
         self.panorama = [
             Tile([0,0], "panorama_stars"),
-            Tile([-self.display.get_width()/TILESIZE, 0], "panorama_stars")
+            Tile([-self.display.get_width()/TILESIZE, 0], "panorama_stars"),
+            Tile([0,self.display.get_height()/TILESIZE], "panorama_planet")
         ]
         self.color = (0, 0, 0)
 
@@ -91,7 +92,7 @@ class Engine():
                     self.entities.append(Tile([x,y], "floor"))
                 elif (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
                     self.tiles.append(Tile([x,y],"door"))
-                elif y == 0 and abs(x) < 3:
+                elif y == 0 and abs(x) <= 1:
                     self.entities.append(ITEMS["item_jump_pad"]([x,y]))
 
                 if y == self.ship_height or y == -self.ship_height or (y == 0 and abs(x) > 2) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
@@ -196,7 +197,7 @@ class Engine():
 
             if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
                 while True:
-                    rand_coords = [randint(-10, 8), randint(-6, 7)]
+                    rand_coords = [randint(-self.ship_width+1, self.ship_width-1), randint(-self.ship_height+1, self.ship_height-1)]
                     if self.place(rand_coords, ENEMIES["alien_spawner"](rand_coords)):
                         break
             self.tick_count += 1
@@ -242,16 +243,22 @@ class Engine():
         pygame.display.flip()
 
     def draw_panorama(self):
+        from pygame_objects import SPRITES
         targets = []
         for p in self.panorama:
-            p.position = [p.position[0]+0.01, p.position[1]]
-            if p.position[0] > self.display.get_width()/TILESIZE:
-                p.position = [-self.display.get_width()/TILESIZE, p.position[1]]
-                p.old_position = p.position[:]
-            if random.randint(0,100) > 99:
-                p.sprite_offset = p.sprite_offset + 1
-            sprite, position = p.get_surf(self.display, self.cam)
-            targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), position))
+            if p._sprite == SPRITES["panorama_stars"]:
+                p.position = [p.position[0]+1, p.position[1]]
+                if p.position[0] > self.display.get_width()/2:
+                    p.position = [-self.display.get_width()/2, 0]
+                    p.old_position = p.position[:]
+                if random.randint(0,100) > 99:
+                    p.sprite_offset = p.sprite_offset + 1
+                sprite, position = p.get_surf(self.display, self.cam)
+                targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), p.old_position))
+            elif p._sprite == SPRITES["panorama_planet"]:
+                p.position = [0,self.display.get_height()] if self.in_space else [0, 0]
+                sprite, position = p.get_surf(self.display, self.cam)
+                targets.append((pygame.transform.scale(sprite, (self.display.get_width(), self.display.get_height())), p.old_position))
 
         self.display.fill(self.color)
         self.display.blits(targets)
