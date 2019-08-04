@@ -6,9 +6,9 @@ def create_collection():
             #self.move(engine, target=engine.player.position)
 
             if engine.player.position[1] < self.position[1] and self.grounded:
-                direction = [0, 1]
+                direction = [0, -1]
                 self.move(engine, direction=direction, amount=self.jump_height)
-            else:
+            elif engine.player.position[0] != self.position[0]:
                 direction = [1 if engine.player.position[0] > self.position[0] else -1, 0]
                 self.move(engine, direction=direction, amount=1)
 

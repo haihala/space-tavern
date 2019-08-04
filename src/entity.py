@@ -57,12 +57,12 @@ class Entity():
                 for ent in colgroup:
                     if ent.on_collision:
                         ent.on_collision(ent, engine, self)
-                    else:
+                    elif self.velocity != [0, 0]:
                         ent.hurt(engine, self.collision_damage)
 
                     if self.on_collision:
                         self.on_collision(self, engine, ent)
-                    else:
+                    elif ent.velocity != [0, 0]:
                         self.hurt(engine, ent.collision_damage)
                 self.velocity = [0, 0]
                 return amount-i
