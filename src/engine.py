@@ -148,9 +148,9 @@ class Engine():
         search_space = spaces[target]
 
         if entity:
-            return [i for i in search_space if i not in exclude and abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1])>2 and any(p in i.colliders for p in entity.colliders)]
+            return [i for i in search_space if i not in exclude and abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1])<=2 and any(p in i.colliders for p in entity.colliders)]
         if point:
-            return [i for i in search_space if i not in exclude and abs(i.position[0]-point[0]) + abs(i.position[1]-point[1])>2 and point in i.colliders]
+            return [i for i in search_space if i not in exclude and abs(i.position[0]-point[0]) + abs(i.position[1]-point[1])<=2 and point in i.colliders]
 
     def project_collides(self, entity, shift, target="collider", exclude=[]):
         cp = copy(entity)
