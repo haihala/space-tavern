@@ -111,6 +111,9 @@ class Engine():
                     self.background.append(Tile([x+1,y+1], "floor_bottom_right"))
         self.update_surroundings(self.in_space)
 
+        self.pause(True)
+
+
     @property
     def enemies(self):
         return [i for i in self.entities if type(i) is Enemy]
@@ -247,7 +250,7 @@ class Engine():
                         elif event.key == pygame.K_ESCAPE:
                             btn = 'esc'
                         elif event.key == pygame.K_SPACE:
-                            btn = ' '
+                            btn = 'space'
                         else:
                             btn = event.unicode
 
@@ -259,13 +262,19 @@ class Engine():
 
         self.player.tick(self, buffered)
 
-    def pause(self):
-        while True:
-            self.draw_help()
+    def pause(self, title=False):
+        paused = True
+        while paused:
+            if not title:
+                self.draw_help()
+            else:
+                self.draw_title_screen()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.quit()
                 elif event.type == pygame.KEYDOWN:
+                    paused = False
                     break
 
     def draw_help(self):
@@ -280,6 +289,7 @@ class Engine():
         offset += 1
         self.display.blit(self.text_surface("Red is health", (255, 0, 0)), (10, int(10+offset*text_height*1.1)))
         offset += 2
+
         self.display.blit(self.text_surface("Keys:", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
         offset += 1
         self.display.blit(self.text_surface("x - Use/pickup/buy/throw", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
@@ -292,8 +302,9 @@ class Engine():
         offset += 1
         self.display.blit(self.text_surface("down arrow - Skip turn", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
         offset += 1
-        self.display.blit(self.text_surface("esc - Toggle this pause menu", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
+        self.display.blit(self.text_surface("esc - Open this pause menu.", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
         offset += 2
+
         self.display.blit(self.text_surface("Use console to take off", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
         offset += 1
         self.display.blit(self.text_surface("Throw beer into dollar sign when on a planet to sell", (255, 255, 255)), (10, int(10+offset*text_height*1.1)))
@@ -301,8 +312,18 @@ class Engine():
         self.display.blit(self.text_surface("Holding onto beer raises value", (255, 255, 255)), (10, int(10+offset*100*1.1)))
         offset += 1
         self.display.blit(self.text_surface("Use items to survive. 5 planets max, each one harder than the last.", (255, 255, 255)), (10, int(10+offset*100*1.1)))
-        offset += 1
+        offset += 2
 
+        cont_txt = self.text_surface("Press any key to continue", (255, 255, 255))
+        self.display.blit(cont_txt, (
+            self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
+        pygame.display.flip()
+
+    def draw_title_screen(self):
+        self.display.fill((0, 0, 0))
+        cont_txt = self.text_surface("Press any key to continue", (255, 255, 255))
+        self.display.blit(cont_txt, (
+            self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
         pygame.display.flip()
 
     def render(self, tick_time_left):
