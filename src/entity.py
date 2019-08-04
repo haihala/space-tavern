@@ -56,17 +56,18 @@ class Entity():
             else:
                 delta = [0, sign(delta[1])]
 
-            colgroup = engine.project_collides(entity=self, shift=delta)
+            colgroup = engine.project_collides(entity=self, shift=delta, exclude=[self])
+
             if colgroup:
                 for ent in colgroup:
                     if ent.on_collision:
                         ent.on_collision(ent, engine, self)
-                    elif self.velocity != [0, 0]:
+                    elif self.velocity != [0, 0] or "enemy" in str(type(self)):
                         ent.hurt(engine, self.collision_damage)
 
                     if self.on_collision:
                         self.on_collision(self, engine, ent)
-                    elif ent.velocity != [0, 0]:
+                    elif ent.velocity != [0, 0] or "enemy" in str(type(ent)):
                         self.hurt(engine, ent.collision_damage)
                 self.velocity = [0, 0]
                 return amount-i
@@ -133,7 +134,7 @@ class Entity():
     def get_surf(self, surface, camera):
         sprite = self.sprite()
         self.old_position = [LERP(self.old_position[i], self.position[i], 0.1) for i in range(2)]
-        offset = [(self.old_position[i] - camera[i])*TILESIZE - 0.5*sprite.get_size()[i] for i in range(2)]
+        offset = [(self.old_position[i] - camera[i] - 0.5)*TILESIZE for i in range(2)]
         position = [int(offset[i]+surface.get_size()[i]/2) for i in range(2)]
 
         return (sprite, position)

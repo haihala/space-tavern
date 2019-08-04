@@ -1,6 +1,9 @@
 from entity import Entity
 from item_collection import ITEMS
 
+def game_over(self, engine, player):
+    engine.quit()
+
 class Player(Entity):
     def __init__(self, binds):
         super().__init__(sprite="player_idle", health=3)
@@ -8,6 +11,7 @@ class Player(Entity):
         self.jump_height = 3
         self.inventory = None
         self.sprite_updated = True
+        self.on_death = game_over
 
     def jump(self, engine):
         if self.grounded:
@@ -42,6 +46,9 @@ class Player(Entity):
                             target.data["itemcount"] -= 1
                 else:
                     return False
+            elif "console" in target.data:
+                if target.data["console"]:
+                    engine.liftoff(target)
             else:
                 self.inventory = target
                 engine.entities = [i for i in engine.entities if i is not target]     # Remove item from the world

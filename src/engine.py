@@ -25,7 +25,7 @@ class Engine():
         self.money = 50
         self.in_space = False
         self.difficulty = 20
-        self.max_enemy_count = 2
+        self.max_enemy_count = 1
         self.tick_count = 0
         self.planet = 0
 
@@ -36,8 +36,7 @@ class Engine():
         self.player = Player(conf["binds"])
         self.entities = [
                 self.player,
-                #ITEMS["item_beer"]([6, 5]),
-                #ITEMS["item_gun"]([7, 4])
+                ITEMS["item_console"]([-9, -1])
                 ]
         self.tiles = []
         self.background = []
@@ -57,8 +56,6 @@ class Engine():
         SOUNDS["music_peace"].set_volume(0.5)
         SOUNDS["music_space"].set_volume(0.5)
         #SOUNDS["music_peace"].play(-1, 0, 2)
-
-        #self.place(ITEMS["item_shop"]([-5, 5], "gun"))
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
@@ -117,6 +114,10 @@ class Engine():
     def enemies(self):
         return [i for i in self.entities if type(i) is Enemy]
 
+    def liftoff(self, console):
+        console.data["console"] = self.in_space
+        self.update_surroundings(not self.in_space)
+
     def update_surroundings(self, state):
         from pygame_objects import SPRITES, SOUNDS
         self.in_space = state
@@ -139,7 +140,7 @@ class Engine():
             self.tiles = [tile for tile in self.tiles if tile._sprite != SPRITES["door"]]
             for x in range(-self.ship_width*3, self.ship_width*3+1):
                 self.background.append(Tile([x,GROUND_LEVEL], "ground_top"))
-            
+
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
         if target in ["collider", "*"]:
@@ -158,15 +159,7 @@ class Engine():
                 }
         search_space = spaces[target]
         if entity:
-            tmp = [i for i in search_space if i not in exclude and abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1])<=2 and any(p in i.colliders for p in entity.colliders)]
-            if len(entity.colliders) >1:
-                print()
-                print(self.player.position)
-                print(entity.position)
-                print(entity.colliders)
-                print(tmp)
-            return tmp
-
+            return [i for i in search_space if i not in exclude and (abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1]))<=3 and any(p in i.colliders for p in entity.colliders)]
         if point:
             return [i for i in search_space if i not in exclude and abs(i.position[0]-point[0]) + abs(i.position[1]-point[1])<=2 and point in i.colliders]
 
@@ -204,7 +197,7 @@ class Engine():
                     entity.tick(self)
 
             for entity in self.entities:
-                entity.grounded = self.project_collides(entity, [0,1])
+                entity.grounded = self.project_collides(entity, [0,1], exclude=[entity])
 
             if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
                 while True:

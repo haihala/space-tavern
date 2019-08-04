@@ -55,11 +55,16 @@ def create_collection():
         i = SHOP_CATALOG[item]
         return Item(position, sprite, data={"item": i["name"], "itemcount": i["count"], "cost": i["cost"]}, collider=False, **kwargs)
 
+    def item_console(position, **kwargs):
+        sprite = "floor_middle"
+        return Item(position, sprite, data={"console": True}, collider=False, **kwargs)
+
     return  {
             "item_beer": item_beer,
             "item_jump_pad": item_jump_pad,
             "item_gun": item_gun,
-            "item_shop": item_shop
+            "item_shop": item_shop,
+            "item_console": item_console
             }
 
 ITEMS = create_collection()
