@@ -86,7 +86,7 @@ class Engine():
                     self.entities.append(Tile([x,y], "floor"))
                 elif (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
                     self.tiles.append(Tile([x,y],"door"))
-                elif y == 0 and abs(x) < 3:
+                elif y == 0 and abs(x) <= 1:
                     self.entities.append(ITEMS["item_jump_pad"]([x,y]))
 
                 if y == self.ship_height or y == -self.ship_height or (y == 0 and abs(x) > 2) or (y == 2 and (x == -self.ship_width or x == self.ship_width)):
@@ -193,7 +193,7 @@ class Engine():
 
             if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
                 while True:
-                    rand_coords = [randint(-10, 8), randint(-6, 7)]
+                    rand_coords = [randint(-self.ship_width+1, self.ship_width-1), randint(-self.ship_height+1, self.ship_height-1)]
                     if self.place(rand_coords, ENEMIES["alien_spawner"](rand_coords)):
                         break
             self.tick_count += 1
