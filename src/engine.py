@@ -39,7 +39,9 @@ class Engine():
 
         for x in range(-10, 10):
             for y in range(-6, 7):
-                if math.sin(x) > 0 and abs(math.sin(y)) < (0.2 + abs(math.cos(x)/1.23)):
+                if abs(x) <= 6 and abs(y) == 3:
+                    self.background.append(Tile([x,y], "window"))
+                elif math.sin(x) > 0 and abs(math.sin(y)) < (0.2 + abs(math.cos(x)/1.23)):
                     self.background.append(Tile([x,y], "wall_middle"))
                 else:
                     self.background.append(Tile([x,y], "wall"))

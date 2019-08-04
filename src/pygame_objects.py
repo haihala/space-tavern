@@ -34,6 +34,16 @@ def get_sprites():
         "wall_bottom_right": get(8, 2),
         "wall": get(7, 0),
 
+        "window_top": get(1, 6),
+        "window_bottom": get(1, 8),
+        "window_right": get(2, 7),
+        "window_left": get(0, 7),
+        "window_top_left": get(0, 6),
+        "window_top_right": get(2, 6),
+        "window_bottom_left": get(0, 8),
+        "window_bottom_right": get(2, 8),
+        "window": get(1, 7),
+
         "floor_top": get(7, 5),
         "floor_middle": get(4, 4),
         "floor_bottom": get(7, 7),
