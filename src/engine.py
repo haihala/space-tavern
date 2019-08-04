@@ -81,8 +81,6 @@ class Engine():
                         self.background.append(Tile([x,y], "window_bottom_left"))
                     elif x == 6 and (y == 4 or y == -2):
                         self.background.append(Tile([x,y], "window_bottom_right"))
-                    else:
-                        self.background.append(Tile([x,y], "window"))
                 elif math.sin(x) > 0 and abs(math.sin(y)) < (0.2 + abs(math.cos(x)/1.23)):
                     self.background.append(Tile([x,y], "wall_middle"))
                 else:
