@@ -42,9 +42,6 @@
   * 1 Max Health
   * Jump 3 tile
   * Gravity 1 tile
-  * Projectile:
-    * No Gravity
-    * 1 damage
 
 * Flying Alien
   * Move 6 ticks
