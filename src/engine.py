@@ -308,7 +308,11 @@ class Engine():
                         (HELDSIZE, HELDSIZE)
                         ), [position[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
 
-                cost_txt = pygame.transform.scale(self.text_surface(str(entity.data["cost"]), (133, 187, 101)), (TILESIZE, TILESIZE))
+                col = (133, 187, 101)
+                if entity.data["cost"] > self.money:
+                    col = (255, 0, 0)
+
+                cost_txt = pygame.transform.scale(self.text_surface(str(entity.data["cost"]), col), (TILESIZE, TILESIZE))
                 targets.append([cost_txt, [position[i] + [0, -TILESIZE][i] for i in range(2)]])
 
         self.display.blits(targets)
