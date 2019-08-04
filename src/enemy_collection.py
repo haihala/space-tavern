@@ -1,26 +1,39 @@
 from enemy import Enemy
+from projectile_collection import PROJECTILES
+
 from random import choice
+
+def bat_shoot(self, engine):
+    if not self.fatigue:
+        bullet = PROJECTILES["projectile_alien_down"](self.down)
+
+        if engine.place(self.down, bullet, target="tile"):
+            bullet.velocity = [0, 1]
+            self.fatigue += self.speed
 
 def create_collection():
     def alien_base(position, **kwargs):
         def ai_base(self, engine):
-            #self.move(engine, target=engine.player.position)
-
             if engine.player.position[1] < self.position[1] and self.grounded:
                 direction = [0, -1]
                 self.move(engine, direction=direction, amount=self.jump_height)
             elif engine.player.position[0] != self.position[0]:
                 direction = [1 if engine.player.position[0] > self.position[0] else -1, 0]
                 self.move(engine, direction=direction, amount=1)
-
-
             # Shoot
         return Enemy(ai_base, "alien_base", position, 1, 4, health=1, **kwargs)
 
     def alien_fly(position, **kwargs):
         def ai_fly(self, engine):
-            pass
-        return Enemy(ai_fly, "alien_fly", position, -1, 6, health=1, **kwargs)
+            if self.position[0] == engine.player.position[0]:
+                bat_shoot(self, engine)
+            elif self.move(engine, amount=1, direction=[int(self.facing_right)*2-1, 0]):
+                if self.move(engine, amount=1, direction=[0, -1]):
+                    self.facing_right = not self.facing_right
+                    if self.move(engine, amount=1, direction=[int(self.facing_right)*2-1, 0]):
+                        self.dead = True
+
+        return Enemy(ai_fly, "alien_fly", position, -1, 3, health=1, **kwargs)
 
     def alien_brain(position, **kwargs):
         def ai_brain(self, engine):

@@ -192,7 +192,6 @@ class Engine():
 
             for entity in self.entities:
                 entity.grounded = self.project_collides(entity, [0,1])
-            print(len(self.entities))
 
             if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
                 while True:

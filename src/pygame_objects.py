@@ -1,5 +1,6 @@
 from constants import TILESIZE
 
+from math import pi
 import pygame
 pygame.mixer.init(buffer=1)
 
@@ -63,6 +64,7 @@ def get_sprites():
 
         "projectile_gun": [get(i+7, 3) for i in range(2)],
         "projectile_alien": [get(i+7, 4) for i in range(2)],
+        "projectile_alien_down": [pygame.transform.rotate(get(i+7, 4), 90) for i in range(2)],
 
         "player_idle": [get(i, 0) for i in range(2)],
         "player_walk": [get(i, 1) for i in range(4)],   # Lista kuvia from x=0-3, y=1,
