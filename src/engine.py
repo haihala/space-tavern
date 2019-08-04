@@ -89,9 +89,9 @@ class Engine():
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
                 if ((x == -self.ship_width or x == self.ship_width) or (y == -self.ship_height or y == self.ship_height or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
-                    self.entities.append(Tile([x,y], "floor"))
+                    self.tiles.append(Tile([x,y], "floor"))
                 elif (y <= 5 and y >= 3) and (x == -self.ship_width or x == self.ship_width):
-                    self.tiles.append(Tile([x,y],"door"))
+                    self.tiles.append(Tile([x,y], "door"))
                 elif y == 0 and abs(x) <= 1:
                     self.entities.append(ITEMS["item_jump_pad"]([x,y]))
 
@@ -150,7 +150,6 @@ class Engine():
                 "pickup": [i for i in self.entities if type(i) is Item and i.can_pickup]
                 }
         search_space = spaces[target]
-
         if entity:
             return [i for i in search_space if i not in exclude and abs(i.position[0]-entity.position[0]) + abs(i.position[1]-entity.position[1])<=2 and any(p in i.colliders for p in entity.colliders)]
         if point:
@@ -179,7 +178,6 @@ class Engine():
                 if dead.dead and dead.on_death:
                     dead.on_death(dead, self, self.player)
             self.entities = [entity for entity in self.entities if not entity.dead]
-
             for entity in self.entities:
                 for item in self.collides(entity, target="trigger_item"):
                     if item.on_collision:
@@ -194,6 +192,7 @@ class Engine():
 
             for entity in self.entities:
                 entity.grounded = self.project_collides(entity, [0,1])
+            print(len(self.entities))
 
             if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
                 while True:
@@ -264,7 +263,6 @@ class Engine():
         self.display.blits(targets)
 
     def draw_background(self):
-
         targets= []
         for bg in self.background:
             targets.append(bg.get_surf(self.display, self.cam))
@@ -280,10 +278,22 @@ class Engine():
             targets.append((sprite, position))
             if type(entity) is Player and entity.inventory:
                 inventory_sprite, inventory_position = entity.inventory.get_surf(self.display, self.cam)
-
                 offset = [HELDSIZE if entity.facing_right else -HELDSIZE, 0]
 
-                targets.append((pygame.transform.scale(pygame.transform.flip(inventory_sprite, True, False) if entity.facing_right else inventory_sprite, (HELDSIZE, HELDSIZE)), [position[i] + offset[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
+                targets.append((
+                    pygame.transform.scale(
+                        pygame.transform.flip(
+                            inventory_sprite, True, False) 
+                        if entity.facing_right else inventory_sprite, (HELDSIZE, HELDSIZE)), [position[i] + offset[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
+
+            if type(entity) is Item and entity.data and "item" in entity.data:
+                inventory_sprite, inventory_position = ITEMS[entity.data["item"]](entity.position).get_surf(self.display, self.cam)
+                targets.append((
+                    pygame.transform.scale(
+                        inventory_sprite,
+                        (HELDSIZE, HELDSIZE)
+                        ), [position[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
+
         self.display.blits(targets)
 
     def draw_hud(self, tick_portion_left):

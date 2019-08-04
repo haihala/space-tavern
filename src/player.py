@@ -30,7 +30,6 @@ class Player(Entity):
         if targets:
             target = targets.pop()
             if "item" in target.data:
-                print(target)
                 if engine.money >= target.data["cost"]:
                     if target.data["itemcount"] != 0:
                         self.inventory = ITEMS[target.data["item"]](self.position)
