@@ -136,7 +136,7 @@ class Entity():
             self.move(engine, amount=abs(int(x)), direction=[x, 0])
             self.velocity = [
                     x if not self.grounded else 0,
-                    max(0, abs(y-sign(y)*self.drag))*sign(y)
+                    max(0, y-sign(y)*self.drag)*sign(y)
                     ]
     def gravity(self, engine):
         if not self.grounded and not self.grounded_last_tick:
