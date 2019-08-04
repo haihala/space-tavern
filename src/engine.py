@@ -75,7 +75,7 @@ class Engine():
                 "*": self.actors + self.items + self.tiles,
                 "collider": self.actors + self.tiles,
                 "enemy": self.enemies,
-                "player": [self.player,],
+                "player": [self.player],
                 "actor": self.actors,
                 "tile": self.tiles,
                 "item": self.items
@@ -90,7 +90,7 @@ class Engine():
     def project_collides(self, entity, shift, target="collider", exclude=[]):
         cp = copy(entity)
         cp.position = [cp.position[i]+shift[i] for i in range(2)]
-        exclude.append(entity)
+        exclude.append(cp)
         return self.collides(cp, target=target, exclude=exclude)
 
     def place(self, spot, item):
