@@ -348,3 +348,10 @@ class Engine():
         heart.fill((255, 0, 0))
         for i in range(self.player.health):
             self.display.blit(heart, (int(base[0]-i*TILESIZE*1.1), base[1]))
+
+        # Money
+        money_text = self.text_surface("$ {}".format(self.money), (133, 187, 101))
+        self.display.blit(money_text, (
+            int(self.display.get_width()-money_text.get_width()-10),
+            int(self.display.get_height()-money_text.get_height()-10-TILESIZE)))
+
