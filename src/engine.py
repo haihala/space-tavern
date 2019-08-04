@@ -280,10 +280,22 @@ class Engine():
             targets.append((sprite, position))
             if type(entity) is Player and entity.inventory:
                 inventory_sprite, inventory_position = entity.inventory.get_surf(self.display, self.cam)
-
                 offset = [HELDSIZE if entity.facing_right else -HELDSIZE, 0]
 
-                targets.append((pygame.transform.scale(pygame.transform.flip(inventory_sprite, True, False) if entity.facing_right else inventory_sprite, (HELDSIZE, HELDSIZE)), [position[i] + offset[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
+                targets.append((
+                    pygame.transform.scale(
+                        pygame.transform.flip(
+                            inventory_sprite, True, False) 
+                        if entity.facing_right else inventory_sprite, (HELDSIZE, HELDSIZE)), [position[i] + offset[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
+
+            if type(entity) is Item and entity.data and "item" in entity.data:
+                inventory_sprite, inventory_position = ITEMS[entity.data["item"]](entity.position).get_surf(self.display, self.cam)
+                targets.append((
+                    pygame.transform.scale(
+                        inventory_sprite,
+                        (HELDSIZE, HELDSIZE)
+                        ), [position[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
+
         self.display.blits(targets)
 
     def draw_hud(self, tick_portion_left):
