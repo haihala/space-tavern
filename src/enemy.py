@@ -1,8 +1,8 @@
 from entity import Entity
 
 class Enemy(Entity):
-    def __init__(self, ai, sprite, position, weight, speed, collision_damage=1, **kwargs):
-        super().__init__(sprite, position, weight, speed, collision_damage=collision_damage, **kwargs)
+    def __init__(self, ai, sprite, position, weight, speed, collision_damage=1, collider=True, **kwargs):
+        super().__init__(sprite, position, weight, speed, collision_damage=collision_damage, collider=collider, **kwargs)
         self.ai = ai
 
     def tick(self, engine):
