@@ -55,19 +55,6 @@ class Entity():
             colgroup = engine.project_collides(entity=self, shift=delta)
             if colgroup:
                 for ent in colgroup:
-<<<<<<< HEAD
-                    if str(type(ent)) != "<class 'tile.Tile'>":
-                        if ent.on_collision:
-                            ent.on_collision(ent, engine, self)
-                        else:
-                            ent.hurt(engine, self.weight)
-
-                        if self.on_collision:
-                            self.on_collision(self, engine, ent)
-                        else:
-                            self.hurt(engine, self.weight)
-
-=======
                     if ent.on_collision:
                         ent.on_collision(ent, engine, self)
                     else:
@@ -77,8 +64,6 @@ class Entity():
                         self.on_collision(self, engine, ent)
                     else:
                         self.hurt(engine, ent.collision_damage)
-
->>>>>>> ca94aec7e3c265d54c3314ec760844ccbbbacd63
                 self.velocity = [0, 0]
                 return amount-i
             else:
