@@ -286,7 +286,7 @@ class Engine():
                             inventory_sprite, True, False)
                         if entity.facing_right else inventory_sprite, (HELDSIZE, HELDSIZE)), [position[i] + offset[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
 
-            if type(entity) is Item and entity.data and "item" in entity.data:
+            if type(entity) is Item and entity.data and "item" in entity.data and entity.data["itemcount"] != 0:
                 inventory_sprite, inventory_position = ITEMS[entity.data["item"]](entity.position).get_surf(self.display, self.cam)
                 targets.append((
                     pygame.transform.scale(
