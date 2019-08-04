@@ -10,14 +10,15 @@ def drop(self, engine, user):
 
 def jump_pad_collision(self, engine, user):
     if type(user) is not Tile and self != user:
-        user.move(engine, amount=5, direction=[0, -1])
+        user.move(engine, amount=engine.ship_height*2-3, direction=[0, -1])
 
 def gun_shoot(self, engine, user):
     if not self.fatigue:
         bullet = PROJECTILES["projectile_gun"](user.forwards)
 
-        if engine.place(user.forwards, bullet):
+        if engine.place(user.forwards, bullet, target="tile"):
             bullet.velocity = [int(user.facing_right)*2-1, 0]
+            bullet.facing_right = user.facing_right
             self.fatigue += self.speed
 
 SHOP_CATALOG = {

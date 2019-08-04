@@ -10,7 +10,7 @@ def sign(x):
 
 class Entity():
     # Abstract
-    def __init__(self, sprite="window", position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None, on_death=None, jump_height=0, collision_damage=0, collider=True, data={}):
+    def __init__(self, sprite="window", position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None, on_death=None, jump_height=0, collision_damage=0, collider=True, data={}, sprite_updated=False):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
         self.sprite_offset = 0
@@ -30,6 +30,7 @@ class Entity():
         self.collision_damage = collision_damage
         self.collider = collider
         self.data = data
+        self.sprite_updated = sprite_updated
 
         self.velocity = [0, 0]
         self.dead = False

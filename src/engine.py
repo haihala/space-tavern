@@ -162,8 +162,8 @@ class Engine():
         exclude.append(cp)
         return self.collides(cp, target=target, exclude=exclude)
 
-    def place(self, spot, item, exclude=[]):
-        if not self.collides(point=spot, target="*", exclude=exclude):
+    def place(self, spot, item, exclude=[], target="*"):
+        if not self.collides(point=spot, target=target, exclude=exclude):
             item.position = spot
             item.old_position = spot
             self.entities.append(item)
@@ -247,7 +247,7 @@ class Engine():
         targets = []
         for p in self.panorama:
             if p._sprite == SPRITES["panorama_stars"]:
-                p.position = [p.position[0]+1, p.position[1]]
+                p.position = [p.position[0]+(1 if self.in_space else 0), p.position[1]]
                 if p.position[0] > self.display.get_width():
                     p.position = [-self.display.get_width(), 0]
                     p.old_position = p.position[:]
