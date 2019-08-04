@@ -27,6 +27,8 @@ class Engine():
         self.difficulty = 20
         self.max_enemy_count = 5
         self.boss_probability = 0.1
+        self.space_duration = 10
+        self.console_available = 0
 
         self.tick_count = 0
         self.planet = 0
@@ -36,17 +38,18 @@ class Engine():
         self.ship_gap = 4
 
         self.player = Player(conf["binds"])
+        self.console = ITEMS["item_console"]([-9, -1])
         self.entities = [
                 self.player,
-                ITEMS["item_console"]([-9, -1])
+                self.console
                 ]
         self.tiles = []
         self.background = []
         self.panorama = [
-            Tile([0,0], "panorama_stars"),
-            Tile([-self.display.get_width(), 0], "panorama_stars"),
-            Tile([0,self.display.get_height()/TILESIZE], "panorama_planet")
-        ]
+                Tile([0,0], "panorama_stars"),
+                Tile([-self.display.get_width(), 0], "panorama_stars"),
+                Tile([0,self.display.get_height()/TILESIZE], "panorama_planet")
+                ]
         self.color = (0, 0, 0)
 
         self.tick_target_duration = 1
@@ -58,6 +61,8 @@ class Engine():
         SOUNDS["music_peace"].set_volume(0.5)
         SOUNDS["music_space"].set_volume(0.5)
         #SOUNDS["music_peace"].play(-1, 0, 2)
+
+        self.basic_font = pygame.font.SysFont("comicsansms", 72)
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
@@ -114,8 +119,9 @@ class Engine():
     def enemies(self):
         return [i for i in self.entities if type(i) is Enemy]
 
-    def liftoff(self, console):
-        console.data["console"] = self.in_space
+    def liftoff(self):
+        self.console.data["console"] = self.in_space
+        self.console_available = self.tick_count + self.space_duration
         self.update_surroundings(not self.in_space)
 
     def update_surroundings(self, state):
@@ -186,6 +192,8 @@ class Engine():
     def run(self):
         self.running = True
         while self.running:
+            if self.tick_count >= self.console_available:
+                self.console.data["console"] = True
             for dead in self.entities:
                 if dead.dead and dead.on_death:
                     dead.on_death(dead, self, self.player)
@@ -284,6 +292,9 @@ class Engine():
 
         self.display.blits(targets)
 
+    def text_surface(self, content, color):
+        return self.basic_font.render(content, True, color)
+
     def draw_world(self):
         targets = []
         for entity in self.entities:
@@ -308,11 +319,30 @@ class Engine():
                         (HELDSIZE, HELDSIZE)
                         ), [position[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
 
+                col = (133, 187, 101)
+                if entity.data["cost"] > self.money:
+                    col = (255, 0, 0)
+
+                cost_txt = pygame.transform.scale(self.text_surface(str(entity.data["cost"]), col), (TILESIZE, TILESIZE))
+                targets.append([cost_txt, [position[i] + [0, -TILESIZE][i] for i in range(2)]])
+
         self.display.blits(targets)
 
+
     def draw_hud(self, tick_portion_left):
+        # Fatigue bar
         if self.player.fatigue:
             color = [255, 0, 0]
         else:
             color = [0, 255, 0]
         pygame.draw.rect(self.display, color, (0, 0, self.display.get_width()*(1-tick_portion_left), 50))
+
+        # Health
+        base = [self.display.get_size()[i]-TILESIZE for i in range(2)]
+        heart = pygame.Surface((TILESIZE, TILESIZE))
+        heart.fill((255, 0, 0))
+        for i in range(self.player.health):
+            self.display.blit(heart, (int(base[0]-i*TILESIZE*1.1), base[1]))
+
+            
+

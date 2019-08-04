@@ -50,7 +50,7 @@ class Player(Entity):
                     return False
             elif "console" in target.data:
                 if target.data["console"]:
-                    engine.liftoff(target)
+                    engine.liftoff()
             else:
                 self.inventory = target
                 engine.entities = [i for i in engine.entities if i is not target]     # Remove item from the world
@@ -95,7 +95,6 @@ class Player(Entity):
             elif action == "use":
                 if self.inventory:
                     self.inventory.on_use(self.inventory, engine, self)
-                self.fatigue = 0
             elif action == "pickup":
                 if self.inventory:
                     self.throw(engine)
