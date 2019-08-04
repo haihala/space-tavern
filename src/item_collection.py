@@ -3,7 +3,8 @@ from tile import Tile
 from projectile_collection import PROJECTILES
 
 def drop(self, engine, user):
-    if engine.place(user.forwards, self):
+    self.position = user.forwards
+    if engine.place(self):
         user.inventory = None
         from pygame_objects import SOUNDS
         SOUNDS["item_drop"].play()
@@ -17,7 +18,8 @@ def gun_shoot(self, engine, user):
     if not self.fatigue:
         bullet = PROJECTILES["projectile_gun"](user.forwards)
 
-        if engine.place(user.forwards, bullet, target="tile"):
+        bullet.position = user.forwards
+        if engine.place(bullet, target="tile"):
             bullet.velocity = [int(user.facing_right)*2-1, 0]
             bullet.facing_right = user.facing_right
             self.fatigue += self.speed

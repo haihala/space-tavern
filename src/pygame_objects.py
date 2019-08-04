@@ -12,12 +12,12 @@ def get_array(path, size=16):
 
 ARRAY = get_array("resources/Test.png")
 
-def merge(x, y, width, height, size=16):
-    ret = pygame.Surface((width*size, height*size))
+def merge(x, y, width, height):
+    ret = pygame.Surface((width*TILESIZE, height*TILESIZE), pygame.SRCALPHA).convert_alpha()
     for i in range(width):
         for j in range(height):
-            ret.blit(ARRAY[x+i][y+j], (i*size, j*size))
-    return pygame.transform.scale(ret, (TILESIZE*width, TILESIZE*height))
+            ret.blit(get(x+i, y+j), (i*TILESIZE, j*TILESIZE))
+    return ret.convert_alpha()
 
 def get(x, y):
     return pygame.transform.scale(ARRAY[x][y], (TILESIZE, TILESIZE))
