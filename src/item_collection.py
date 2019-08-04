@@ -16,6 +16,8 @@ def jump_pad_collision(self, engine, user):
     if type(user) is not Tile and self != user:
         user.move(engine, amount=engine.ship_height*2-3, direction=[0, -1])
         self.sprite_offset = 1
+        from pygame_objects import SOUNDS
+        SOUNDS["entity_jump"].play()
 
 def gun_shoot(self, engine, user):
     if not self.fatigue:
@@ -23,6 +25,8 @@ def gun_shoot(self, engine, user):
 
         bullet.position = user.forwards
         if engine.place(bullet, target="tile"):
+            from pygame_objects import SOUNDS
+            SOUNDS["item_throw"].play()
             bullet.velocity = [int(user.facing_right)*2-1, 0]
             bullet.facing_right = user.facing_right
             self.fatigue += self.speed

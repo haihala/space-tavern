@@ -21,6 +21,8 @@ def create_collection():
                 bullet = PROJECTILES["projectile_alien_down"](self.down)
 
                 if engine.place(bullet, target="tile"):
+                    from pygame_objects import SOUNDS
+                    SOUNDS["item_throw"].play()
                     bullet.velocity = [0, 1]
                     self.fatigue += self.speed
 
@@ -43,6 +45,8 @@ def create_collection():
                     bullet.facing_right = True
 
                 if engine.place(bullet, target="tile"):
+                    from pygame_objects import SOUNDS
+                    SOUNDS["item_throw"].play()
                     bullet.velocity = direction
                     self.fatigue += self.speed
 
@@ -79,6 +83,8 @@ def create_collection():
             mob = choice([alien_base, alien_fly, alien_turret])(self.position)
             mob.facing_right = bool(getrandbits(1))
             engine.place(mob, exclude=[self])
+            from pygame_objects import SOUNDS
+            SOUNDS["enemy_spawn"].play()
 
         return Enemy(ai_spawner, "alien_spawner", position, 0, 2, health=5, on_death=spawn, sprite_updated=True, **kwargs)
 
@@ -114,6 +120,8 @@ def create_collection():
             mob = alien_roadroller(self.position)
             mob.facing_right = bool(getrandbits(1))
             engine.place(mob, exclude=[self])
+            from pygame_objects import SOUNDS
+            SOUNDS["enemy_spawn"].play()
 
         return Enemy(ai_spawner, "alien_spawner_big", position, 0, 2, health=1, on_death=spawn, sprite_updated=True, width=2, height=2, **kwargs)
 
