@@ -55,7 +55,7 @@ class Entity():
         return [self.position[i] + [2*int(self.facing_right)-1, 0][i] for i in range(2)]
 
     @property
-    def forwards(self):
+    def up(self):
         return [self.position[i] + [0, -1][i] for i in range(2)]
 
     def sprite(self):
