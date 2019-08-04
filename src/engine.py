@@ -114,13 +114,14 @@ class Engine():
         self.update_surroundings(self.in_space)
 
         self.pause(True)
+        self.pause()        # Info for players
 
 
     @property
     def enemies(self):
         return [i for i in self.entities if type(i) is Enemy]
 
-    def make_particles(self, position, kind):
+    def add_particles(self, position, kind):
         self.particles.append((position, kind))
 
     def liftoff(self):
@@ -146,6 +147,8 @@ class Engine():
 
         else:
             self.planet += 1
+            if self.planet == 5:
+                self.quit(victory=True)
             SOUNDS["ship_land"].play()
             SOUNDS["music_space"].fadeout(2)
             SOUNDS["music_peace"].play(-1, 0, 2)
@@ -206,6 +209,7 @@ class Engine():
                 self.console.sprite_offset = 1
             for dead in self.entities:
                 if dead.dead and dead.on_death:
+                    self.add_particles(dead.position, "particle_explosion")
                     dead.on_death(dead, self, self.player)
             self.entities = [entity for entity in self.entities if not entity.dead]
             for entity in self.entities:
@@ -232,8 +236,9 @@ class Engine():
                         break
             self.tick_count += 1
 
-    def quit(self):
-        # Maybe save
+    def quit(self, hard=False, victory=False):
+        if not hard:
+            self.pause(False, not victory, victory)
         exit(0)
 
     def player_tick(self, slot):
@@ -244,7 +249,7 @@ class Engine():
             self.render(((time()-start_time)/true_slot) if self.in_space else 1)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.quit()
+                    self.quit(True)
                 if not self.player.fatigue:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
@@ -270,17 +275,23 @@ class Engine():
 
         self.player.tick(self, buffered)
 
-    def pause(self, title=False):
+    def pause(self, title=False, lose=False, win=False):
         paused = True
         while paused:
-            if not title:
-                self.draw_help()
-            else:
+            if title:
                 self.draw_title_screen()
+            elif lose:
+                self.draw_end_screen()
+                sleep(2)
+            elif win:
+                self.draw_end_screen(True)
+                sleep(2)
+            else:
+                self.draw_help()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.quit()
+                    self.quit(True)
                 elif event.type == pygame.KEYDOWN:
                     paused = False
                     break
@@ -332,6 +343,22 @@ class Engine():
         self.display.fill((0, 0, 0))
         self.display.blit(pygame.transform.scale(SPRITES["title_image"][0], self.display.get_size()), (0,0))
         cont_txt = self.text_surface("Press any key to continue", (255, 255, 255))
+        self.display.blit(cont_txt, (
+            self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
+        pygame.display.flip()
+
+    def draw_end_screen (self, win=False):
+        from pygame_objects import SPRITES
+        self.display.fill((0, 0, 0))
+        if win:
+            msg = self.text_surface("Thanks for playing, you win", (0, 255, 0))
+        else:
+            msg = self.text_surface("Red is health", (255, 0, 0))
+
+        self.display.blit(msg,
+                [self.display.get_size()[i]/2-msg.get_size()[i]/2 for i in range(2)])
+
+        cont_txt = self.text_surface("Press any key to exit", (255, 255, 255))
         self.display.blit(cont_txt, (
             self.display.get_width()/2-cont_txt.get_width()/2, self.display.get_height()*0.8-cont_txt.get_height()/2))
         pygame.display.flip()
