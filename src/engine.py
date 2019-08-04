@@ -1,4 +1,5 @@
 from enemy import Enemy
+from item import Item
 from player import Player
 from tile import Tile
 from enemy_collection import ENEMIES
@@ -27,11 +28,11 @@ class Engine():
         self.planet = 0
 
         self.player = Player(conf["binds"])
-        self.actors = [self.player]
-        self.items = [
+        self.entities = [
+                self.player, 
                 ITEMS["item_beer"]([6, 5]),
                 ITEMS["item_gun"]([7, 4])
-        ]
+                ]
         self.tiles = []
         self.background = []
         self.panorama = [
@@ -79,11 +80,11 @@ class Engine():
             for y in range(-6, 7):
 
                 if ((x == -10 or x == 9) or (y == -6 or y == 6 or y == 0) and (not (y == 0 and abs(x) < 3))) and not (y <= 5 and y >= 3):
-                    self.tiles.append(Tile([x,y], "floor"))
+                    self.entities.append(Tile([x,y], "floor"))
                 elif (y <= 5 and y >= 3) and (x == -10 or x == 9):
-                    self.items.append(ITEMS["item_door"]([x,y]))
+                    self.entities.append(ITEMS["item_door"]([x,y]))
                 elif y == 0 and abs(x) < 3:
-                    self.items.append(ITEMS["item_jump_pad"]([x,y]))
+                    self.entities.append(ITEMS["item_jump_pad"]([x,y]))
 
                 if y == 6 or y == -6 or (y == 0 and abs(x) > 2) or (y == 2 and (x == -10 or x == 9)):
                     self.background.append(Tile([x,y+1], "floor_bottom"))
@@ -104,7 +105,7 @@ class Engine():
 
     @property
     def enemies(self):
-        return [i for i in self.items if type(i) is Enemy]
+        return [i for i in self.entities if type(i) is Enemy]
 
     def update_surroundings(self, state):
         self.in_space = state
@@ -115,13 +116,13 @@ class Engine():
 
     def collides(self, entity=None, point=None, target="collider", exclude=[]):
         spaces = {
-                "*": self.actors + self.items + self.tiles,
-                "collider": self.actors + self.tiles + [i for i in self.items if i.collider],
+                "*": self.entities + self.tiles,
+                "collider": self.tiles + [i for i in self.entities if i.collider],
                 "enemy": self.enemies,
                 "player": [self.player],
-                "actor": self.actors,
                 "tile": self.tiles,
-                "item": self.items
+                "entities": self.entities,
+                "trigger_item": [i for i in self.entities if type(i) is Item and i.on_collision]
                 }
         search_space = spaces[target]
 
@@ -140,7 +141,7 @@ class Engine():
         if not self.collides(point=spot, target="*", exclude=exclude):
             item.position = spot
             item.old_position = spot
-            self.items.append(item)
+            self.entities.append(item)
             return True
 
     def camera_shake(self, amount):
@@ -149,17 +150,13 @@ class Engine():
     def run(self):
         self.running = True
         while self.running:
-            for dead in self.actors + self.items:
+            for dead in self.entities:
                 if dead.dead and dead.on_death:
                     dead.on_death(dead, self, self.player)
-            self.actors = [entity for entity in self.actors if not entity.dead]
-            self.items = [item for item in  self.items if not item.dead]
+            self.entities = [entity for entity in self.entities if not entity.dead]
 
-            for item in self.items:
-                item.tick(self)
-
-            for entity in self.actors:
-                for item in self.collides(entity, target="item"):
+            for entity in self.entities:
+                for item in self.collides(entity, target="trigger_item"):
                     if item.on_collision:
                         item.on_collision(item, self, entity)
                 if entity == self.player:
@@ -170,7 +167,7 @@ class Engine():
                 else:
                     entity.tick(self)
 
-            for entity in self.actors:
+            for entity in self.entities:
                 entity.grounded = self.project_collides(entity, [0,1])
 
             if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
@@ -246,7 +243,7 @@ class Engine():
 
     def draw_world(self):
         targets = []
-        for entity in self.actors:
+        for entity in self.entities:
             sprite, position = entity.get_surf(self.display, self.cam)
             targets.append((sprite, position))
             if type(entity) is Player and entity.inventory:
@@ -255,8 +252,6 @@ class Engine():
                 offset = [HELDSIZE if entity.facing_right else -HELDSIZE, 0]
 
                 targets.append((pygame.transform.scale(pygame.transform.flip(inventory_sprite, True, False) if entity.facing_right else inventory_sprite, (HELDSIZE, HELDSIZE)), [position[i] + offset[i] + TILESIZE/2 - HELDSIZE/2 for i in range(2)]))
-        for item in self.items:
-            targets.append(item.get_surf(self.display, self.cam))
         self.display.blits(targets)
 
     def draw_hud(self, tick_portion_left):
