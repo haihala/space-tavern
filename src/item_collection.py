@@ -9,7 +9,7 @@ def drop(self, engine, user):
         SOUNDS["item_drop"].play()
 
 def jump_pad_collision(self, engine, user):
-    if type(user) is not Tile:
+    if type(user) is not Tile and self != user:
         user.move(engine, amount=5, direction=[0, -1])
 
 def gun_shoot(self, engine, user):
@@ -27,7 +27,7 @@ def create_collection():
 
     def item_jump_pad(position, **kwargs):
         sprite = "item_jump_pad"
-        return Item(position, sprite, on_collision=jump_pad_collision, on_use=drop, **kwargs)
+        return Item(position, sprite, on_collision=jump_pad_collision, on_use=drop, weight=1, **kwargs)
 
     def item_gun(position, **kwargs):
         sprite = "item_gun"
