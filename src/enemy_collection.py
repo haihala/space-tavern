@@ -3,24 +3,6 @@ from projectile_collection import PROJECTILES
 
 from random import choice, getrandbits
 
-def bat_shoot(self, engine):
-    if not self.fatigue:
-        bullet = PROJECTILES["projectile_alien_down"](self.down)
-
-        if engine.place(bullet, target="tile"):
-            bullet.velocity = [0, 1]
-            self.fatigue += self.speed
-
-def turret_shoot(self, engine, direction, sprite):
-    if not self.fatigue:
-        bullet = PROJECTILES[sprite]([direction[i]+self.position[i] for i in range(2)])
-        if direction == [1, 0]:
-            bullet.facing_right = True
-
-        if engine.place(bullet, target="tile"):
-            bullet.velocity = direction
-            self.fatigue += self.speed
-
 def create_collection():
     def alien_base(position, **kwargs):
         def ai_base(self, engine):
@@ -34,6 +16,14 @@ def create_collection():
         return Enemy(ai_base, "alien_base", position, 1, 4, health=1, sprite_updated=True, **kwargs)
 
     def alien_fly(position, **kwargs):
+        def bat_shoot(self, engine):
+            if not self.fatigue:
+                bullet = PROJECTILES["projectile_alien_down"](self.down)
+
+                if engine.place(bullet, target="tile"):
+                    bullet.velocity = [0, 1]
+                    self.fatigue += self.speed
+
         def ai_fly(self, engine):
             if self.position[0] == engine.player.position[0]:
                 bat_shoot(self, engine)
@@ -46,14 +36,24 @@ def create_collection():
         return Enemy(ai_fly, "alien_fly", position, -1, 3, health=1, sprite_updated=True, **kwargs)
 
     def alien_turret(position, **kwargs):
+        def turret_shoot(self, engine, direction, sprite):
+            if not self.fatigue:
+                bullet = PROJECTILES[sprite]([direction[i]+self.position[i] for i in range(2)])
+                if direction == [1, 0]:
+                    bullet.facing_right = True
+
+                if engine.place(bullet, target="tile"):
+                    bullet.velocity = direction
+                    self.fatigue += self.speed
+
         def ai_turret(self, engine):
             if self.position[0] == engine.player.position[0]:
                 direction = [0, -1]
                 sprite = "projectile_alien_up"
             else:
-                direction = [[-1, 1][self.position[0]<engine.player.position[0]], 0]
+                direction = [[-1, 1][int(self.position[0] < engine.player.position[0])], 0]
                 sprite = "projectile_alien"
-                self.facing_right = self.position[0]<engine.player.position[0]
+                self.facing_right = self.position[0] < engine.player.position[0]
             turret_shoot(self, engine, direction, sprite)
 
         return Enemy(ai_turret, "alien_turret", position, 1, 5, health=1, sprite_updated=True, **kwargs)
@@ -83,10 +83,16 @@ def create_collection():
         return Enemy(ai_spawner, "alien_spawner", position, 0, 2, health=5, on_death=spawn, sprite_updated=True, **kwargs)
 
     def alien_roadroller(position, **kwargs):
+        def roadroll(engine, points):
+            for point in points:
+                tgt = engine.collides(point=point, target="entity")
+                for t in tgt:
+                    t.hurt(self, 1)
+
         def ai_roadroller(self, engine):
             target_direction = engine.player.position[0] - self.position[0]
 
-            engine.roadroll([[self.forwards[i] + [0, j][i] for i in range(2)] for j in range(-1, 4)])
+            roadroll(engine, [[self.forwards[i] + [0, j][i] for i in range(2)] for j in range(-1, 4)])
             self.move(engine, amount=1, direction=[self.forwards[i] - self.position[i] for i in range(2)])
 
             if target_direction:

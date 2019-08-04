@@ -27,6 +27,33 @@ def gun_shoot(self, engine, user):
             bullet.facing_right = user.facing_right
             self.fatigue += self.speed
 
+def stop_time(self, engine, user):
+    user.inventory = None
+    for i in engine.entities:
+        if i is not user:
+            i.fatigue += 10
+
+def speed_up(self, engine, user):
+    user.inventory = None
+    user.speed -= 1
+
+def heal(self, engine, user):
+    user.inventory = None
+    user.health += 2
+
+def explode(self, engine, user):
+    points = []
+    for i in range(-1, 3):
+        for j in range(-1, 3):
+            points.append([self.position[0]+i, self.position[1]+j])
+
+    for point in points:
+        tgt = engine.collides(point=point, target="entity")
+        for t in tgt:
+            t.hurt(self, 2)
+
+    self.dead = True
+
 def sell_collision(self, engine, user):
     from pygame_objects import SPRITES
     if user._sprite == SPRITES["item_beer"]:
@@ -38,6 +65,31 @@ SHOP_CATALOG = {
             "name": "item_gun",
             "count": 1,
             "cost": 20
+            },
+        "jump_pad": {
+            "name": "item_jump_pad",
+            "count": 1,
+            "cost": 30
+            },
+        "heal": {
+            "name": "item_heal",
+            "count": 2,
+            "cost": 5
+            },
+        "warudo": {
+            "name": "item_warudo",
+            "count": 1,
+            "cost": 50
+            },
+        "mine": {
+            "name": "item_mine",
+            "count": 1,
+            "cost": 10
+            },
+        "item_adrenaline": {
+            "name": "item_adrenaline",
+            "count": 1,
+            "cost": 50
             },
         "box": {
             "name": "item_beer",
@@ -51,6 +103,14 @@ def create_collection():
         sprite = "item_beer"
         return Item(position, sprite, on_use=drop, collider=True, health=2, collision_damage=1, **kwargs)
 
+    def item_warudo(position, **kwargs):
+        sprite = "floor_middle"
+        return Item(position, sprite, on_use=stop_time, **kwargs)
+
+    def item_adrenaline(position, **kwargs):
+        sprite = "floor_middle"
+        return Item(position, sprite, on_use=speed_up, **kwargs)
+
     def item_jump_pad(position, **kwargs):
         sprite = "item_jump_pad"
         return Item(position, sprite, on_collision=jump_pad_collision, on_use=drop, can_pickup=False, weight=1, **kwargs)
@@ -58,6 +118,14 @@ def create_collection():
     def item_gun(position, **kwargs):
         sprite = "item_gun"
         return Item(position, sprite, on_use=gun_shoot, speed=6, **kwargs)
+
+    def item_heal(position, **kwargs):
+        sprite = "wall_middle"
+        return Item(position, sprite, on_use=stop_time, **kwargs)
+
+    def item_mine(position, **kwargs):
+        sprite = "wall_middle"
+        return Item(position, sprite, can_pickup=False, on_collision=explode, **kwargs)
 
     def item_shop(position, item=None, **kwargs):
         sprite = "item_shop"
@@ -76,9 +144,14 @@ def create_collection():
             "item_beer": item_beer,
             "item_jump_pad": item_jump_pad,
             "item_gun": item_gun,
+            "item_warudo": item_warudo,
+            "item_heal": item_heal,
+            "item_mine": item_mine,
+            "item_adrenaline": item_adrenaline,
+
             "item_shop": item_shop,
             "item_sell": item_sell,
-            "item_console": item_console
+            "item_console": item_console,
             }
 
 ITEMS = create_collection()
