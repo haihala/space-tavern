@@ -135,7 +135,7 @@ class Entity():
             self.move(engine, amount=abs(int(y)), direction=[0, y])
             self.move(engine, amount=abs(int(x)), direction=[x, 0])
             self.velocity = [
-                    x if not self.grounded else 0,
+                    x if not self.grounded else max(0, x-sign(x)*self.drag)*sign(x),
                     max(0, y-sign(y)*self.drag)*sign(y)
                     ]
     def gravity(self, engine):
