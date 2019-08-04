@@ -76,20 +76,31 @@ class Entity():
         self.grounded = engine.project_collides(self, [0,1], exclude=[self])
 
     @property
+    def up(self):
+        return [self.position[i] + [0, -1][i] for i in range(2)]
+    @property
     def down(self):
-        return [self.position[i] + [0, 1][i] for i in range(2)]
+        return [self.position[i] + [0, self.height][i] for i in range(2)]
+    @property
+    def left(self):
+        return [self.position[i] + [-1, 0][i] for i in range(2)]
+    @property
+    def right(self):
+        return [self.position[i] + [self.width, 0][i] for i in range(2)]
 
     @property
     def back(self):
-        return [self.position[i] + [1-2*int(self.facing_right), 0][i] for i in range(2)]
+        if self.facing_right:
+            return self.left
+        else:
+            return self.right
 
     @property
     def forwards(self):
-        return [self.position[i] + [2*int(self.facing_right)-1, 0][i] for i in range(2)]
-
-    @property
-    def up(self):
-        return [self.position[i] + [0, -1][i] for i in range(2)]
+        if not self.facing_right:
+            return self.left
+        else:
+            return self.right
 
     def sprite(self):
         if type(self._sprite) is list:
