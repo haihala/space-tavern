@@ -32,11 +32,10 @@ def create_collection():
             self.hurt(engine, 1)
 
         def spawn(self, engine, player):
-            mob = choice([alien_base, alien_fly, alien_brain])(self.up)
-            engine.place(self.up, mob)
+            mob = choice([alien_base, alien_fly, alien_brain])(self.position)
+            engine.place(self.position, mob, exclude=[self])
 
-
-        return Enemy(ai_spawner, "alien_spawner", position, 2, 2, health=5, on_death=spawn, **kwargs)
+        return Enemy(ai_spawner, "alien_spawner", position, 0, 2, health=5, on_death=spawn, **kwargs)
 
     return  {
 

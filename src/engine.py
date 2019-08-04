@@ -10,6 +10,7 @@ import pygame
 import math
 import random
 
+from random import randint
 from copy import copy
 from time import sleep, time
 
@@ -20,10 +21,13 @@ class Engine():
 
         self.money = 0
         self.in_space = True
+        self.difficulty = 20
+        self.max_enemy_count = 2
+        self.tick_count = 0
         self.planet = 0
 
         self.player = Player(conf["binds"])
-        self.actors = [self.player, ENEMIES["alien_spawner"]([-5, -5])]
+        self.actors = [self.player]
         self.items = [
                 ITEMS["item_beer"]([6, 5]),
                 ITEMS["item_gun"]([7, 4])
@@ -100,7 +104,7 @@ class Engine():
 
     @property
     def enemies(self):
-        return [i for i in self.actors if type(i) is Enemy]
+        return [i for i in self.items if type(i) is Enemy]
 
     def update_surroundings(self, state):
         self.in_space = state
@@ -132,8 +136,8 @@ class Engine():
         exclude.append(cp)
         return self.collides(cp, target=target, exclude=exclude)
 
-    def place(self, spot, item):
-        if not self.collides(point=spot, target="*"):
+    def place(self, spot, item, exclude=[]):
+        if not self.collides(point=spot, target="*", exclude=exclude):
             item.position = spot
             item.old_position = spot
             self.items.append(item)
@@ -168,6 +172,13 @@ class Engine():
 
             for entity in self.actors:
                 entity.grounded = self.project_collides(entity, [0,1])
+
+            if self.tick_count % self.difficulty == 0 and len(self.enemies) < self.max_enemy_count and self.in_space:
+                while True:
+                    rand_coords = [randint(-10, 8), randint(-6, 7)]
+                    if self.place(rand_coords, ENEMIES["alien_spawner"](rand_coords)):
+                        break
+            self.tick_count += 1
 
     def quit(self):
         # Maybe save
