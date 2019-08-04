@@ -73,7 +73,7 @@ class Player(Entity):
                     self.sprite_offset = 0
                 self._sprite = SPRITES["player_walk"]
                 SOUNDS["player_move"].play()
-                engine.camera_shake(1)
+                engine.camera_shake(0.2)
                 self.move(engine, direction=[-1, 0])
                 moved = True
             elif action == "right":
@@ -81,7 +81,7 @@ class Player(Entity):
                     self.sprite_offset = 0
                 self._sprite = SPRITES["player_walk"]
                 SOUNDS["player_move"].play()
-                engine.camera_shake(1)
+                engine.camera_shake(0.2)
                 self.move(engine, direction=[1, 0])
                 moved = True
             elif action == "down":

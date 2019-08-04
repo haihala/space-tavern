@@ -79,10 +79,12 @@ def get_sprites():
         "alien_big": [merge(i*2, 4, 2, 2) for i in range(2)],
 
         "door": get(4, 3),
+        "item_sell": get(6, 4),
         "item_shop": [get(i+4, 0) for i in range(2)],
         "item_beer": get(8, 0),
         "item_gun": [get(i+4, 2) for i in range(2)],
         "item_jump_pad": [get(i+5, 3) for i in range(2)],
+        "item_console": [get(i, 8) for i in range(2)],
     }
 
 SPRITES = get_sprites()
