@@ -150,6 +150,7 @@ class Engine():
             SOUNDS["music_space"].fadeout(2)
             SOUNDS["music_peace"].play(-1, 0, 2)
             self.tiles = [tile for tile in self.tiles if tile._sprite != SPRITES["door"]]
+            self.entities = [entity for entity in self.entities if type(entity) is not Enemy]
             for x in range(-self.ship_width*3, self.ship_width*3+1):
                 self.background.append(Tile([x,GROUND_LEVEL], "ground_top"))
 
@@ -445,3 +446,11 @@ class Engine():
         self.display.blit(planet_text, (
             int(self.display.get_width()-planet_text.get_width()-10),
             int(self.display.get_height()-planet_text.get_height()-100)))
+
+        # Ticks left
+        if self.in_space:
+            time_text = pygame.transform.scale(self.text_surface("Turns remaining {}".format(max(0, self.console_available-self.tick_count)), (255, 255, 255)), (int(self.display.get_width()/5), int(self.display.get_height()/10)))
+            self.display.blit(time_text, (
+                int(self.display.get_width()-time_text.get_width()-10),
+                int(self.display.get_height()-time_text.get_height()-200)))
+
