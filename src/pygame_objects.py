@@ -69,12 +69,12 @@ def get_sprites():
         "player_jump": [get(i+2, 0) for i in range(2)],
         "player_fall": get(3, 0),
 
+        "alien_spawner": [get(i+4,5) for i in range(2)],
         "alien_base": [get(i, 2) for i in range(2)],
         "alien_fly": [get(i+2, 2) for i in range(2)],
         "alien_brain": [get(i, 3) for i in range(2)],
         "alien_turret": [get(i+2, 3) for i in range(2)],
         "alien_big": [merge(i*2, 4, 2, 2) for i in range(2)],
-        "alien_spawner": get(4, 4),
 
         "door": get(4, 3),
         "item_shop": [get(i+4, 0) for i in range(2)],
