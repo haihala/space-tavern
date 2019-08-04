@@ -22,10 +22,15 @@ def create_collection():
         sprite = "item_door"
         return Item(position, sprite, can_pickup=False, **kwargs)
 
+    def item_gun(position, **kwargs):
+        sprite = "item_gun"
+        return Item(position, sprite, **kwargs)
+
     return  {
             "item_beer": item_beer,
             "item_jump_pad": item_jump_pad,
             "item_door": item_door,
+            "item_gun": item_gun
             }
 
 ITEMS = create_collection()

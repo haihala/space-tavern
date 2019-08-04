@@ -21,7 +21,8 @@ class Engine():
         self.player = Player(conf["binds"])
         self.actors = [self.player, ENEMIES["alien_base"]([-5, -5])]
         self.items = [
-                ITEMS["item_beer"]([6, 5])
+                ITEMS["item_beer"]([6, 5]),
+                ITEMS["item_gun"]([7, 4])
         ]
         self.tiles = []
         self.background = []
@@ -33,6 +34,7 @@ class Engine():
         self.running = False
 
         from pygame_objects import SOUNDS
+        SOUNDS["music_peace"].set_volume(0.25)
         SOUNDS["music_peace"].play(-1)
 
         for x in range(-10, 10):
