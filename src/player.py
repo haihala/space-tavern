@@ -12,11 +12,14 @@ class Player(Entity):
             self.move(engine, amount=self.jump_height, direction=[0, -1])
 
     def throw(self, engine):
-        engine.place(self.forwards, self.inventory)
-        self.inventory.velocity = [int(self.facing_right)*2-1, -2]
+        if engine.place(self.forwards, self.inventory):
+            self.inventory.velocity = [int(self.facing_right)*2-1, -2]
+        elif engine.place(self.up, self.inventory):
+            self.inventory.velocity = [0, -3]
         self.inventory = None
         from pygame_objects import SOUNDS
         SOUNDS["item_throw"].play()
+
 
     def pickup(self, engine):
         targets = []
@@ -30,10 +33,6 @@ class Player(Entity):
             from pygame_objects import SOUNDS
             SOUNDS["item_pickup"].play()
             return True
-
-    @property
-    def forwards(self):
-        return [self.position[i] + [2*int(self.facing_right)-1, 0][i] for i in range(2)]
 
     def tick(self, engine, action):
         IsIdle = self.fatigue == 0
