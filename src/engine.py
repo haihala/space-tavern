@@ -22,7 +22,7 @@ class Engine():
         self.display = pygame.display.set_mode(resolution, flags)
         self.null_entity = Entity()
 
-        self.money = 0
+        self.money = 10
         self.in_space = True
         self.difficulty = 20
         self.max_enemy_count = 2
@@ -56,6 +56,9 @@ class Engine():
         from pygame_objects import SOUNDS
         SOUNDS["music_peace"].set_volume(0.25)
         SOUNDS["music_peace"].play(-1)
+
+        pos = [-5, 5]
+        self.place(pos, ITEMS["item_shop"](pos, "gun"))
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):

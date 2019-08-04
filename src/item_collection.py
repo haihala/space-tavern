@@ -20,6 +20,14 @@ def gun_shoot(self, engine, user):
             bullet.velocity = [int(user.facing_right)*2-1, 0]
             self.fatigue += self.speed
 
+SHOP_CATALOG = {
+        "gun": {
+            "name": "item_gun",
+            "count": 1,
+            "cost": 4
+            }
+        }
+
 def create_collection():
     def item_beer(position, **kwargs):
         sprite = "item_beer"
@@ -33,10 +41,16 @@ def create_collection():
         sprite = "item_gun"
         return Item(position, sprite, on_use=gun_shoot, speed=6, **kwargs)
 
+    def item_shop(position, item, **kwargs):
+        sprite = "item_shop"
+        i = SHOP_CATALOG[item]
+        return Item(position, sprite, data={"item": i["name"], "itemcount": i["count"], "cost": i["cost"]}, collider=False, **kwargs)
+
     return  {
             "item_beer": item_beer,
             "item_jump_pad": item_jump_pad,
-            "item_gun": item_gun
+            "item_gun": item_gun,
+            "item_shop": item_shop
             }
 
 ITEMS = create_collection()
