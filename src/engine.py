@@ -36,8 +36,7 @@ class Engine():
         self.player = Player(conf["binds"])
         self.entities = [
                 self.player,
-                #ITEMS["item_beer"]([6, 5]),
-                #ITEMS["item_gun"]([7, 4])
+                ITEMS["item_console"]([-9, -1])
                 ]
         self.tiles = []
         self.background = []
@@ -57,8 +56,6 @@ class Engine():
         SOUNDS["music_peace"].set_volume(0.75)
         SOUNDS["music_space"].set_volume(0.75)
         #SOUNDS["music_peace"].play(-1, 0, 2)
-
-        self.place(ITEMS["item_shop"]([-5, 5], "gun"))
 
         for x in range(-self.ship_width, self.ship_width+1):
             for y in range(-self.ship_height, self.ship_height+1):
@@ -116,6 +113,10 @@ class Engine():
     @property
     def enemies(self):
         return [i for i in self.entities if type(i) is Enemy]
+
+    def liftoff(self, console):
+        console.data["console"] = self.in_space
+        self.update_surroundings(not self.in_space)
 
     def update_surroundings(self, state):
         from pygame_objects import SPRITES, SOUNDS
