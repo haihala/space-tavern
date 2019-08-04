@@ -241,7 +241,6 @@ class Engine():
                             btn = 'up'
                         elif event.key == pygame.K_DOWN:
                             btn = 'down'
-                            self.update_surroundings(not self.in_space)
                         elif event.key == pygame.K_LEFT:
                             btn = 'left'
                         elif event.key == pygame.K_RIGHT:
@@ -343,6 +342,3 @@ class Engine():
         heart.fill((255, 0, 0))
         for i in range(self.player.health):
             self.display.blit(heart, (int(base[0]-i*TILESIZE*1.1), base[1]))
-
-            
-

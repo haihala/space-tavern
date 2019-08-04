@@ -10,7 +10,7 @@ def sign(x):
 
 class Entity():
     # Abstract
-    def __init__(self, sprite="transparent", position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.3, health=None, on_collision=None, on_use=None, on_death=None, jump_height=0, collision_damage=0, collider=True, data={}, sprite_updated=False):
+    def __init__(self, sprite="transparent", position=[0,0], weight=1, speed=2, width=1, height=1, fatigue=0, drag=0.7, health=None, on_collision=None, on_use=None, on_death=None, jump_height=0, collision_damage=0, collider=True, data={}, sprite_updated=False):
         from pygame_objects import SPRITES
         self._sprite = SPRITES[sprite]
         self.sprite_offset = 0
@@ -73,6 +73,7 @@ class Entity():
                 return amount-i
             else:
                 self.position = [self.position[i] + delta[i] for i in range(2)]
+        self.grounded = engine.project_collides(self, [0,1], exclude=[self])
 
     @property
     def down(self):
@@ -120,10 +121,10 @@ class Entity():
     def handle_velocity(self, engine):
         if self.velocity != [0, 0]:
             x, y = self.velocity
-            self.move(engine, amount=abs(int(x)), direction=[x, 0])
             self.move(engine, amount=abs(int(y)), direction=[0, y])
+            self.move(engine, amount=abs(int(x)), direction=[x, 0])
             self.velocity = [
-                    x,
+                    x if not self.grounded else 0,
                     max(0, abs(y-sign(y)*self.drag))*sign(y)
                     ]
     def gravity(self, engine):
