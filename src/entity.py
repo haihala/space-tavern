@@ -121,6 +121,8 @@ class Entity():
         active = self.fatigue != 0
         if type(self) is Entity:
             self.upkeep(engine, False)
+            if self.velocity == [0, 0]:
+                self.dead = True
         return active
 
     def upkeep(self, engine, fatigue=True):

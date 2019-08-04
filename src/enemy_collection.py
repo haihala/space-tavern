@@ -37,10 +37,10 @@ def create_collection():
         def ai_fly(self, engine):
             if self.position[0] == engine.player.position[0]:
                 bat_shoot(self, engine)
-            elif self.move(engine, amount=1, direction=self.forwards):
+            elif self.move(engine, amount=1, direction=[self.forwards[i] - self.position[i] for i in range(2)]):
                 if self.move(engine, amount=1, direction=[0, -1]):
                     self.facing_right = not self.facing_right
-                    if self.move(engine, amount=1, direction=self.forwards):
+                    if self.move(engine, amount=1, direction=[self.forwards[i] - self.position[i] for i in range(2)]):
                         self.dead = True
 
         return Enemy(ai_fly, "alien_fly", position, -1, 3, health=1, sprite_updated=True, **kwargs)
