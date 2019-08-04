@@ -1,7 +1,7 @@
 from enemy import Enemy
 from projectile_collection import PROJECTILES
 
-from random import choice
+from random import choice, getrandbits
 
 def bat_shoot(self, engine):
     if not self.fatigue:
@@ -46,6 +46,7 @@ def create_collection():
 
         def spawn(self, engine, player):
             mob = choice([alien_base, alien_fly, alien_brain])(self.position)
+            mob.facing_right = bool(random.getrandbits(1))
             engine.place(self.position, mob, exclude=[self])
 
         return Enemy(ai_spawner, "alien_spawner", position, 0, 2, health=5, on_death=spawn, **kwargs)
