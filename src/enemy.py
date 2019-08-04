@@ -7,7 +7,7 @@ class Enemy(Entity):
 
     def tick(self, engine):
         if super().tick():
-            self.handle_velocity()
+            self.handle_velocity(engine)
             self.gravity(engine)
             return None
         self.ai(self, engine)
